@@ -8,10 +8,17 @@
 
 ## 👥 1. BẢNG PHÂN CHIA VAI TRÒ (TEAM ROLES)
 
-| Thành viên | Vai trò chính | Nhiệm vụ chính trong đồ án & buổi báo cáo |
-| :--- | :--- | :--- |
-| **Thành viên 1 (Bạn của bạn)** | **Machine Learning / Modeling Engineer** | • Trình bày bài toán nghiệp vụ ngân hàng & tập dữ liệu BANKING77.<br>• Trình bày kiến trúc Pipeline 4 chặng: Embedding 384D $\rightarrow$ UMAP 5D $\rightarrow$ HDBSCAN $\rightarrow$ c-TF-IDF.<br>• Phân tích thực nghiệm siêu tham số ($min\_cluster\_size$, $eom$ vs $leaf$, chỉ số DBCV).<br>• Trình bày bảng Benchmark đối chuẩn 9 phương pháp (HDBSCAN vs K-Means, GMM, Agglomerative) & kiểm định 5 Seed. |
-| **Thành viên 2 (Bạn - ThienPhucNg-1410)** | **Data Mining & Insights Specialist** | • Trình bày so sánh đối chiếu 77 Nhãn gốc vs 75 Cụm HDBSCAN (Gộp cụm, Tách cụm, Điểm nhiễu Noise).<br>• Khai phá Pattern 1: Cấu trúc câu hỏi & Bản đồ điểm nóng nghiệp vụ (WHY khiếu nại vs HOW thao tác).<br>• Khai phá Pattern 2 & 3: Mỏ neo Lift 195.9x (Android vs iOS, 3 cấp độ thẻ) & Cụm sinh đôi cận biên ($d_{UMAP} < 0.80$).<br>• **Trực tiếp Live Demo ứng dụng Web Streamlit** (soi cụm, thử câu mới, giải thích láng giềng).<br>• Kết luận giá trị thực tiễn & hướng mở rộng. |
+| Thành viên | Vai trò chính | Tệp tin cần tập trung đọc | Nhiệm vụ chính trong đồ án & buổi báo cáo |
+| :--- | :--- | :--- | :--- |
+| **Thành viên 1 (Bạn của bạn)** | **Machine Learning / Modeling Engineer** | 🎯 **CHỈ CẦN 2 TỆP TIN:**<br>1. `BANKING77/REPORT_BANKING77_V3.md`<br>2. `BANKING77/BANKING77_Pipeline_v3_Executed.ipynb`<br>*(+ các bảng số liệu `artifacts/benchmark_v3.csv`, `sweep_v3.csv` nếu cần)* | • Trình bày bài toán nghiệp vụ ngân hàng & tập dữ liệu BANKING77 (Slide 1, 2).<br>• Trình bày kiến trúc Pipeline 4 chặng: Embedding 384D $\rightarrow$ UMAP 5D $\rightarrow$ HDBSCAN $\rightarrow$ c-TF-IDF (Slide 3).<br>• Phân tích thực nghiệm siêu tham số ($min\_cluster\_size$, $eom$ vs $leaf$, chỉ số DBCV) (Slide 4).<br>• Trình bày bảng Benchmark đối chuẩn 9 phương pháp & kiểm định 5 Seed (Slide 5). |
+| **Thành viên 2 (Bạn - ThienPhucNg-1410)** | **Data Mining & Insights Specialist** | 🎯 `app.py`, `components/tab_views.py`, `utils/`, `artifacts/` và bản kế hoạch này | • Trình bày so sánh đối chiếu 77 Nhãn gốc vs 75 Cụm HDBSCAN (Gộp cụm, Tách cụm, Điểm nhiễu Noise) (Slide 6).<br>• Khai phá Pattern 1: Cấu trúc câu hỏi & Bản đồ điểm nóng nghiệp vụ (WHY khiếu nại vs HOW thao tác) (Slide 7).<br>• Khai phá Pattern 2 & 3: Mỏ neo Lift 195.9x & Cụm sinh đôi cận biên (Slide 8).<br>• **Trực tiếp Live Demo ứng dụng Web Streamlit** (Slide 9).<br>• Kết luận giá trị thực tiễn & hướng mở rộng (Slide 10). |
+
+> 💡 **HƯỚNG DẪN RIÊNG CHO THÀNH VIÊN 1 (BẠN CỦA BẠN):**
+> * Bạn **KHÔNG CẦN** quan tâm đến mã nguồn ứng dụng web (`app.py`, `components/`, `utils/`, `export_artifacts.py`).
+> * Bạn chỉ cần mở đúng **2 tệp tin** trong thư mục `BANKING77/`:
+>   1. **`BANKING77/REPORT_BANKING77_V3.md` (Đọc để làm Slide):** Chứa sẵn mọi lý giải lý thuyết, công thức toán (DBCV, V-measure, c-TF-IDF), bảng số liệu so sánh mô hình và phân tích chuyên sâu.
+>   2. **`BANKING77/BANKING77_Pipeline_v3_Executed.ipynb` (Xem khi cần soi code):** Notebook Jupyter đã lưu sẵn toàn bộ kết quả chạy thực nghiệm từ đầu đến cuối.
+
 
 ---
 
@@ -137,14 +144,31 @@ flowchart LR
 
 ---
 
-## 📁 4. DANH MỤC TÀI NGUYÊN CẦN CHIA SẺ TRÊN GITHUB
+## 📁 4. PHÂN ĐỊNH TỆP TIN TRÊN GITHUB CHO TỪNG THÀNH VIÊN
 
-Toàn bộ các file phục vụ trực tiếp cho buổi báo cáo và chạy demo:
-1. `app.py`: Mã nguồn ứng dụng demo Streamlit (đã tối ưu 4 Tab).
-2. `components/tab_views.py`: Giao diện 4 Tab và các thẻ giải thích tương tác ("bấm đến đâu giải thích đến đó").
-3. `utils/`: Bộ công cụ tính toán suy luận (`pipeline.py`), vẽ biểu đồ (`viz.py`), định dạng tiếng Việt (`format_vi.py`).
-4. `artifacts/`: Toàn bộ 12 file kết quả tính sẵn để chạy web ngay lập tức (không cần train lại).
-5. `export_artifacts.py`: Script trích xuất và tái tạo toàn bộ dữ liệu.
-6. `requirements.txt`: Danh sách thư viện Python cần cài đặt.
-7. `KE_HOACH_PHAN_CONG_BAO_CAO.md`: Bản kế hoạch phân công chi tiết này.
-8. `README.md`: Tài liệu hướng dẫn sử dụng và giới thiệu tổng quan đề tài.
+### 📌 A. DÀNH RIÊNG CHO THÀNH VIÊN 1 (Mô hình & Thuật toán) — CHỈ CẦN TẬP TRUNG CÁC TỆP SAU:
+1. **`BANKING77/REPORT_BANKING77_V3.md` (⭐ TỆP QUAN TRỌNG NHẤT ĐỂ LÀM SLIDE):**
+   * Đọc tệp này để lấy toàn bộ lý thuyết, bảng số liệu, công thức cho **Slide 1 đến Slide 5**.
+   * Chứa bảng so sánh Benchmark 9 mô hình (HDBSCAN vs K-Means, GMM, Ward, Agglomerative).
+   * Chứa bảng quét siêu tham số $mcs \in \{20, 30, 50, 80\}$, giải thích cặn kẽ tại sao chọn $mcs=50, eom$ (DBCV 0.432, Noise 7.41%).
+   * Phân tích toán học vì sao gom cụm trực tiếp trên 384 chiều thất bại do *"Lời nguyền số chiều"*.
+2. **`BANKING77/BANKING77_Pipeline_v3_Executed.ipynb` (DÙNG ĐỂ SOI CODE & CHỤP ẢNH MINH HỌA):**
+   * Toàn bộ notebook Jupyter đã chạy xong và lưu sẵn output từng cell.
+   * Xem các hàm pipeline: trích xuất embedding BGE-small, giảm chiều UMAP 5D, phân cụm HDBSCAN, và trích xuất từ khóa c-TF-IDF.
+3. *(Tùy chọn - nếu muốn mở file CSV xem bảng số liệu số)*:
+   * `artifacts/benchmark_v3.csv`: Số liệu chi tiết 9 mô hình.
+   * `artifacts/sweep_v3.csv`: Số liệu 8 tổ hợp tham số quét.
+   * `artifacts/scorecard_v3.csv`: Điểm V-measure Train vs Test (0.833 vs 0.837 - không bị quá khớp).
+   * `artifacts/seed_runs.csv`: Kiểm định độ lặp lại trên 5 seed ngẫu nhiên.
+
+> ⚠️ *Thành viên 1 hoàn toàn KHÔNG CẦN đụng vào hay tìm hiểu code của thư mục `components/`, `utils/`, hoặc file `app.py`.*
+
+---
+
+### 📌 B. DÀNH CHO THÀNH VIÊN 2 (Khai phá Pattern & Trình diễn Live Demo):
+1. **`app.py` & `components/tab_views.py`:** Mã nguồn giao diện Streamlit 4 Tab tương tác trực quan.
+2. **`utils/` (`pipeline.py`, `viz.py`, `format_vi.py`):** Bộ engine suy luận gán nhãn câu mới theo HDBSCAN và render biểu đồ Plotly.
+3. **`artifacts/cluster_patterns_v3.csv`, `artifacts/topics_v3.csv`, `artifacts/umap_2d_states.csv`:** Dữ liệu phân tầng cụm, cú pháp mở đầu câu hỏi và tọa độ 2D để vẽ bản đồ.
+4. **`KE_HOACH_PHAN_CONG_BAO_CAO.md`:** Kịch bản bấm live demo và đối thoại phản biện.
+
+
