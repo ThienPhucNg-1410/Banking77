@@ -1,0 +1,10 @@
+Phương pháp,Số cụm,Noise,V (noise=1 cụm),V (noise=singleton),V (bỏ noise),Coverage,ARI (noise=1 cụm),ARI (bỏ noise),Purity (trọng số),Intent có cụm riêng,Silhouette (cosine),DBCV,k_known
+"BGE-small → UMAP → Agglomerative (K=77, biết trước)",77,0.0,0.863,0.863,0.863,1.0,0.664,0.664,0.774,0.909,0.218,,True
+"BGE-small → UMAP → K-Means (K=77, biết trước)",77,0.0,0.861,0.861,0.861,1.0,0.675,0.675,0.782,0.883,0.205,,True
+BGE-small → UMAP → HDBSCAN,75,0.0741,0.833,0.841,0.873,0.9259,0.542,0.673,0.786,0.87,0.222,0.432,False
+"BGE-small → UMAP → DBSCAN (eps=0.10, p90)",190,0.058,0.824,0.841,0.864,0.942,0.499,0.621,0.9,0.987,0.264,,False
+MPNet-base → UMAP → HDBSCAN,78,0.074,0.812,0.824,0.853,0.926,0.508,0.637,0.757,0.857,0.198,0.321,False
+MiniLM-L6 (gốc) → UMAP → HDBSCAN,74,0.0765,0.79,0.802,0.83,0.9235,0.458,0.577,0.698,0.818,0.21,0.353,False
+TF-IDF → K-Means (K=77),77,0.0,0.557,0.557,0.557,1.0,0.161,0.161,0.366,0.714,,,True
+TF-IDF → NMF (K=77),77,0.0,0.544,0.544,0.544,1.0,0.214,0.214,0.355,0.675,,,True
+Bỏ UMAP: BGE-small → HDBSCAN (full-D),3,0.04,0.056,0.121,0.054,0.96,0.001,0.001,0.041,0.039,0.108,,False

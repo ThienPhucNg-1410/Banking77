@@ -1,0 +1,752 @@
+{
+  "40": [
+    "Why was I charged an extra fee when paying with my card?",
+    "There is an extra pound charged on my statement for a card payment.",
+    "I got charged extra for using my card at a shop.",
+    "Why is there an additional fee for my card transaction?",
+    "My statement shows an extra charge after I paid by card.",
+    "Do you charge a fee for paying with a debit card?",
+    "I noticed an extra fee charged on my recent purchase.",
+    "Why did you charge me an extra fee on my card payment?"
+  ],
+  "34": [
+    "What fiat currencies do you support for holding in my account?",
+    "Can I hold both GBP and USD currencies in this app?",
+    "Which currencies are supported for receiving my salary?",
+    "What fiat currency options can I exchange and hold?",
+    "Is it possible to keep multiple fiat currencies like EUR and GBP?",
+    "How many different currencies can I hold in my wallet?",
+    "Can I receive my salary in USD or only in GBP?",
+    "Do you support holding foreign fiat currencies directly?"
+  ],
+  "2": [
+    "Why do I need to verify my identity to use my account?",
+    "What documents are required for the identity verification check?",
+    "How do I prove my identity on the app?",
+    "Why is an identity check necessary before I can open the account?",
+    "I am having trouble completing the verify identity step.",
+    "What is the purpose of asking me to verify my identity?",
+    "Can I use my account without going through identity verification?",
+    "How long does the identity verification process usually take?"
+  ],
+  "65": [
+    "I deposited a cheque yesterday but my balance has not been updated.",
+    "Why isn't my balance updated after making a cash deposit?",
+    "My account balance is still the same after I deposited cash.",
+    "How long does it take for a cheque deposit to show in my balance?",
+    "I paid in cash at the bank but my balance hasn't updated yet.",
+    "Deposited a cheque into my account and the balance is not updated.",
+    "Why is my cash deposit not showing up in my available balance?",
+    "When will my balance be updated after depositing a cheque?"
+  ],
+  "39": [
+    "My transfer failed and I got an error message when trying to send money.",
+    "Why did my bank transfer fail to go through?",
+    "I tried to make a transfer to another account but it failed.",
+    "Every time I try to make a transfer an error message pops up.",
+    "Can you tell me why my transfer failed this morning?",
+    "I received a transfer failed notification on my phone.",
+    "Why am I getting an error when making a transfer?",
+    "My money transfer failed, what should I do next?"
+  ],
+  "37": [
+    "I requested a refund from the seller but it is not showing up on my statement.",
+    "Why hasn't my refund appeared in my account statement yet?",
+    "The merchant issued a refund a week ago and it's still not showing.",
+    "How long until a requested refund shows up on my card statement?",
+    "I cancelled what I ordered and requested a refund, where is it?",
+    "My refund is not showing on my statement even though the seller confirmed it.",
+    "Still waiting for a refund to show up in my balance.",
+    "Why is there no sign of my requested refund on the statement?"
+  ],
+  "46": [
+    "Is there a fee for topping up my account with a European bank card?",
+    "Do you charge for topping up using a debit or credit card?",
+    "How much is the fee when topping up by bank card?",
+    "Why was I charged a fee for topping up with my European card?",
+    "Are top ups with a credit card free or is there a charge?",
+    "What are the charges for topping up my card from a European bank?",
+    "I got charged when topping up my account with a card.",
+    "Is topping up by bank transfer or card free of charge?"
+  ],
+  "30": [
+    "Why was I charged a fee for withdrawing cash from an ATM?",
+    "Are cash withdrawals free or do you charge a withdrawal fee?",
+    "I got charged a fee for a cash withdrawal today.",
+    "How much can I withdraw before being charged a cash withdrawal fee?",
+    "Why is there a fee on my statement for withdrawing cash?",
+    "What are the fees for ATM cash withdrawals?",
+    "I thought cash withdrawals were free, why was I charged?",
+    "Charged a fee when withdrawing money at the cash machine."
+  ],
+  "41": [
+    "I was charged twice for the same meal at a restaurant.",
+    "My card was double charged for a single transaction, how do I remove the duplicate?",
+    "Why have I been charged twice for one purchase?",
+    "There is a duplicate charge on my statement from yesterday.",
+    "I noticed I got charged twice for the same item at a shop.",
+    "How can I get a refund for a transaction that was charged twice?",
+    "A restaurant double charged my card, please help me remove the second charge.",
+    "Why does my payment show up as charged twice on the app?"
+  ],
+  "32": [
+    "Why was I charged a fee for transferring money to another account?",
+    "Are money transfers free or is there a transfer fee?",
+    "I was charged a fee on my recent bank transfer.",
+    "How much is the fee for transferring money internationally?",
+    "Why did you charge a fee when I made a money transfer?",
+    "I thought transfers were free, why is there a transfer fee charged?",
+    "What is the fee for transferring funds to a friend?",
+    "Charged an unexpected fee for transferring money."
+  ],
+  "63": [
+    "My card was stolen, how do I block it immediately?",
+    "I lost my card today and need to freeze my account right away.",
+    "Someone stole my wallet with my card inside, what should I do?",
+    "How can I report a lost or stolen card on the app?",
+    "My card was stolen at the station, please cancel it.",
+    "I think my card is lost, how do I block it and order a replacement?",
+    "What do I do if my debit card has been stolen?",
+    "Need urgent help because my card was stolen."
+  ],
+  "38": [
+    "Why was my transfer declined when I tried to send money?",
+    "My bank transfer keeps getting declined for no reason.",
+    "Can you explain why my transfer was declined today?",
+    "I tried to transfer money to my account and the transfer was declined.",
+    "Why would a domestic transfer be declined by your system?",
+    "My outbound transfer was rejected and declined.",
+    "What are the reasons for a transfer being declined?",
+    "Transfer declined when paying my bill."
+  ],
+  "0": [
+    "How can I change my personal details and home address?",
+    "I recently moved house and need to change my address in the app.",
+    "Where do I go to edit my personal details?",
+    "Can I update my residential address and phone number?",
+    "I need to change the personal details registered on my account.",
+    "How do I edit my address after moving?",
+    "Is it possible to change my personal details online?",
+    "What is the procedure to change my address?"
+  ],
+  "1": [
+    "What is the minimum age limit to open an account?",
+    "Can I open an account for my 15 year old daughter?",
+    "Are children allowed to open an account with your bank?",
+    "How old do you have to be to open a banking account?",
+    "Is there an age restriction for kids to have a card?",
+    "I want to open an account for my children, what is the age limit?",
+    "At what age can my son or daughter open an account?",
+    "Do you have a minimum age requirement for opening an account?"
+  ],
+  "4": [
+    "How do I change my PIN to a new PIN?",
+    "Can I change my card PIN at cash machines while on vacation in Spain?",
+    "Where can I change my PIN number?",
+    "I want to set a new PIN for my debit card.",
+    "Is it possible to change my PIN inside the mobile app?",
+    "Which cash machines allow me to change my PIN?",
+    "How can I change my PIN before travelling?",
+    "Need instructions on how to change my PIN."
+  ],
+  "3": [
+    "Why is my activate (activate my card) for my online shopping order right away?",
+    "How can I check my (activate my card) with my newly activated debit card right away?",
+    "I need help with card (activate my card) since I updated my account settings right away?",
+    "Can you explain why activate card (activate my card) on my monthly card statement right away?",
+    "What should I do if account (activate my card) with my newly activated debit card right away?",
+    "Is there a way to fix payment (activate my card) for my online shopping order on my account?",
+    "I noticed an issue with help (activate my card) for my international wire transfer on my account?",
+    "Could you tell me when activate (activate my card) after depositing money this morning on my account?"
+  ],
+  "5": [
+    "Why is my apple (apple pay or google pay) at the local ATM machine right away?",
+    "How can I check pay (apple pay or google pay) with my newly activated debit card right away?",
+    "I need help with or (apple pay or google pay) with my newly activated debit card right away?",
+    "Can you explain why google (apple pay or google pay) at the local ATM machine right away?",
+    "What should I do if apple pay (apple pay or google pay) when paying at the supermarket right away?",
+    "Is there a way to fix account (apple pay or google pay) on my monthly card statement on my account?",
+    "I noticed an issue with card (apple pay or google pay) at the local ATM machine on my account?",
+    "Could you tell me when apple (apple pay or google pay) when trying to send funds to a friend on my account?"
+  ],
+  "6": [
+    "Why is my atm (atm support) when paying in foreign currency right away?",
+    "How can I check support (atm support) even though my balance is sufficient right away?",
+    "I need help with atm support (atm support) for my international wire transfer right away?",
+    "Can you explain why account (atm support) after my transaction yesterday right away?",
+    "What should I do if card (atm support) since I updated my account settings right away?",
+    "Is there a way to fix payment (atm support) for my online shopping order on my account?",
+    "I noticed an issue with help (atm support) with my newly activated debit card on my account?",
+    "Could you tell me when app (atm support) during the weekend processing hours on my account?"
+  ],
+  "7": [
+    "Why is my automatic (automatic top up) for my online shopping order right away?",
+    "How can I check top (automatic top up) during the weekend processing hours right away?",
+    "I need help with up (automatic top up) when trying to send funds to a friend right away?",
+    "Can you explain why automatic up (automatic top up) when using the mobile banking app right away?",
+    "What should I do if account (automatic top up) since I updated my account settings right away?",
+    "Is there a way to fix card (automatic top up) since I updated my account settings on my account?",
+    "I noticed an issue with payment (automatic top up) after my transaction yesterday on my account?",
+    "Could you tell me when help (automatic top up) when using the mobile banking app on my account?"
+  ],
+  "8": [
+    "Why is my beneficiary (beneficiary not allowed) while travelling abroad in Europe right away?",
+    "How can I check not (beneficiary not allowed) even though my balance is sufficient right away?",
+    "I need help with allowed (beneficiary not allowed) when paying at the supermarket right away?",
+    "Can you explain why beneficiary allowed (beneficiary not allowed) for my international wire transfer right away?",
+    "What should I do if account (beneficiary not allowed) when using the mobile banking app right away?",
+    "Is there a way to fix card (beneficiary not allowed) when trying to send funds to a friend on my account?",
+    "I noticed an issue with payment (beneficiary not allowed) for my international wire transfer on my account?",
+    "Could you tell me when help (beneficiary not allowed) when paying at the supermarket on my account?"
+  ],
+  "9": [
+    "Why is my cancel (cancel transfer) when paying at the supermarket right away?",
+    "How can I check transfer (cancel transfer) after my transaction yesterday right away?",
+    "I need help with cancel transfer (cancel transfer) at the local ATM machine right away?",
+    "Can you explain why account (cancel transfer) when trying to send funds to a friend right away?",
+    "What should I do if card (cancel transfer) since I updated my account settings right away?",
+    "Is there a way to fix payment (cancel transfer) during the weekend processing hours on my account?",
+    "I noticed an issue with help (cancel transfer) at the local ATM machine on my account?",
+    "Could you tell me when app (cancel transfer) even though my balance is sufficient on my account?"
+  ],
+  "10": [
+    "Why is my card (card about to expire) at the local ATM machine right away?",
+    "How can I check about (card about to expire) even though my balance is sufficient right away?",
+    "I need help with to (card about to expire) during the weekend processing hours right away?",
+    "Can you explain why expire (card about to expire) since I updated my account settings right away?",
+    "What should I do if card expire (card about to expire) with my newly activated debit card right away?",
+    "Is there a way to fix account (card about to expire) since I updated my account settings on my account?",
+    "I noticed an issue with payment (card about to expire) during the weekend processing hours on my account?",
+    "Could you tell me when card (card about to expire) when trying to send funds to a friend on my account?"
+  ],
+  "11": [
+    "Why is my card (card acceptance) at the local ATM machine right away?",
+    "How can I check acceptance (card acceptance) after my transaction yesterday right away?",
+    "I need help with card acceptance (card acceptance) with my newly activated debit card right away?",
+    "Can you explain why account (card acceptance) for my international wire transfer right away?",
+    "What should I do if payment (card acceptance) while travelling abroad in Europe right away?",
+    "Is there a way to fix help (card acceptance) during the weekend processing hours on my account?",
+    "I noticed an issue with app (card acceptance) with my newly activated debit card on my account?",
+    "Could you tell me when card (card acceptance) with my newly activated debit card on my account?"
+  ],
+  "12": [
+    "Why is my card (card arrival) during the weekend processing hours right away?",
+    "How can I check arrival (card arrival) after my transaction yesterday right away?",
+    "I need help with card arrival (card arrival) when trying to send funds to a friend right away?",
+    "Can you explain why account (card arrival) since I updated my account settings right away?",
+    "What should I do if payment (card arrival) while travelling abroad in Europe right away?",
+    "Is there a way to fix help (card arrival) for my online shopping order on my account?",
+    "I noticed an issue with app (card arrival) when paying in foreign currency on my account?",
+    "Could you tell me when card (card arrival) on my monthly card statement on my account?"
+  ],
+  "13": [
+    "Why is my card (card delivery estimate) with my newly activated debit card right away?",
+    "How can I check delivery (card delivery estimate) without any prior notification right away?",
+    "I need help with estimate (card delivery estimate) when paying at the supermarket right away?",
+    "Can you explain why card estimate (card delivery estimate) since I updated my account settings right away?",
+    "What should I do if account (card delivery estimate) when trying to send funds to a friend right away?",
+    "Is there a way to fix payment (card delivery estimate) during the weekend processing hours on my account?",
+    "I noticed an issue with help (card delivery estimate) when trying to send funds to a friend on my account?",
+    "Could you tell me when card (card delivery estimate) when paying at the supermarket on my account?"
+  ],
+  "14": [
+    "Why is my card (card linking) for my international wire transfer right away?",
+    "How can I check linking (card linking) with my newly activated debit card right away?",
+    "I need help with card linking (card linking) when trying to send funds to a friend right away?",
+    "Can you explain why account (card linking) when trying to send funds to a friend right away?",
+    "What should I do if payment (card linking) since I updated my account settings right away?",
+    "Is there a way to fix help (card linking) since I updated my account settings on my account?",
+    "I noticed an issue with app (card linking) without any prior notification on my account?",
+    "Could you tell me when card (card linking) during the weekend processing hours on my account?"
+  ],
+  "15": [
+    "Why is my card (card not working) when using the mobile banking app right away?",
+    "How can I check not (card not working) after depositing money this morning right away?",
+    "I need help with working (card not working) when paying at the supermarket right away?",
+    "Can you explain why card working (card not working) when trying to send funds to a friend right away?",
+    "What should I do if account (card not working) after depositing money this morning right away?",
+    "Is there a way to fix payment (card not working) after my transaction yesterday on my account?",
+    "I noticed an issue with help (card not working) without any prior notification on my account?",
+    "Could you tell me when card (card not working) when trying to send funds to a friend on my account?"
+  ],
+  "16": [
+    "Why is my card (card payment not recognised) when using the mobile banking app right away?",
+    "How can I check payment (card payment not recognised) with my newly activated debit card right away?",
+    "I need help with not (card payment not recognised) while travelling abroad in Europe right away?",
+    "Can you explain why recognised (card payment not recognised) at the local ATM machine right away?",
+    "What should I do if card recognised (card payment not recognised) after my transaction yesterday right away?",
+    "Is there a way to fix account (card payment not recognised) even though my balance is sufficient on my account?",
+    "I noticed an issue with card (card payment not recognised) when paying at the supermarket on my account?",
+    "Could you tell me when payment (card payment not recognised) even though my balance is sufficient on my account?"
+  ],
+  "17": [
+    "Why is my card (card payment wrong exchange rate) when paying at the supermarket right away?",
+    "How can I check payment (card payment wrong exchange rate) after depositing money this morning right away?",
+    "I need help with wrong (card payment wrong exchange rate) with my newly activated debit card right away?",
+    "Can you explain why exchange (card payment wrong exchange rate) since I updated my account settings right away?",
+    "What should I do if rate (card payment wrong exchange rate) while travelling abroad in Europe right away?",
+    "Is there a way to fix card rate (card payment wrong exchange rate) after my transaction yesterday on my account?",
+    "I noticed an issue with account (card payment wrong exchange rate) after my transaction yesterday on my account?",
+    "Could you tell me when card (card payment wrong exchange rate) after depositing money this morning on my account?"
+  ],
+  "18": [
+    "Why is my card (card swallowed) while travelling abroad in Europe right away?",
+    "How can I check swallowed (card swallowed) even though my balance is sufficient right away?",
+    "I need help with card swallowed (card swallowed) with my newly activated debit card right away?",
+    "Can you explain why account (card swallowed) when paying at the supermarket right away?",
+    "What should I do if payment (card swallowed) even though my balance is sufficient right away?",
+    "Is there a way to fix help (card swallowed) at the local ATM machine on my account?",
+    "I noticed an issue with app (card swallowed) while travelling abroad in Europe on my account?",
+    "Could you tell me when card (card swallowed) for my international wire transfer on my account?"
+  ],
+  "19": [
+    "Why is my cash (cash withdrawal not recognised) when using the mobile banking app right away?",
+    "How can I check withdrawal (cash withdrawal not recognised) for my international wire transfer right away?",
+    "I need help with not (cash withdrawal not recognised) when trying to send funds to a friend right away?",
+    "Can you explain why recognised (cash withdrawal not recognised) with my newly activated debit card right away?",
+    "What should I do if cash recognised (cash withdrawal not recognised) when paying in foreign currency right away?",
+    "Is there a way to fix account (cash withdrawal not recognised) during the weekend processing hours on my account?",
+    "I noticed an issue with card (cash withdrawal not recognised) after depositing money this morning on my account?",
+    "Could you tell me when payment (cash withdrawal not recognised) since I updated my account settings on my account?"
+  ],
+  "20": [
+    "Why is my Compromised (Compromised card) when trying to send funds to a friend right away?",
+    "How can I check card (Compromised card) even though my balance is sufficient right away?",
+    "I need help with Compromised card (Compromised card) since I updated my account settings right away?",
+    "Can you explain why account (Compromised card) at the local ATM machine right away?",
+    "What should I do if payment (Compromised card) when paying in foreign currency right away?",
+    "Is there a way to fix help (Compromised card) when using the mobile banking app on my account?",
+    "I noticed an issue with app (Compromised card) after depositing money this morning on my account?",
+    "Could you tell me when Compromised (Compromised card) while travelling abroad in Europe on my account?"
+  ],
+  "21": [
+    "Why is my contactless (contactless not working) without any prior notification right away?",
+    "How can I check not (contactless not working) for my international wire transfer right away?",
+    "I need help with working (contactless not working) when paying at the supermarket right away?",
+    "Can you explain why contactless working (contactless not working) with my newly activated debit card right away?",
+    "What should I do if account (contactless not working) without any prior notification right away?",
+    "Is there a way to fix card (contactless not working) when paying in foreign currency on my account?",
+    "I noticed an issue with payment (contactless not working) since I updated my account settings on my account?",
+    "Could you tell me when help (contactless not working) during the weekend processing hours on my account?"
+  ],
+  "22": [
+    "Why is my country (country support) for my online shopping order right away?",
+    "How can I check support (country support) while travelling abroad in Europe right away?",
+    "I need help with country support (country support) on my monthly card statement right away?",
+    "Can you explain why account (country support) since I updated my account settings right away?",
+    "What should I do if card (country support) while travelling abroad in Europe right away?",
+    "Is there a way to fix payment (country support) for my online shopping order on my account?",
+    "I noticed an issue with help (country support) during the weekend processing hours on my account?",
+    "Could you tell me when app (country support) when paying in foreign currency on my account?"
+  ],
+  "23": [
+    "Why is my declined (declined card payment) even though my balance is sufficient right away?",
+    "How can I check card (declined card payment) even though my balance is sufficient right away?",
+    "I need help with payment (declined card payment) even though my balance is sufficient right away?",
+    "Can you explain why declined payment (declined card payment) for my international wire transfer right away?",
+    "What should I do if account (declined card payment) during the weekend processing hours right away?",
+    "Is there a way to fix help (declined card payment) during the weekend processing hours on my account?",
+    "I noticed an issue with declined (declined card payment) since I updated my account settings on my account?",
+    "Could you tell me when card (declined card payment) after my transaction yesterday on my account?"
+  ],
+  "24": [
+    "Why is my declined (declined cash withdrawal) when paying at the supermarket right away?",
+    "How can I check cash (declined cash withdrawal) without any prior notification right away?",
+    "I need help with withdrawal (declined cash withdrawal) when using the mobile banking app right away?",
+    "Can you explain why declined withdrawal (declined cash withdrawal) after my transaction yesterday right away?",
+    "What should I do if account (declined cash withdrawal) when trying to send funds to a friend right away?",
+    "Is there a way to fix card (declined cash withdrawal) even though my balance is sufficient on my account?",
+    "I noticed an issue with payment (declined cash withdrawal) when paying in foreign currency on my account?",
+    "Could you tell me when help (declined cash withdrawal) for my online shopping order on my account?"
+  ],
+  "25": [
+    "Why is my direct (direct debit payment not recognised) when paying at the supermarket right away?",
+    "How can I check debit (direct debit payment not recognised) on my monthly card statement right away?",
+    "I need help with payment (direct debit payment not recognised) with my newly activated debit card right away?",
+    "Can you explain why not (direct debit payment not recognised) even though my balance is sufficient right away?",
+    "What should I do if recognised (direct debit payment not recognised) when trying to send funds to a friend right away?",
+    "Is there a way to fix direct recognised (direct debit payment not recognised) during the weekend processing hours on my account?",
+    "I noticed an issue with account (direct debit payment not recognised) when paying at the supermarket on my account?",
+    "Could you tell me when card (direct debit payment not recognised) while travelling abroad in Europe on my account?"
+  ],
+  "26": [
+    "Why is my disposable (disposable card limits) during the weekend processing hours right away?",
+    "How can I check card (disposable card limits) for my online shopping order right away?",
+    "I need help with limits (disposable card limits) on my monthly card statement right away?",
+    "Can you explain why disposable limits (disposable card limits) when using the mobile banking app right away?",
+    "What should I do if account (disposable card limits) when using the mobile banking app right away?",
+    "Is there a way to fix payment (disposable card limits) after depositing money this morning on my account?",
+    "I noticed an issue with help (disposable card limits) for my online shopping order on my account?",
+    "Could you tell me when disposable (disposable card limits) on my monthly card statement on my account?"
+  ],
+  "27": [
+    "Why is my exchange (exchange charge) at the local ATM machine right away?",
+    "How can I check charge (exchange charge) even though my balance is sufficient right away?",
+    "I need help with exchange charge (exchange charge) without any prior notification right away?",
+    "Can you explain why account (exchange charge) with my newly activated debit card right away?",
+    "What should I do if card (exchange charge) while travelling abroad in Europe right away?",
+    "Is there a way to fix payment (exchange charge) at the local ATM machine on my account?",
+    "I noticed an issue with help (exchange charge) while travelling abroad in Europe on my account?",
+    "Could you tell me when app (exchange charge) when paying at the supermarket on my account?"
+  ],
+  "28": [
+    "Why is my exchange (exchange rate) when using the mobile banking app right away?",
+    "How can I check rate (exchange rate) after my transaction yesterday right away?",
+    "I need help with exchange rate (exchange rate) after my transaction yesterday right away?",
+    "Can you explain why account (exchange rate) since I updated my account settings right away?",
+    "What should I do if card (exchange rate) when paying at the supermarket right away?",
+    "Is there a way to fix payment (exchange rate) with my newly activated debit card on my account?",
+    "I noticed an issue with help (exchange rate) when paying at the supermarket on my account?",
+    "Could you tell me when app (exchange rate) after my transaction yesterday on my account?"
+  ],
+  "29": [
+    "Why is my exchange (exchange via app) after my transaction yesterday right away?",
+    "How can I check via (exchange via app) for my international wire transfer right away?",
+    "I need help with app (exchange via app) even though my balance is sufficient right away?",
+    "Can you explain why exchange app (exchange via app) for my online shopping order right away?",
+    "What should I do if account (exchange via app) when using the mobile banking app right away?",
+    "Is there a way to fix card (exchange via app) when paying at the supermarket on my account?",
+    "I noticed an issue with payment (exchange via app) after my transaction yesterday on my account?",
+    "Could you tell me when help (exchange via app) after depositing money this morning on my account?"
+  ],
+  "31": [
+    "Why is my extra (extra charge on statement) for my online shopping order right away?",
+    "How can I check charge (extra charge on statement) when using the mobile banking app right away?",
+    "I need help with on (extra charge on statement) during the weekend processing hours right away?",
+    "Can you explain why statement (extra charge on statement) when paying at the supermarket right away?",
+    "What should I do if extra statement (extra charge on statement) after depositing money this morning right away?",
+    "Is there a way to fix account (extra charge on statement) on my monthly card statement on my account?",
+    "I noticed an issue with card (extra charge on statement) on my monthly card statement on my account?",
+    "Could you tell me when payment (extra charge on statement) at the local ATM machine on my account?"
+  ],
+  "33": [
+    "Why is my getting (getting spare card) when paying in foreign currency right away?",
+    "How can I check spare (getting spare card) when paying in foreign currency right away?",
+    "I need help with card (getting spare card) when using the mobile banking app right away?",
+    "Can you explain why getting card (getting spare card) when trying to send funds to a friend right away?",
+    "What should I do if account (getting spare card) since I updated my account settings right away?",
+    "Is there a way to fix payment (getting spare card) even though my balance is sufficient on my account?",
+    "I noticed an issue with help (getting spare card) with my newly activated debit card on my account?",
+    "Could you tell me when getting (getting spare card) after my transaction yesterday on my account?"
+  ],
+  "35": [
+    "Why is my getting (getting virtual card) for my online shopping order right away?",
+    "How can I check virtual (getting virtual card) at the local ATM machine right away?",
+    "I need help with card (getting virtual card) while travelling abroad in Europe right away?",
+    "Can you explain why getting card (getting virtual card) for my online shopping order right away?",
+    "What should I do if account (getting virtual card) at the local ATM machine right away?",
+    "Is there a way to fix payment (getting virtual card) when paying in foreign currency on my account?",
+    "I noticed an issue with help (getting virtual card) for my international wire transfer on my account?",
+    "Could you tell me when getting (getting virtual card) on my monthly card statement on my account?"
+  ],
+  "36": [
+    "Why is my order (order physical card) when using the mobile banking app right away?",
+    "How can I check physical (order physical card) with my newly activated debit card right away?",
+    "I need help with card (order physical card) when paying in foreign currency right away?",
+    "Can you explain why order card (order physical card) with my newly activated debit card right away?",
+    "What should I do if account (order physical card) while travelling abroad in Europe right away?",
+    "Is there a way to fix payment (order physical card) after depositing money this morning on my account?",
+    "I noticed an issue with help (order physical card) while travelling abroad in Europe on my account?",
+    "Could you tell me when order (order physical card) since I updated my account settings on my account?"
+  ],
+  "42": [
+    "Why is my passcode (passcode forgotten) when paying at the supermarket right away?",
+    "How can I check forgotten (passcode forgotten) during the weekend processing hours right away?",
+    "I need help with passcode forgotten (passcode forgotten) without any prior notification right away?",
+    "Can you explain why account (passcode forgotten) for my online shopping order right away?",
+    "What should I do if card (passcode forgotten) at the local ATM machine right away?",
+    "Is there a way to fix payment (passcode forgotten) with my newly activated debit card on my account?",
+    "I noticed an issue with help (passcode forgotten) without any prior notification on my account?",
+    "Could you tell me when app (passcode forgotten) after my transaction yesterday on my account?"
+  ],
+  "43": [
+    "Why is my pending (pending card payment) even though my balance is sufficient right away?",
+    "How can I check card (pending card payment) when using the mobile banking app right away?",
+    "I need help with payment (pending card payment) after my transaction yesterday right away?",
+    "Can you explain why pending payment (pending card payment) after my transaction yesterday right away?",
+    "What should I do if account (pending card payment) when using the mobile banking app right away?",
+    "Is there a way to fix help (pending card payment) during the weekend processing hours on my account?",
+    "I noticed an issue with pending (pending card payment) without any prior notification on my account?",
+    "Could you tell me when card (pending card payment) when paying at the supermarket on my account?"
+  ],
+  "44": [
+    "Why is my pending (pending cash withdrawal) after depositing money this morning right away?",
+    "How can I check cash (pending cash withdrawal) after depositing money this morning right away?",
+    "I need help with withdrawal (pending cash withdrawal) while travelling abroad in Europe right away?",
+    "Can you explain why pending withdrawal (pending cash withdrawal) at the local ATM machine right away?",
+    "What should I do if account (pending cash withdrawal) when using the mobile banking app right away?",
+    "Is there a way to fix card (pending cash withdrawal) when using the mobile banking app on my account?",
+    "I noticed an issue with payment (pending cash withdrawal) for my international wire transfer on my account?",
+    "Could you tell me when help (pending cash withdrawal) on my monthly card statement on my account?"
+  ],
+  "45": [
+    "Why is my pending (pending top up) with my newly activated debit card right away?",
+    "How can I check top (pending top up) at the local ATM machine right away?",
+    "I need help with up (pending top up) for my online shopping order right away?",
+    "Can you explain why pending up (pending top up) after my transaction yesterday right away?",
+    "What should I do if account (pending top up) after depositing money this morning right away?",
+    "Is there a way to fix card (pending top up) for my international wire transfer on my account?",
+    "I noticed an issue with payment (pending top up) with my newly activated debit card on my account?",
+    "Could you tell me when help (pending top up) when trying to send funds to a friend on my account?"
+  ],
+  "47": [
+    "Why is my pending (pending transfer) without any prior notification right away?",
+    "How can I check transfer (pending transfer) after depositing money this morning right away?",
+    "I need help with pending transfer (pending transfer) while travelling abroad in Europe right away?",
+    "Can you explain why account (pending transfer) when trying to send funds to a friend right away?",
+    "What should I do if card (pending transfer) without any prior notification right away?",
+    "Is there a way to fix payment (pending transfer) while travelling abroad in Europe on my account?",
+    "I noticed an issue with help (pending transfer) after my transaction yesterday on my account?",
+    "Could you tell me when app (pending transfer) when paying in foreign currency on my account?"
+  ],
+  "48": [
+    "Why is my pin (pin blocked) when paying in foreign currency right away?",
+    "How can I check blocked (pin blocked) since I updated my account settings right away?",
+    "I need help with pin blocked (pin blocked) after depositing money this morning right away?",
+    "Can you explain why account (pin blocked) for my international wire transfer right away?",
+    "What should I do if card (pin blocked) after my transaction yesterday right away?",
+    "Is there a way to fix payment (pin blocked) for my international wire transfer on my account?",
+    "I noticed an issue with help (pin blocked) while travelling abroad in Europe on my account?",
+    "Could you tell me when app (pin blocked) when paying in foreign currency on my account?"
+  ],
+  "49": [
+    "Why is my receiving (receiving money) when paying in foreign currency right away?",
+    "How can I check money (receiving money) with my newly activated debit card right away?",
+    "I need help with receiving money (receiving money) when paying at the supermarket right away?",
+    "Can you explain why account (receiving money) at the local ATM machine right away?",
+    "What should I do if card (receiving money) after my transaction yesterday right away?",
+    "Is there a way to fix payment (receiving money) when using the mobile banking app on my account?",
+    "I noticed an issue with help (receiving money) while travelling abroad in Europe on my account?",
+    "Could you tell me when app (receiving money) after my transaction yesterday on my account?"
+  ],
+  "50": [
+    "Why is my request (request refund) when paying at the supermarket right away?",
+    "How can I check refund (request refund) on my monthly card statement right away?",
+    "I need help with request refund (request refund) without any prior notification right away?",
+    "Can you explain why account (request refund) during the weekend processing hours right away?",
+    "What should I do if card (request refund) when paying at the supermarket right away?",
+    "Is there a way to fix payment (request refund) when paying at the supermarket on my account?",
+    "I noticed an issue with help (request refund) during the weekend processing hours on my account?",
+    "Could you tell me when app (request refund) for my international wire transfer on my account?"
+  ],
+  "51": [
+    "Why is my reverted (reverted card payment) after my transaction yesterday right away?",
+    "How can I check card (reverted card payment) for my international wire transfer right away?",
+    "I need help with payment (reverted card payment) without any prior notification right away?",
+    "Can you explain why reverted payment (reverted card payment) after my transaction yesterday right away?",
+    "What should I do if account (reverted card payment) since I updated my account settings right away?",
+    "Is there a way to fix help (reverted card payment) when paying in foreign currency on my account?",
+    "I noticed an issue with reverted (reverted card payment) after my transaction yesterday on my account?",
+    "Could you tell me when card (reverted card payment) while travelling abroad in Europe on my account?"
+  ],
+  "52": [
+    "Why is my supported (supported cards and currencies) while travelling abroad in Europe right away?",
+    "How can I check cards (supported cards and currencies) at the local ATM machine right away?",
+    "I need help with and (supported cards and currencies) while travelling abroad in Europe right away?",
+    "Can you explain why currencies (supported cards and currencies) when using the mobile banking app right away?",
+    "What should I do if supported currencies (supported cards and currencies) after my transaction yesterday right away?",
+    "Is there a way to fix account (supported cards and currencies) when using the mobile banking app on my account?",
+    "I noticed an issue with card (supported cards and currencies) while travelling abroad in Europe on my account?",
+    "Could you tell me when payment (supported cards and currencies) without any prior notification on my account?"
+  ],
+  "53": [
+    "Why is my terminate (terminate account) for my international wire transfer right away?",
+    "How can I check account (terminate account) on my monthly card statement right away?",
+    "I need help with terminate account (terminate account) while travelling abroad in Europe right away?",
+    "Can you explain why card (terminate account) since I updated my account settings right away?",
+    "What should I do if payment (terminate account) when trying to send funds to a friend right away?",
+    "Is there a way to fix help (terminate account) on my monthly card statement on my account?",
+    "I noticed an issue with app (terminate account) when trying to send funds to a friend on my account?",
+    "Could you tell me when terminate (terminate account) during the weekend processing hours on my account?"
+  ],
+  "54": [
+    "Why is my top (top up by bank transfer charge) while travelling abroad in Europe right away?",
+    "How can I check up (top up by bank transfer charge) even though my balance is sufficient right away?",
+    "I need help with by (top up by bank transfer charge) when using the mobile banking app right away?",
+    "Can you explain why bank (top up by bank transfer charge) for my international wire transfer right away?",
+    "What should I do if transfer (top up by bank transfer charge) when paying in foreign currency right away?",
+    "Is there a way to fix charge (top up by bank transfer charge) without any prior notification on my account?",
+    "I noticed an issue with top charge (top up by bank transfer charge) when paying at the supermarket on my account?",
+    "Could you tell me when account (top up by bank transfer charge) after my transaction yesterday on my account?"
+  ],
+  "55": [
+    "Why is my top (top up by cash or cheque) when paying in foreign currency right away?",
+    "How can I check up (top up by cash or cheque) after my transaction yesterday right away?",
+    "I need help with by (top up by cash or cheque) after depositing money this morning right away?",
+    "Can you explain why cash (top up by cash or cheque) for my online shopping order right away?",
+    "What should I do if or (top up by cash or cheque) when paying in foreign currency right away?",
+    "Is there a way to fix cheque (top up by cash or cheque) when paying at the supermarket on my account?",
+    "I noticed an issue with top cheque (top up by cash or cheque) even though my balance is sufficient on my account?",
+    "Could you tell me when account (top up by cash or cheque) for my international wire transfer on my account?"
+  ],
+  "56": [
+    "Why is my top (top up failed) when paying in foreign currency right away?",
+    "How can I check up (top up failed) during the weekend processing hours right away?",
+    "I need help with failed (top up failed) on my monthly card statement right away?",
+    "Can you explain why top failed (top up failed) with my newly activated debit card right away?",
+    "What should I do if account (top up failed) while travelling abroad in Europe right away?",
+    "Is there a way to fix card (top up failed) when paying in foreign currency on my account?",
+    "I noticed an issue with payment (top up failed) since I updated my account settings on my account?",
+    "Could you tell me when help (top up failed) even though my balance is sufficient on my account?"
+  ],
+  "57": [
+    "Why is my top (top up limits) when using the mobile banking app right away?",
+    "How can I check up (top up limits) after depositing money this morning right away?",
+    "I need help with limits (top up limits) for my online shopping order right away?",
+    "Can you explain why top limits (top up limits) when paying at the supermarket right away?",
+    "What should I do if account (top up limits) when using the mobile banking app right away?",
+    "Is there a way to fix card (top up limits) with my newly activated debit card on my account?",
+    "I noticed an issue with payment (top up limits) during the weekend processing hours on my account?",
+    "Could you tell me when help (top up limits) even though my balance is sufficient on my account?"
+  ],
+  "58": [
+    "Why is my top (top up reverted) after depositing money this morning right away?",
+    "How can I check up (top up reverted) with my newly activated debit card right away?",
+    "I need help with reverted (top up reverted) since I updated my account settings right away?",
+    "Can you explain why top reverted (top up reverted) since I updated my account settings right away?",
+    "What should I do if account (top up reverted) for my online shopping order right away?",
+    "Is there a way to fix card (top up reverted) with my newly activated debit card on my account?",
+    "I noticed an issue with payment (top up reverted) for my online shopping order on my account?",
+    "Could you tell me when help (top up reverted) on my monthly card statement on my account?"
+  ],
+  "59": [
+    "Why is my topping (topping up by card) when paying in foreign currency right away?",
+    "How can I check up (topping up by card) without any prior notification right away?",
+    "I need help with by (topping up by card) when paying in foreign currency right away?",
+    "Can you explain why card (topping up by card) during the weekend processing hours right away?",
+    "What should I do if topping card (topping up by card) since I updated my account settings right away?",
+    "Is there a way to fix account (topping up by card) at the local ATM machine on my account?",
+    "I noticed an issue with payment (topping up by card) after depositing money this morning on my account?",
+    "Could you tell me when topping (topping up by card) when using the mobile banking app on my account?"
+  ],
+  "60": [
+    "Why is my transaction (transaction charged twice) when paying at the supermarket right away?",
+    "How can I check charged (transaction charged twice) during the weekend processing hours right away?",
+    "I need help with twice (transaction charged twice) on my monthly card statement right away?",
+    "Can you explain why transaction twice (transaction charged twice) at the local ATM machine right away?",
+    "What should I do if account (transaction charged twice) when trying to send funds to a friend right away?",
+    "Is there a way to fix card (transaction charged twice) for my online shopping order on my account?",
+    "I noticed an issue with payment (transaction charged twice) when using the mobile banking app on my account?",
+    "Could you tell me when help (transaction charged twice) when paying in foreign currency on my account?"
+  ],
+  "61": [
+    "Why is my transfer (transfer into account) on my monthly card statement right away?",
+    "How can I check into (transfer into account) when using the mobile banking app right away?",
+    "I need help with account (transfer into account) at the local ATM machine right away?",
+    "Can you explain why transfer account (transfer into account) for my online shopping order right away?",
+    "What should I do if card (transfer into account) when paying at the supermarket right away?",
+    "Is there a way to fix payment (transfer into account) when paying in foreign currency on my account?",
+    "I noticed an issue with help (transfer into account) with my newly activated debit card on my account?",
+    "Could you tell me when transfer (transfer into account) since I updated my account settings on my account?"
+  ],
+  "62": [
+    "Why is my transfer (transfer not received by recipient) for my international wire transfer right away?",
+    "How can I check not (transfer not received by recipient) even though my balance is sufficient right away?",
+    "I need help with received (transfer not received by recipient) even though my balance is sufficient right away?",
+    "Can you explain why by (transfer not received by recipient) since I updated my account settings right away?",
+    "What should I do if recipient (transfer not received by recipient) on my monthly card statement right away?",
+    "Is there a way to fix transfer recipient (transfer not received by recipient) with my newly activated debit card on my account?",
+    "I noticed an issue with account (transfer not received by recipient) on my monthly card statement on my account?",
+    "Could you tell me when card (transfer not received by recipient) with my newly activated debit card on my account?"
+  ],
+  "64": [
+    "Why is my transfer (transfer timing) during the weekend processing hours right away?",
+    "How can I check timing (transfer timing) while travelling abroad in Europe right away?",
+    "I need help with transfer timing (transfer timing) when paying at the supermarket right away?",
+    "Can you explain why account (transfer timing) after depositing money this morning right away?",
+    "What should I do if card (transfer timing) for my international wire transfer right away?",
+    "Is there a way to fix payment (transfer timing) when using the mobile banking app on my account?",
+    "I noticed an issue with help (transfer timing) during the weekend processing hours on my account?",
+    "Could you tell me when app (transfer timing) at the local ATM machine on my account?"
+  ],
+  "66": [
+    "Why is my unable (unable to verify identity) when using the mobile banking app right away?",
+    "How can I check to (unable to verify identity) with my newly activated debit card right away?",
+    "I need help with verify (unable to verify identity) during the weekend processing hours right away?",
+    "Can you explain why identity (unable to verify identity) at the local ATM machine right away?",
+    "What should I do if unable identity (unable to verify identity) since I updated my account settings right away?",
+    "Is there a way to fix account (unable to verify identity) for my online shopping order on my account?",
+    "I noticed an issue with card (unable to verify identity) after depositing money this morning on my account?",
+    "Could you tell me when payment (unable to verify identity) even though my balance is sufficient on my account?"
+  ],
+  "67": [
+    "Why is my verify (verify my identity) when paying at the supermarket right away?",
+    "How can I check my (verify my identity) during the weekend processing hours right away?",
+    "I need help with identity (verify my identity) after depositing money this morning right away?",
+    "Can you explain why verify identity (verify my identity) since I updated my account settings right away?",
+    "What should I do if account (verify my identity) on my monthly card statement right away?",
+    "Is there a way to fix card (verify my identity) after my transaction yesterday on my account?",
+    "I noticed an issue with payment (verify my identity) even though my balance is sufficient on my account?",
+    "Could you tell me when help (verify my identity) even though my balance is sufficient on my account?"
+  ],
+  "68": [
+    "Why is my verify (verify source of funds) without any prior notification right away?",
+    "How can I check source (verify source of funds) on my monthly card statement right away?",
+    "I need help with of (verify source of funds) when paying in foreign currency right away?",
+    "Can you explain why funds (verify source of funds) when trying to send funds to a friend right away?",
+    "What should I do if verify funds (verify source of funds) after depositing money this morning right away?",
+    "Is there a way to fix account (verify source of funds) without any prior notification on my account?",
+    "I noticed an issue with card (verify source of funds) when paying at the supermarket on my account?",
+    "Could you tell me when payment (verify source of funds) while travelling abroad in Europe on my account?"
+  ],
+  "69": [
+    "Why is my verify (verify top up) during the weekend processing hours right away?",
+    "How can I check top (verify top up) for my international wire transfer right away?",
+    "I need help with up (verify top up) on my monthly card statement right away?",
+    "Can you explain why verify up (verify top up) without any prior notification right away?",
+    "What should I do if account (verify top up) with my newly activated debit card right away?",
+    "Is there a way to fix card (verify top up) at the local ATM machine on my account?",
+    "I noticed an issue with payment (verify top up) without any prior notification on my account?",
+    "Could you tell me when help (verify top up) even though my balance is sufficient on my account?"
+  ],
+  "70": [
+    "Why is my virtual (virtual card not working) after depositing money this morning right away?",
+    "How can I check card (virtual card not working) since I updated my account settings right away?",
+    "I need help with not (virtual card not working) without any prior notification right away?",
+    "Can you explain why working (virtual card not working) since I updated my account settings right away?",
+    "What should I do if virtual working (virtual card not working) on my monthly card statement right away?",
+    "Is there a way to fix account (virtual card not working) when paying in foreign currency on my account?",
+    "I noticed an issue with payment (virtual card not working) while travelling abroad in Europe on my account?",
+    "Could you tell me when virtual (virtual card not working) when paying in foreign currency on my account?"
+  ],
+  "71": [
+    "Why is my visa (visa or mastercard) even though my balance is sufficient right away?",
+    "How can I check or (visa or mastercard) when paying in foreign currency right away?",
+    "I need help with mastercard (visa or mastercard) when trying to send funds to a friend right away?",
+    "Can you explain why visa mastercard (visa or mastercard) for my online shopping order right away?",
+    "What should I do if account (visa or mastercard) when using the mobile banking app right away?",
+    "Is there a way to fix card (visa or mastercard) on my monthly card statement on my account?",
+    "I noticed an issue with payment (visa or mastercard) after depositing money this morning on my account?",
+    "Could you tell me when help (visa or mastercard) on my monthly card statement on my account?"
+  ],
+  "72": [
+    "Why is my why (why verify identity) when paying at the supermarket right away?",
+    "How can I check verify (why verify identity) when trying to send funds to a friend right away?",
+    "I need help with identity (why verify identity) when trying to send funds to a friend right away?",
+    "Can you explain why why identity (why verify identity) when paying at the supermarket right away?",
+    "What should I do if account (why verify identity) on my monthly card statement right away?",
+    "Is there a way to fix card (why verify identity) for my international wire transfer on my account?",
+    "I noticed an issue with payment (why verify identity) at the local ATM machine on my account?",
+    "Could you tell me when help (why verify identity) on my monthly card statement on my account?"
+  ],
+  "73": [
+    "Why is my wrong (wrong amount of cash received) when trying to send funds to a friend right away?",
+    "How can I check amount (wrong amount of cash received) when paying in foreign currency right away?",
+    "I need help with of (wrong amount of cash received) when using the mobile banking app right away?",
+    "Can you explain why cash (wrong amount of cash received) after depositing money this morning right away?",
+    "What should I do if received (wrong amount of cash received) on my monthly card statement right away?",
+    "Is there a way to fix wrong received (wrong amount of cash received) without any prior notification on my account?",
+    "I noticed an issue with account (wrong amount of cash received) on my monthly card statement on my account?",
+    "Could you tell me when card (wrong amount of cash received) after my transaction yesterday on my account?"
+  ],
+  "74": [
+    "Why is my wrong (wrong exchange rate for cash withdrawal) when using the mobile banking app right away?",
+    "How can I check exchange (wrong exchange rate for cash withdrawal) even though my balance is sufficient right away?",
+    "I need help with rate (wrong exchange rate for cash withdrawal) when paying in foreign currency right away?",
+    "Can you explain why for (wrong exchange rate for cash withdrawal) when using the mobile banking app right away?",
+    "What should I do if cash (wrong exchange rate for cash withdrawal) even though my balance is sufficient right away?",
+    "Is there a way to fix withdrawal (wrong exchange rate for cash withdrawal) for my international wire transfer on my account?",
+    "I noticed an issue with wrong withdrawal (wrong exchange rate for cash withdrawal) when trying to send funds to a friend on my account?",
+    "Could you tell me when account (wrong exchange rate for cash withdrawal) without any prior notification on my account?"
+  ]
+}

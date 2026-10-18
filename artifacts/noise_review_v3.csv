@@ -1,0 +1,37 @@
+nhóm,size,novelty TB,keywords,Intent chiếm đa số (chẩn đoán),tỉ lệ
+9,11,0.153,deposit,receiving_money,0.55
+19,14,0.146,"gas, cash, atm",wrong_amount_of_cash_received,0.36
+13,15,0.137,"landlord, rent, new landlord, new, checked, double",transfer_not_received_by_recipient,1.0
+20,9,0.136,"statement, make, payment, did",card_payment_not_recognised,0.44
+34,8,0.132,"wallet, withdrawal, urgent, stolen, lost wallet, hours",cash_withdrawal_not_recognised,0.88
+35,44,0.129,"freeze, freeze card, using, charges, town, used",card_payment_not_recognised,0.36
+16,68,0.121,"contactless, work, contactless payments, payments, working, use",contactless_not_working,0.91
+12,10,0.111,"tomorrow, rent, wrong account, right account, needs, payment wrong",cancel_transfer,1.0
+27,30,0.11,"delivered, date, specific, certain, choose, certain date",card_delivery_estimate,1.0
+4,15,0.106,"pounds, russian, ruble, russian ruble, ruble pounds, changed",card_payment_wrong_exchange_rate,0.93
+32,21,0.101,"transfer, card, payment, group_32",pending_cash_withdrawal,0.59
+17,17,0.1,"transfer, card, payment, group_17",contactless_not_working,0.56
+30,11,0.099,"transfer, card, payment, group_30",passcode_forgotten,0.52
+28,14,0.098,"transfer, card, payment, group_28",getting_virtual_card,0.47
+7,20,0.096,"transfer, card, payment, group_7",card_acceptance,0.86
+29,8,0.096,"transfer, card, payment, group_29",order_physical_card,0.82
+24,32,0.093,"transfer, card, payment, group_24",exchange_rate,0.73
+18,19,0.091,"transfer, card, payment, group_18",country_support,0.64
+11,30,0.086,"transfer, card, payment, group_11",card_not_working,0.8
+10,18,0.084,"transfer, card, payment, group_10",card_linking,0.67
+23,19,0.084,"transfer, card, payment, group_23",exchange_charge,0.71
+3,25,0.083,"transfer, card, payment, group_3",automatic_top_up,0.85
+25,13,0.082,"transfer, card, payment, group_25",exchange_via_app,0.6
+26,30,0.081,"transfer, card, payment, group_26",extra_charge_on_statement,0.75
+15,19,0.081,"transfer, card, payment, group_15",cash_withdrawal_not_recognised,0.52
+0,30,0.081,"transfer, card, payment, group_0",activate_my_card,0.45
+8,19,0.08,"transfer, card, payment, group_8",card_arrival,0.45
+31,22,0.08,"transfer, card, payment, group_31",pending_card_payment,0.59
+1,16,0.078,"transfer, card, payment, group_1",apple_pay_or_google_pay,0.69
+33,10,0.077,"transfer, card, payment, group_33",pending_top_up,0.8
+2,28,0.077,"transfer, card, payment, group_2",atm_support,0.62
+6,15,0.075,"transfer, card, payment, group_6",card_about_to_expire,0.43
+22,12,0.075,"transfer, card, payment, group_22",disposable_card_limits,0.64
+21,15,0.068,"transfer, card, payment, group_21",direct_debit_payment_not_recognised,0.62
+5,25,0.066,"transfer, card, payment, group_5",cancel_transfer,0.89
+14,15,0.066,"transfer, card, payment, group_14",card_swallowed,0.45

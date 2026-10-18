@@ -1,0 +1,44 @@
+{
+  "train_size": 9993,
+  "test_size": 3076,
+  "num_intents": 77,
+  "num_clusters_v3": 75,
+  "low_purity_clusters": 16,
+  "majority_intents_covered": 67,
+  "bootstrap_v_diff_mean": 0.0431,
+  "bootstrap_v_ci95": [
+    0.0396,
+    0.0479
+  ],
+  "bootstrap_km_diff_mean": -0.0703,
+  "bootstrap_km_ci95": [
+    -0.0744,
+    -0.0664
+  ],
+  "stability_ari_mean": 0.958,
+  "stability_ari_std": 0.016,
+  "stability_v_mean": 0.827,
+  "stability_v_std": 0.003,
+  "novelty_thr_p95": 0.118,
+  "spearman_dbcv": 0.93,
+  "spearman_silhouette": -0.62,
+  "noise_total_sentences": 1037,
+  "noise_candidate_groups": 36,
+  "noise_scattered_ratio": 0.08,
+  "noise_intents_spanned": 54,
+  "noise_top5_intent_share": 0.39,
+  "keyword_stats": {
+    "old": {
+      "noise_words": 35,
+      "repeated_ngrams": 5,
+      "diversity": 0.663,
+      "npmi": 0.102
+    },
+    "new": {
+      "noise_words": 0,
+      "repeated_ngrams": 0,
+      "diversity": 0.786,
+      "npmi": -0.009
+    }
+  }
+}

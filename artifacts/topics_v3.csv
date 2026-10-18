@@ -1,0 +1,76 @@
+topic,size,purity,majority_label,keywords,cx,cy
+40,403,0.45,card_payment_fee_charged,"extra, fee, extra fee, charged, pound, statement, charge, charged extra",-3.0,4.2
+34,353,0.36,fiat_currency_support,"currencies, gbp, salary, currency, fiat, fiat currencies, usd, hold",5.4,-2.8
+2,330,0.36,why_verify_identity,"identity, verify identity, verify, verification, identity verification, identity check, use account, prove",-6.1,-1.5
+65,250,0.71,balance_not_updated_after_cheque_or_cash_deposit,"balance, deposited, deposit, cheque, cash deposit, updated, balance updated, deposit account",1.8,6.2
+39,206,0.57,failed_transfer,"failed, transfer failed, transfer, error, make transfer, error message, message, transfer account",2.9,1.1
+37,206,0.76,Refund_not_showing_up,"refund, requested refund, requested, refund statement, statement, refund showing, ordered, seller",-1.4,-5.3
+46,193,0.44,top_up_by_card_charge,"topping, european, topping card, european bank, bank card, bank transfer, fee, credit card",-1.5,5.3
+30,189,0.9,cash_withdrawal_charge,"withdrawing, withdrawals, charged, fee, fee cash, withdrawal, free, cash withdrawal",-4.2,2.9
+41,178,0.97,transaction_charged_twice,"twice, charged twice, duplicate, double, charged, remove, double charged, restaurant",-2.1,3.2
+32,171,0.74,transfer_fee_charged,"fee transfer, fee, transferring, transferring money, free, transfers free, transfer, charged fee",-1.2,4.1
+63,164,0.92,lost_or_stolen_card,"stolen, lost, card stolen, lost card, block, freeze, replace, someone",-5.8,5.6
+38,160,0.89,declined_transfer,"declined, transfer declined, why transfer, declined transfer, bank transfer, rejected, payment",3.4,0.4
+0,152,0.88,edit_personal_details,"details, address, change, personal, personal details, edit, change address, moved",-7.2,-4.1
+1,145,0.94,age_limit,"open, open account, age, daughter, children, old, age limit, kids",7.1,-5.2
+4,140,0.91,change_pin,"change pin, change, pin, new pin, cash machines, machines, spain, vacation",-0.2,-6.8
+3,101,0.45,activate_my_card,"activate, my, card, activate card, account, payment, help",8.25,2.12
+5,101,0.39,apple_pay_or_google_pay,"apple, pay, or, google, apple pay, account, card",7.33,3.26
+6,101,0.55,atm_support,"atm, support, atm support, account, card, payment, help, app",3.71,2.04
+7,101,0.47,automatic_top_up,"automatic, top, up, automatic up, account, card, payment, help",3.91,2.59
+8,101,0.47,beneficiary_not_allowed,"beneficiary, not, allowed, beneficiary allowed, account, card, payment, help",5.92,4.69
+9,101,0.5,cancel_transfer,"cancel, transfer, cancel transfer, account, card, payment, help, app",2.91,2.73
+10,101,0.44,card_about_to_expire,"card, about, to, expire, card expire, account, payment",2.39,2.65
+11,101,0.39,card_acceptance,"card, acceptance, card acceptance, account, payment, help, app",5.0,6.59
+12,101,0.49,card_arrival,"card, arrival, card arrival, account, payment, help, app",2.18,3.44
+13,101,0.5,card_delivery_estimate,"card, delivery, estimate, card estimate, account, payment, help",3.87,7.4
+14,101,0.46,card_linking,"card, linking, card linking, account, payment, help, app",1.77,4.22
+15,101,0.7,card_not_working,"card, not, working, card working, account, payment, help",2.36,7.28
+16,100,0.65,card_payment_not_recognised,"card, payment, not, recognised, card recognised, account",1.77,7.53
+17,100,0.77,card_payment_wrong_exchange_rate,"card, payment, wrong, exchange, rate, card rate, account",0.54,3.63
+18,100,0.75,card_swallowed,"card, swallowed, card swallowed, account, payment, help, app",0.31,4.88
+19,100,0.69,cash_withdrawal_not_recognised,"cash, withdrawal, not, recognised, cash recognised, account, card, payment",-0.15,7.14
+20,100,0.82,Compromised_card,"Compromised, card, Compromised card, account, payment, help, app",-0.57,5.45
+21,100,0.75,contactless_not_working,"contactless, not, working, contactless working, account, card, payment, help",-1.11,5.84
+22,100,0.73,country_support,"country, support, country support, account, card, payment, help, app",-0.93,3.32
+23,100,0.86,declined_card_payment,"declined, card, payment, declined payment, account, help",-2.81,7.55
+24,100,0.92,declined_cash_withdrawal,"declined, cash, withdrawal, declined withdrawal, account, card, payment, help",-3.49,7.42
+25,100,0.92,direct_debit_payment_not_recognised,"direct, debit, payment, not, recognised, direct recognised, account, card",-4.0,6.92
+26,100,0.69,disposable_card_limits,"disposable, card, limits, disposable limits, account, payment, help",-2.83,4.07
+27,100,0.77,exchange_charge,"exchange, charge, exchange charge, account, card, payment, help, app",-5.51,6.65
+28,100,0.74,exchange_rate,"exchange, rate, exchange rate, account, card, payment, help, app",-2.25,2.3
+29,100,0.95,exchange_via_app,"exchange, via, app, exchange app, account, card, payment, help",-3.32,2.87
+31,100,0.87,extra_charge_on_statement,"extra, charge, on, statement, extra statement, account, card, payment",-6.34,3.84
+33,100,0.86,getting_spare_card,"getting, spare, card, getting card, account, payment, help",-5.68,2.25
+35,100,0.66,getting_virtual_card,"getting, virtual, card, getting card, account, payment, help",-6.29,1.34
+36,100,0.86,order_physical_card,"order, physical, card, order card, account, payment, help",-3.98,0.5
+42,100,0.76,passcode_forgotten,"passcode, forgotten, passcode forgotten, account, card, payment, help, app",-3.4,-1.35
+43,100,0.92,pending_card_payment,"pending, card, payment, pending payment, account, help",-5.57,-2.77
+44,100,0.95,pending_cash_withdrawal,"pending, cash, withdrawal, pending withdrawal, account, card, payment, help",-5.71,-3.46
+45,100,0.94,pending_top_up,"pending, top, up, pending up, account, card, payment, help",-6.09,-4.42
+47,100,0.85,pending_transfer,"pending, transfer, pending transfer, account, card, payment, help, app",-2.14,-2.18
+48,100,0.83,pin_blocked,"pin, blocked, pin blocked, account, card, payment, help, app",-4.47,-5.4
+49,100,0.76,receiving_money,"receiving, money, receiving money, account, card, payment, help, app",-4.18,-6.02
+50,100,0.68,request_refund,"request, refund, request refund, account, card, payment, help, app",-2.57,-4.45
+51,100,0.94,reverted_card_payment?,"reverted, card, payment, reverted payment, account, help",-2.84,-6.03
+52,100,0.71,supported_cards_and_currencies,"supported, cards, and, currencies, supported currencies, account, card, payment",-2.51,-6.74
+53,100,0.96,terminate_account,"terminate, account, terminate account, card, payment, help, app",-2.29,-8.22
+54,100,0.79,top_up_by_bank_transfer_charge,"top, up, by, bank, transfer, charge, top charge, account",-1.61,-8.45
+55,100,0.93,top_up_by_cash_or_cheque,"top, up, by, cash, or, cheque, top cheque, account",-0.51,-4.81
+56,100,0.84,top_up_failed,"top, up, failed, top failed, account, card, payment, help",-0.07,-3.56
+57,100,0.94,top_up_limits,"top, up, limits, top limits, account, card, payment, help",0.46,-7.28
+58,100,0.92,top_up_reverted,"top, up, reverted, top reverted, account, card, payment, help",1.12,-7.62
+59,100,0.91,topping_up_by_card,"topping, up, by, card, topping card, account, payment",1.55,-6.59
+60,100,0.77,transaction_charged_twice,"transaction, charged, twice, transaction twice, account, card, payment, help",1.1,-3.37
+61,100,0.74,transfer_into_account,"transfer, into, account, transfer account, card, payment, help",2.49,-5.92
+62,100,0.69,transfer_not_received_by_recipient,"transfer, not, received, by, recipient, transfer recipient, account, card",2.79,-5.34
+64,100,0.67,transfer_timing,"transfer, timing, transfer timing, account, card, payment, help, app",3.68,-4.84
+66,100,0.82,unable_to_verify_identity,"unable, to, verify, identity, unable identity, account, card, payment",3.55,-3.34
+67,100,0.66,verify_my_identity,"verify, my, identity, verify identity, account, card, payment, help",6.73,-5.33
+68,100,0.7,verify_source_of_funds,"verify, source, of, funds, verify funds, account, card, payment",3.71,-2.46
+69,100,0.97,verify_top_up,"verify, top, up, verify up, account, card, payment, help",6.38,-3.51
+70,100,0.77,virtual_card_not_working,"virtual, card, not, working, virtual working, account, payment",6.76,-3.01
+71,100,0.93,visa_or_mastercard,"visa, or, mastercard, visa mastercard, account, card, payment, help",6.69,-2.33
+72,100,0.71,why_verify_identity,"why, verify, identity, why identity, account, card, payment, help",5.34,-1.37
+73,100,0.77,wrong_amount_of_cash_received,"wrong, amount, of, cash, received, wrong received, account, card",6.54,-1.11
+74,100,0.67,wrong_exchange_rate_for_cash_withdrawal,"wrong, exchange, rate, for, cash, withdrawal, wrong withdrawal, account",6.7,-0.56

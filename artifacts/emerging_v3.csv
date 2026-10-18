@@ -1,0 +1,4 @@
+Detector,AUROC,Recall,FPR,Lift (R/FPR),Precision,Base rate,Precision/Base,Intent mới khôi phục
+HDBSCAN 1-strength,0.644,0.203,0.105,1.942,0.368,0.233,1.572,0.8
+HDBSCAN noise flag,0.539,0.176,0.097,1.821,0.355,0.233,1.515,0.733
+kNN cosine distance,0.864,0.552,0.1,5.514,0.621,0.233,2.666,1.0
