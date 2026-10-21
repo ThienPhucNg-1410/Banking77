@@ -1506,3 +1506,98 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     st.caption(f"Đang hiển thị {len(disp_p)} / 76 cụm nghiệp vụ.")
 
 
+def render_tab_report():
+    """Render Tab 5: Báo cáo Toàn diện Đồ án Data Mining với bộ điều hướng từng chương."""
+    st.subheader("📖 Báo Cáo Toàn Diện Đồ Án Khai Phá Dữ Liệu (BANKING77)")
+    st.caption("Tài liệu nghiên cứu khoa học và khai phá tri thức chuyên sâu 6 chương hoàn chỉnh.")
+
+    report_path = "BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.md"
+    html_path = "BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.html"
+
+    if not os.path.exists(report_path):
+        st.error(f"Chưa tìm thấy tệp `{report_path}`.")
+        return
+
+    with open(report_path, "r", encoding="utf-8") as f:
+        report_text = f.read()
+
+    # Thanh công cụ trên cùng
+    c_top1, c_top2, c_top3 = st.columns([1.4, 1.3, 1.3])
+    with c_top1:
+        st.download_button(
+            label="⬇️ Tải File Markdown (.md)",
+            data=report_text,
+            file_name="BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.md",
+            mime="text/markdown",
+            use_container_width=True
+        )
+    with c_top2:
+        if os.path.exists(html_path):
+            with open(html_path, "r", encoding="utf-8") as f_html:
+                html_data = f_html.read()
+            st.download_button(
+                label="🌐 Tải Bản Web Đẹp (.html)",
+                data=html_data,
+                file_name="BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.html",
+                mime="text/html",
+                use_container_width=True
+            )
+    with c_top3:
+        st.markdown(
+            f"""
+            <a href="file:///{os.path.abspath(html_path).replace(chr(92), '/')}" target="_blank" style="text-decoration: none;">
+                <div style="background: linear-gradient(135deg, #0284C7, #2563EB); color: white; padding: 9px 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 13.5px;">
+                    📑 Mở Trình Đọc HTML Độc Lập
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.markdown("---")
+
+    # Chia theo từng chương
+    parts = re.split(r'\n(?=## CHƯƠNG \d+:)', report_text)
+
+    chapter_options = [
+        "📖 Toàn bộ Báo Cáo (Xem xuyên suốt cả 6 chương)",
+        "📋 Phần đầu: Mục lục & Giới thiệu Đề tài",
+        "Chương 1: Giới thiệu Bài toán & Bối cảnh Nghiệp vụ",
+        "Chương 2: Phân tích Khám phá Dữ liệu (EDA)",
+        "Chương 3: Quá trình Thực hiện & Thiết kế Pipeline v3",
+        "Chương 4: Kết quả Thực hiện & Đối chuẩn Định lượng",
+        "Chương 5: Khai phá Dữ liệu Chuyên sâu Hậu Thuật toán",
+        "Chương 6: Khuyến nghị Vận hành & Kết luận Thực tiễn"
+    ]
+
+    sel_chap = st.selectbox(
+        "🎯 Chọn Chương bạn muốn đọc nhanh:",
+        options=chapter_options,
+        index=0
+    )
+
+    st.markdown("---")
+
+    if sel_chap.startswith("📖 Toàn bộ"):
+        content_to_show = report_text
+    elif sel_chap.startswith("📋 Phần đầu"):
+        content_to_show = parts[0] if len(parts) > 0 else report_text
+    elif "Chương 1" in sel_chap and len(parts) > 1:
+        content_to_show = parts[1]
+    elif "Chương 2" in sel_chap and len(parts) > 2:
+        content_to_show = parts[2]
+    elif "Chương 3" in sel_chap and len(parts) > 3:
+        content_to_show = parts[3]
+    elif "Chương 4" in sel_chap and len(parts) > 4:
+        content_to_show = parts[4]
+    elif "Chương 5" in sel_chap and len(parts) > 5:
+        content_to_show = parts[5]
+    elif "Chương 6" in sel_chap and len(parts) > 6:
+        content_to_show = parts[6]
+    else:
+        content_to_show = report_text
+
+    st.markdown(content_to_show, unsafe_allow_html=True)
+
+
+

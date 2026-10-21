@@ -21,6 +21,7 @@ from utils.viz import (
 from components.tab_views import (
     render_tab_benchmark,
     render_tab_patterns,
+    render_tab_report,
     analyze_sentence_pattern,
     render_pattern_analysis_card,
 )
@@ -86,7 +87,8 @@ tabs = st.tabs([
     "1. 🗺️ Dựng Cụm & Khám phá Toàn cảnh",
     "2. 🧩 Khai phá Pattern & Quy luật Ngầm",
     "3. 🧪 Thử nghiệm Câu mới & Giải thích",
-    "4. 📊 Đánh giá & So sánh Thuật toán"
+    "4. 📊 Đánh giá & So sánh Thuật toán",
+    "5. 📖 Báo Cáo Toàn Diện Dự Án"
 ])
 
 # -------------------------------------------------------------------------
@@ -397,3 +399,9 @@ with tabs[2]:
 # -------------------------------------------------------------------------
 with tabs[3]:
     render_tab_benchmark(bench_df, score_df, seed_df, meta)
+
+# -------------------------------------------------------------------------
+# TAB 5: BÁO CÁO TOÀN DIỆN DỰ ÁN
+# -------------------------------------------------------------------------
+with tabs[4]:
+    render_tab_report()

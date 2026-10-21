@@ -417,3 +417,4 @@ flowchart TD
 Đồ án đã chứng minh sự kết hợp hoàn hảo giữa kỹ thuật biểu diễn ngôn ngữ hiện đại (Dense Embedding), phương pháp bảo toàn mật độ phi tuyến (UMAP) và thuật toán phân cụm phân cấp không giám sát (HDBSCAN). 
 
 Không chỉ dừng lại ở các con số độ đo học thuật ($V\text{-measure} = 0,833$, $\text{DBCV} = 0,432$), dự án đã thực sự khai phá ra các **tri thức nghiệp vụ hành vi sâu sắc** (bản đồ điểm nóng WHY/HOW, mỏ neo Lift 195x, phân định nền tảng di động và cấp độ khẩn cấp) mang lại giá trị thực tế to lớn cho ngành Ngân hàng số.
+
