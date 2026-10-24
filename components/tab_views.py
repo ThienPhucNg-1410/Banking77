@@ -1,3 +1,4 @@
+import os
 # components/tab_views.py
 import re
 import json
@@ -1522,7 +1523,7 @@ def render_tab_report():
         report_text = f.read()
 
     # Thanh công cụ trên cùng
-    c_top1, c_top2, c_top3 = st.columns([1.4, 1.3, 1.3])
+    c_top1, c_top2 = st.columns(2)
     with c_top1:
         st.download_button(
             label="⬇️ Tải File Markdown (.md)",
@@ -1536,23 +1537,12 @@ def render_tab_report():
             with open(html_path, "r", encoding="utf-8") as f_html:
                 html_data = f_html.read()
             st.download_button(
-                label="🌐 Tải Bản Web Đẹp (.html)",
+                label="🌐 Tải Bản Web HTML (.html)",
                 data=html_data,
                 file_name="BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.html",
                 mime="text/html",
                 use_container_width=True
             )
-    with c_top3:
-        st.markdown(
-            f"""
-            <a href="file:///{os.path.abspath(html_path).replace(chr(92), '/')}" target="_blank" style="text-decoration: none;">
-                <div style="background: linear-gradient(135deg, #0284C7, #2563EB); color: white; padding: 9px 12px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 13.5px;">
-                    📑 Mở Trình Đọc HTML Độc Lập
-                </div>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
 
     st.markdown("---")
 

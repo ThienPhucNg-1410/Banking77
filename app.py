@@ -95,25 +95,20 @@ def load_all_artifacts(art_dir: str = "artifacts"):
 meta, rep_map, topics_df, sweep_df, scatter_df, bench_df, score_df, seed_df, emerg_df, noise_df, pattern_df = load_all_artifacts()
 
 with st.sidebar:
-    st.markdown("### 🏦 Đồ án Data Mining")
-    st.markdown("**Gom cụm & Khai phá Tri thức từ BANKING77**")
-    st.caption("Ứng dụng phân cụm mật độ phân cấp (HDBSCAN), trích xuất chủ đề (c-TF-IDF) & khai phá mẫu hình ngôn ngữ.")
+    st.markdown("### 🏦 BANKING77 Demo")
+    st.caption("Khám phá Chủ đề & Khai phá Mẫu hình Ngữ nghĩa")
     st.markdown("---")
-    run_mode = st.radio(
-        "⚡ Tốc độ suy luận:",
-        options=["Chế độ nhanh (Dữ liệu tính sẵn)", "Pipeline thật (Sentence-Transformers)"],
-        index=0
-    )
-    use_real_encoder = (run_mode == "Pipeline thật (Sentence-Transformers)")
+    st.metric("📦 Tập Train", f"{fmt_int_vi(meta['train_size'])} câu", f"{meta['num_intents']} intent gốc")
+    st.metric("🎯 Cụm HDBSCAN", f"{meta['num_clusters_v3']} cụm", "Tự động phát hiện")
+    st.metric("💎 V-measure", f"{fmt_num_vi(meta.get('v_measure_v3', 0.833), 3)}", "Độ khớp chuẩn")
     st.markdown("---")
-    st.markdown(
-        f"**📊 Thông số bộ dữ liệu:**\n"
-        f"- Tập huấn luyện: `{fmt_int_vi(meta['train_size'])}` câu (`{meta['num_intents']}` nhãn)\n"
-        f"- Không gian nén: UMAP 5D (Cosine)\n"
-        f"- Gom cụm: HDBSCAN (`{meta['num_clusters_v3']}` cụm tự nhiên)\n"
-        f"- Đánh giá: V-measure `{fmt_num_vi(meta.get('v_measure_v3', 0.833), 3)}`"
-    )
-    st.info("💡 **Gợi ý thao tác:** Chuyển đổi giữa 4 Tab phía trên để xem quy trình dựng cụm, các pattern khai phá được, và thử nghiệm câu hỏi mới.")
+    with st.expander("⚙️ Tuỳ chọn nâng cao", expanded=False):
+        run_mode = st.radio(
+            "Tốc độ suy luận:",
+            options=["Nhanh (Dữ liệu tính sẵn)", "Pipeline thật (Transformer)"],
+            index=0
+        )
+    use_real_encoder = (run_mode == "Pipeline thật (Transformer)")
 
 st.title("🏦 Khai phá Dữ liệu Chủ đề Ngân hàng (BANKING77)")
 st.caption("Đồ án Khai phá Dữ liệu: Phân cụm mật độ phân cấp (HDBSCAN), Trích xuất từ khoá (c-TF-IDF) & Khai phá Mẫu hình ngữ nghĩa.")
@@ -148,15 +143,15 @@ with tabs[0]:
     step_choice = st.radio(
         "Chọn bước trong quy trình Khai phá Dữ liệu để quan sát trực quan:",
         options=[
-            "Bước 1: Trích xuất đặc trưng (Text → Vector 384D)",
-            "Bước 2: Giảm chiều bảo toàn mật độ (UMAP 5D)",
-            "Bước 3: Gom cụm mật độ HDBSCAN & Thử nghiệm tham số",
-            "Bước 4: Mô hình hoá chủ đề c-TF-IDF & Soi chi tiết từng cụm"
+            "1. Text → 384D",
+            "2. UMAP 5D",
+            "3. Phân cụm HDBSCAN",
+            "4. Soi chi tiết 75 Cụm"
         ],
         horizontal=True,
         index=3
     )
-    step_num = int(step_choice.split(":")[0].replace("Bước ", ""))
+    step_num = int(step_choice.split(".")[0].strip())
 
     color_by = "topic"
     focus_intent = None
