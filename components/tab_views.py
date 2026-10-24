@@ -1508,6 +1508,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
 
 
 def render_tab_report():
+    import os
+    import re
     """Render Tab 5: Báo cáo Toàn diện Đồ án Data Mining với bộ điều hướng từng chương."""
     st.subheader("📖 Báo Cáo Toàn Diện Đồ Án Khai Phá Dữ Liệu (BANKING77)")
     st.caption("Tài liệu nghiên cứu khoa học và khai phá tri thức chuyên sâu 6 chương hoàn chỉnh.")
