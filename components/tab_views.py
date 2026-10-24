@@ -62,10 +62,10 @@ def render_tab_overview(meta: dict, topics_df: pd.DataFrame, scatter_df: pd.Data
     with arch_cols[0]:
         st.markdown(
             """
-            <div style="background: rgba(59, 130, 246, 0.08); border: 1.5px solid #3B82F6; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #60A5FA; font-size: 14px;">CHẶNG 1: EMBEDDING</div>
+            <div style="background: #EFF6FF; border: 1.5px solid #3B82F6; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #2563EB; font-size: 14px;">CHẶNG 1: EMBEDDING</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">BGE-small-en-v1.5</div>
-                <div style="font-size: 12.5px; color: #94A3B8; line-height: 1.4;">
+                <div style="font-size: 12.5px; color: #475569; line-height: 1.4;">
                     • 384 chiều, chuẩn hoá L2<br>
                     • Bắt trọn ngữ nghĩa câu hỏi ngân hàng<br>
                     • Vượt trội MiniLM-L6 (+0,043 V-measure)
@@ -77,10 +77,10 @@ def render_tab_overview(meta: dict, topics_df: pd.DataFrame, scatter_df: pd.Data
     with arch_cols[1]:
         st.markdown(
             """
-            <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid #10B981; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #34D399; font-size: 14px;">CHẶNG 2: GIẢM CHIỀU</div>
+            <div style="background: #F0FDF4; border: 1.5px solid #10B981; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #059669; font-size: 14px;">CHẶNG 2: GIẢM CHIỀU</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">UMAP 5D (Cosine)</div>
-                <div style="font-size: 12.5px; color: #94A3B8; line-height: 1.4;">
+                <div style="font-size: 12.5px; color: #475569; line-height: 1.4;">
                     • n_neighbors=30, min_dist=0<br>
                     • Co cụm mật độ phi cầu mạnh mẽ<br>
                     • Vượt qua lời nguyền số chiều (Curse of Dim)
@@ -92,10 +92,10 @@ def render_tab_overview(meta: dict, topics_df: pd.DataFrame, scatter_df: pd.Data
     with arch_cols[2]:
         st.markdown(
             """
-            <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #FBBF24; font-size: 14px;">CHẶNG 3: PHÂN CỤM</div>
+            <div style="background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #D97706; font-size: 14px;">CHẶNG 3: PHÂN CỤM</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">HDBSCAN (mcs=50, EOM)</div>
-                <div style="font-size: 12.5px; color: #94A3B8; line-height: 1.4;">
+                <div style="font-size: 12.5px; color: #475569; line-height: 1.4;">
                     • Tự khám phá 75 cụm tự nhiên<br>
                     • Không ép buộc số K biết trước<br>
                     • Cơ chế cờ Noise (-1) bảo vệ độ thuần
@@ -107,10 +107,10 @@ def render_tab_overview(meta: dict, topics_df: pd.DataFrame, scatter_df: pd.Data
     with arch_cols[3]:
         st.markdown(
             """
-            <div style="background: rgba(168, 85, 247, 0.08); border: 1.5px solid #A855F7; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #C084FC; font-size: 14px;">CHẶNG 4: GIÁM SÁT</div>
+            <div style="background: #FAF5FF; border: 1.5px solid #A855F7; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #7C3AED; font-size: 14px;">CHẶNG 4: GIÁM SÁT</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">c-TF-IDF & kNN Novelty</div>
-                <div style="font-size: 12.5px; color: #94A3B8; line-height: 1.4;">
+                <div style="font-size: 12.5px; color: #475569; line-height: 1.4;">
                     • 8 từ khoá c-TF-IDF theo từng câu<br>
                     • kNN khoảng cách 384D (ngưỡng p95=0,118)<br>
                     • Phân loại 4 trạng thái vận hành
@@ -270,7 +270,7 @@ def render_tab_benchmark(bench_df: pd.DataFrame, score_df: pd.DataFrame, seed_df
     with s_col2:
         st.markdown(
             f"""
-            <div style="background: rgba(30, 58, 138, 0.12); border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px;">
+            <div style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px;">
                 <div style="font-weight: 700; font-size: 15px; margin-bottom: 6px;">Kết luận Kiểm định Tính lặp lại:</div>
                 <div style="font-size: 13.5px; line-height: 1.55;">
                     • <strong>Độ tương đồng ARI giữa các lần chạy:</strong> <code>0,958 ± 0,016</code> (Cực kỳ ổn định, không phụ thuộc vào khởi tạo ngẫu nhiên).<br>
@@ -323,8 +323,8 @@ def render_tab_emerging(emerg_df: pd.DataFrame, meta: dict):
     with e_col1:
         st.markdown(
             """
-            <div style="background: rgba(239, 68, 68, 0.08); border: 1.5px solid #EF4444; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #F87171; font-size: 13px;">THỬ NGHIỆM 1</div>
+            <div style="background: #FEF2F2; border: 1.5px solid #EF4444; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #DC2626; font-size: 13px;">THỬ NGHIỆM 1</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">Tiền mã hoá (Crypto)</div>
                 <div style="font-size: 13px; line-height: 1.5;">
                     • <strong>Ví dụ:</strong> <i>"Can I buy Bitcoin or Ethereum on the app?"</i><br>
@@ -338,8 +338,8 @@ def render_tab_emerging(emerg_df: pd.DataFrame, meta: dict):
     with e_col2:
         st.markdown(
             """
-            <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #FBBF24; font-size: 13px;">THỬ NGHIỆM 2</div>
+            <div style="background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #D97706; font-size: 13px;">THỬ NGHIỆM 2</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">Vay thế chấp (Mortgage)</div>
                 <div style="font-size: 13px; line-height: 1.5;">
                     • <strong>Ví dụ:</strong> <i>"What is the interest rate for a home loan?"</i><br>
@@ -353,8 +353,8 @@ def render_tab_emerging(emerg_df: pd.DataFrame, meta: dict):
     with e_col3:
         st.markdown(
             """
-            <div style="background: rgba(168, 85, 247, 0.08); border: 1.5px solid #A855F7; border-radius: 10px; padding: 14px;">
-                <div style="font-weight: 800; color: #C084FC; font-size: 13px;">THỬ NGHIỆM 3</div>
+            <div style="background: #FAF5FF; border: 1.5px solid #A855F7; border-radius: 10px; padding: 14px;">
+                <div style="font-weight: 800; color: #7C3AED; font-size: 13px;">THỬ NGHIỆM 3</div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">Đầu tư Chứng khoán (Stocks)</div>
                 <div style="font-size: 13px; line-height: 1.5;">
                     • <strong>Ví dụ:</strong> <i>"How do I trade US stocks and ETFs?"</i><br>
@@ -703,9 +703,9 @@ def render_tab_recommendations():
     with g_col1:
         st.markdown(
             """
-            <div style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid #EF4444; padding: 14px 18px; border-radius: 8px; margin-bottom: 14px;">
-                <div style="font-weight: 700; font-size: 15px; color: #F87171;">1. Giới hạn Ngôn ngữ (English-only)</div>
-                <div style="font-size: 13px; line-height: 1.5; color: #CBD5E1; margin-top: 4px;">
+            <div style="background: #FEF2F2; border-left: 4px solid #EF4444; padding: 14px 18px; border-radius: 8px; margin-bottom: 14px;">
+                <div style="font-weight: 700; font-size: 15px; color: #DC2626;">1. Giới hạn Ngôn ngữ (English-only)</div>
+                <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-top: 4px;">
                     Encoder <code>BAAI/bge-small-en-v1.5</code> được tối ưu hoá riêng cho tiếng Anh. Khi người dùng nhập câu tiếng Việt, vector nhúng sẽ bị lệch và điểm Novelty không còn đáng tin cậy. Cần chuyển sang mô hình đa ngôn ngữ (Multilingual E5 hoặc BGE-M3) khi triển khai tại Việt Nam.
                 </div>
             </div>
@@ -714,9 +714,9 @@ def render_tab_recommendations():
         )
         st.markdown(
             """
-            <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #F59E0B; padding: 14px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; font-size: 15px; color: #FBBF24;">2. Cụm Lai ghép (Hybrid Clusters)</div>
-                <div style="font-size: 13px; line-height: 1.5; color: #CBD5E1; margin-top: 4px;">
+            <div style="background: #FFFBEB; border-left: 4px solid #F59E0B; padding: 14px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; font-size: 15px; color: #D97706;">2. Cụm Lai ghép (Hybrid Clusters)</div>
+                <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-top: 4px;">
                     Có 16/75 cụm có độ tinh khiết Purity < 0,60 (điển hình như Cụm 34 gom chung 3 intent về tiền tệ và tỷ giá). Trong không gian UMAP, các nghiệp vụ này có mật độ đan xen nhau, HDBSCAN không thể tách rời nếu không có sự can thiệp của tri thức chuyên gia.
                 </div>
             </div>
@@ -727,9 +727,9 @@ def render_tab_recommendations():
     with g_col2:
         st.markdown(
             """
-            <div style="background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px; margin-bottom: 14px;">
-                <div style="font-weight: 700; font-size: 15px; color: #60A5FA;">3. Chi phí Tính toán khi Mở rộng (Scalability)</div>
-                <div style="font-size: 13px; line-height: 1.5; color: #CBD5E1; margin-top: 4px;">
+            <div style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px; margin-bottom: 14px;">
+                <div style="font-weight: 700; font-size: 15px; color: #2563EB;">3. Chi phí Tính toán khi Mở rộng (Scalability)</div>
+                <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-top: 4px;">
                     Thuật toán kNN tìm kiếm chính xác láng giềng ở 384D có độ phức tạp O(N·D). Khi số lượng câu hỏi trong ngân hàng tích luỹ lên tới hàng triệu mẫu, cần chuyển sang thư viện tìm kiếm láng giềng xấp xỉ như <strong>FAISS</strong> hoặc <strong>HNSW</strong> để đảm bảo độ trễ phản hồi < 50ms.
                 </div>
             </div>
@@ -738,9 +738,9 @@ def render_tab_recommendations():
         )
         st.markdown(
             """
-            <div style="background: rgba(168, 85, 247, 0.08); border-left: 4px solid #A855F7; padding: 14px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; font-size: 15px; color: #C084FC;">4. Giới hạn của Hình chiếu Trực quan 2D</div>
-                <div style="font-size: 13px; line-height: 1.5; color: #CBD5E1; margin-top: 4px;">
+            <div style="background: #FAF5FF; border-left: 4px solid #A855F7; padding: 14px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; font-size: 15px; color: #7C3AED;">4. Giới hạn của Hình chiếu Trực quan 2D</div>
+                <div style="font-size: 13px; line-height: 1.5; color: #334155; margin-top: 4px;">
                     Hình chiếu 2D trên giao diện chỉ dùng để hỗ trợ con người quan sát trực quan. Thuật toán HDBSCAN thực tế chạy trên không gian UMAP 5D và kNN chạy trên 384D. Đôi khi hai điểm nằm gần nhau trên biểu đồ 2D nhưng khoảng cách thực ở 384D lại rất xa nhau.
                 </div>
             </div>
@@ -859,15 +859,15 @@ def render_pattern_analysis_card(pattern_info: dict):
     with p_col1:
         st.markdown(
             f"""
-            <div style="background: rgba(30, 41, 59, 0.45); border: 1.5px solid {q['color']}; border-radius: 10px; padding: 14px 16px; height: 100%;">
+            <div style="background: #F8FAFC; border: 1.5px solid {q['color']}; border-radius: 10px; padding: 14px 16px; height: 100%;">
                 <div style="font-size: 11.5px; font-weight: 800; color: {q['color']}; text-transform: uppercase;">
                     1. Mẫu Cấu trúc Câu hỏi (Structural Pattern)
                 </div>
                 <div style="font-size: 16px; font-weight: 700; margin: 4px 0;">{q['badge']}</div>
-                <div style="font-size: 13px; line-height: 1.45; color: #CBD5E1; margin-bottom: 8px;">
+                <div style="font-size: 13px; line-height: 1.45; color: #334155; margin-bottom: 8px;">
                     {q['desc']}
                 </div>
-                <div style="font-size: 12px; color: #93C5FD; background: rgba(59, 130, 246, 0.12); padding: 6px 10px; border-radius: 6px;">
+                <div style="font-size: 12px; color: #1D4ED8; background: #EFF6FF; padding: 6px 10px; border-radius: 6px;">
                     💡 <strong>Hành động Chatbot / NV:</strong> {q['bot_action']}
                 </div>
             </div>
@@ -879,17 +879,17 @@ def render_pattern_analysis_card(pattern_info: dict):
         if b and b["is_very_close"]:
             st.markdown(
                 f"""
-                <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px 16px; height: 100%;">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #FBBF24; text-transform: uppercase;">
+                <div style="background: #FFFBEB; border: 1.5px solid #F59E0B; border-radius: 10px; padding: 14px 16px; height: 100%;">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D97706; text-transform: uppercase;">
                         2. Cảnh báo Cụm Sinh đôi Cận biên (Boundary Twin)
                     </div>
                     <div style="font-size: 15px; font-weight: 700; margin: 4px 0; color: #F59E0B;">
                         ⚠️ Nằm sát vách Topic {b['twin_topic']:02d} (d_UMAP = {b['d_umap']:.2f}, d_Cos = {b['d_cos']:.2f})
                     </div>
-                    <div style="font-size: 12.5px; line-height: 1.45; color: #E2E8F0; margin-bottom: 6px;">
+                    <div style="font-size: 12.5px; line-height: 1.45; color: #334155; margin-bottom: 6px;">
                         Từ khoá cụm sinh đôi kề cận: <code>{b['twin_keywords']}</code>
                     </div>
-                    <div style="font-size: 12px; color: #FCD34D;">
+                    <div style="font-size: 12px; color: #B45309;">
                         📌 <strong>Lưu ý phân biệt:</strong> Ranh giới ngữ nghĩa ở vùng này rất mỏng manh. Cần kiểm tra kỹ xem khách hàng đang hỏi về chủ đề hiện tại hay chủ đề sinh đôi kề bên!
                     </div>
                 </div>
@@ -899,14 +899,14 @@ def render_pattern_analysis_card(pattern_info: dict):
         else:
             st.markdown(
                 f"""
-                <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid #10B981; border-radius: 10px; padding: 14px 16px; height: 100%;">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #34D399; text-transform: uppercase;">
+                <div style="background: #F0FDF4; border: 1.5px solid #10B981; border-radius: 10px; padding: 14px 16px; height: 100%;">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #059669; text-transform: uppercase;">
                         2. Ranh giới Cụm Độc lập (Clear Boundary)
                     </div>
                     <div style="font-size: 15px; font-weight: 700; margin: 4px 0; color: #10B981;">
                         ✅ Cụm có biên giới rõ ràng, ít chồng lấn
                     </div>
-                    <div style="font-size: 13px; line-height: 1.45; color: #CBD5E1; margin-top: 4px;">
+                    <div style="font-size: 13px; line-height: 1.45; color: #334155; margin-top: 4px;">
                         Chủ đề này cách biệt tốt với các cụm xung quanh trong không gian UMAP 5D, giảm thiểu tối đa rủi ro nhầm lẫn nghiệp vụ.
                     </div>
                 </div>
@@ -982,11 +982,11 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     # Hộp giải thích khoa học bản chất bóc tách cú pháp (Giải đáp thắc mắc 1, 2, 3)
     st.markdown(
         """
-        <div style="background: rgba(30, 41, 59, 0.5); border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
-            <div style="font-weight: 700; font-size: 15px; color: #60A5FA; margin-bottom: 6px;">
+        <div style="background: #F8FAFC; border-left: 4px solid #3B82F6; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
+            <div style="font-weight: 700; font-size: 15px; color: #2563EB; margin-bottom: 6px;">
                 💡 Nguyên lý Khoa học: Tại sao HDBSCAN lại dẫn đến việc bóc tách cú pháp mở đầu câu?
             </div>
-            <div style="font-size: 13.5px; line-height: 1.6; color: #CBD5E1;">
+            <div style="font-size: 13.5px; line-height: 1.6; color: #334155;">
                 • <strong>HDBSCAN không có bộ bóc tách cú pháp:</strong> Thuật toán chỉ tính mật độ trên vector số thực. Nhưng mô hình Transformer (<code>BGE-small-en-v1.5</code>) thông qua cơ chế Self-Attention đã mã hoá đồng thời cả <strong>ngữ nghĩa</strong> lẫn <strong>cấu trúc cú pháp</strong> (từ để hỏi ở vị trí đầu câu nhận trọng số vị trí và Attention rất lớn).<br>
                 • <strong>Tâm lý tự nhiên quy định cú pháp:</strong> Khi bị mất tiền oan, khách hàng luôn tự nhiên hỏi <code>WHY</code>; khi cần cài đặt/thao tác, họ luôn tự nhiên hỏi <code>HOW</code>. Do đó, các câu cùng tâm lý tự động có vector gần nhau và được HDBSCAN gom vào cùng 1 đám mây mật độ!<br>
                 • <strong>Quy tắc tính % theo đa số:</strong> Trong mỗi cụm có cả câu trần thuật (Statements, ví dụ <i>'I was charged twice'</i>) và câu hỏi nghi vấn. Tỷ lệ % hiển thị ở đây được tính là <strong>Tỷ lệ trong nhóm các câu hỏi nghi vấn</strong>, nhằm chỉ ra dạng câu hỏi chiếm ưu thế đa số áp đảo của cụm đó!
@@ -1038,8 +1038,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
         if "WHY" in hotspot_tab:
             st.markdown(
                 """
-                <div style="background: rgba(239, 68, 68, 0.08); border: 1.5px solid #EF4444; padding: 12px 16px; border-radius: 8px;">
-                    <div style="font-weight: 700; color: #F87171; font-size: 14.5px;">Phát hiện 4 Điểm nóng Rủi ro Tài chính lớn nhất của Ngân hàng:</div>
+                <div style="background: #FEF2F2; border: 1.5px solid #EF4444; padding: 12px 16px; border-radius: 8px;">
+                    <div style="font-weight: 700; color: #DC2626; font-size: 14.5px;">Phát hiện 4 Điểm nóng Rủi ro Tài chính lớn nhất của Ngân hàng:</div>
                     <div style="font-size: 13px; line-height: 1.5; margin-top: 4px;">
                         1. <strong>Bị trừ tiền 2 lần (Topic 20):</strong> Trừ tiền trùng lặp khi mua sắm online.<br>
                         2. <strong>Cây ATM từ chối / nuốt tiền (Topic 59, 58):</strong> Máy không nhả tiền nhưng tài khoản vẫn bị trừ.<br>
@@ -1054,8 +1054,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
         elif "HOW" in hotspot_tab:
             st.markdown(
                 """
-                <div style="background: rgba(59, 130, 246, 0.08); border: 1.5px solid #3B82F6; padding: 12px 16px; border-radius: 8px;">
-                    <div style="font-weight: 700; color: #60A5FA; font-size: 14.5px;">Phát hiện 3 Điểm nghẽn Trải nghiệm Người dùng (UI/UX App Mobile):</div>
+                <div style="background: #EFF6FF; border: 1.5px solid #3B82F6; padding: 12px 16px; border-radius: 8px;">
+                    <div style="font-weight: 700; color: #2563EB; font-size: 14.5px;">Phát hiện 3 Điểm nghẽn Trải nghiệm Người dùng (UI/UX App Mobile):</div>
                     <div style="font-size: 13px; line-height: 1.5; margin-top: 4px;">
                         1. <strong>Khách hàng không tìm thấy nút đổi mã PIN (Topic 08):</strong> Bị khoá thẻ do nhập sai PIN mà không biết mở ở đâu.<br>
                         2. <strong>Lúng túng khi muốn huỷ chuyển nhầm (Topic 34, 35):</strong> Chuyển nhầm tiền và hoảng loạn tìm nút 'Huỷ lệnh'.<br>
@@ -1069,8 +1069,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
         elif "WHAT" in hotspot_tab:
             st.markdown(
                 """
-                <div style="background: rgba(245, 158, 11, 0.08); border: 1.5px solid #F59E0B; padding: 12px 16px; border-radius: 8px;">
-                    <div style="font-weight: 700; color: #FBBF24; font-size: 14.5px;">Nhu cầu Tra cứu Tri thức Tĩnh & Biểu phí:</div>
+                <div style="background: #FFFBEB; border: 1.5px solid #F59E0B; padding: 12px 16px; border-radius: 8px;">
+                    <div style="font-weight: 700; color: #D97706; font-size: 14.5px;">Nhu cầu Tra cứu Tri thức Tĩnh & Biểu phí:</div>
                     <div style="font-size: 13px; line-height: 1.5; margin-top: 4px;">
                         • Khách hàng tra cứu hạn mức nạp tiền (Topic 49), loại ngoại tệ hỗ trợ (Topic 46), giấy tờ xác minh danh tính (Topic 02).<br>
                         👉 <strong>Giải pháp Hành động:</strong> Khách cần con số chính xác, không cần đọc hướng dẫn dài dòng. Bot trả về bảng thông số hoặc gọi API biểu phí hiện hành.
@@ -1082,8 +1082,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
         else:
             st.markdown(
                 """
-                <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid #10B981; border-radius: 12px; padding: 12px 16px;">
-                    <div style="font-weight: 700; color: #34D399; font-size: 14.5px;">Kiểm tra Quyền hạn & Điều kiện Sử dụng:</div>
+                <div style="background: #F0FDF4; border: 1.5px solid #10B981; border-radius: 12px; padding: 12px 16px;">
+                    <div style="font-weight: 700; color: #059669; font-size: 14.5px;">Kiểm tra Quyền hạn & Điều kiện Sử dụng:</div>
                     <div style="font-size: 13px; line-height: 1.5; margin-top: 4px;">
                         • Khách hàng hỏi có dùng được Apple Watch không (Topic 22), có nạp tiền bằng séc/tiền mặt được không (Topic 67), có cấp thẻ phụ được không (Topic 69).<br>
                         👉 <strong>Giải pháp Hành động:</strong> Trả lời dứt khoát Có / Không ngay ở câu đầu tiên, sau đó mới giải thích điều kiện đi kèm.
@@ -1209,8 +1209,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     if "google" in sel_lift:
         st.markdown(
             """
-            <div style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10B981; padding: 12px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; color: #34D399; font-size: 14.5px;">Phân định tuyệt đối Android (Google Pay) vs iOS (Apple Pay):</div>
+            <div style="background: #F0FDF4; border-left: 4px solid #10B981; padding: 12px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; color: #059669; font-size: 14.5px;">Phân định tuyệt đối Android (Google Pay) vs iOS (Apple Pay):</div>
                 <div style="font-size: 13px; line-height: 1.6; margin-top: 4px;">
                     • <strong>Nhãn gốc của con người:</strong> Tập dữ liệu gốc gộp chung thành 1 intent tên là <code>apple_pay_or_google_pay</code>.<br>
                     • <strong>Phát hiện của HDBSCAN:</strong> Thuật toán phát hiện từ <code>google play</code>, <code>google pay</code> có Lift lên tới <strong>185,1x</strong>, xuất hiện co cụm độc lập và hoàn toàn tách biệt với <code>apple pay</code>, <code>apple watch</code>.<br>
@@ -1224,8 +1224,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     elif "stolen card" in sel_lift:
         st.markdown(
             """
-            <div style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid #EF4444; padding: 12px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; color: #F87171; font-size: 14.5px;">Tách biệt 3 Cấp độ Khẩn cấp: Thẻ bị đánh cắp vs Nuốt thẻ ATM vs Thẻ hết hạn:</div>
+            <div style="background: #FEF2F2; border-left: 4px solid #EF4444; padding: 12px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; color: #DC2626; font-size: 14.5px;">Tách biệt 3 Cấp độ Khẩn cấp: Thẻ bị đánh cắp vs Nuốt thẻ ATM vs Thẻ hết hạn:</div>
                 <div style="font-size: 13px; line-height: 1.6; margin-top: 4px;">
                     Cả 3 trường hợp đều liên quan đến 'thẻ không dùng được', nhưng HDBSCAN nhờ các từ khoá có Lift cao đã phân tách thành 3 cụm có quy trình xử lý hoàn toàn khác nhau:<br>
                     1. <strong>Thẻ bị đánh cắp (<code>stolen card</code>, Topic 40 - Lift 153.1x):</strong> Cấp độ <strong>Tối khẩn cấp (Emergency)</strong>. Khách hàng đối mặt nguy cơ bị quẹt sạch tiền. Quy trình: Khoá thẻ tức thì 1 chạm, đóng băng tài khoản, gửi cảnh báo fraud.<br>
@@ -1239,8 +1239,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     elif "china" in sel_lift:
         st.markdown(
             """
-            <div style="background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3B82F6; padding: 12px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; color: #60A5FA; font-size: 14.5px;">Chữ ký Nhận diện Độc quyền Chuyển tiền Trung Quốc (Lift = 195.9x):</div>
+            <div style="background: #EFF6FF; border-left: 4px solid #3B82F6; padding: 12px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; color: #2563EB; font-size: 14.5px;">Chữ ký Nhận diện Độc quyền Chuyển tiền Trung Quốc (Lift = 195.9x):</div>
                 <div style="font-size: 13px; line-height: 1.6; margin-top: 4px;">
                     • Từ <code>china</code> rất hiếm gặp trong toàn bộ ngân hàng, nhưng khi xuất hiện thì gần như 100% đi kèm từ <code>long</code> (chuyển sang Trung Quốc mất bao lâu) hoặc <code>card china</code>.<br>
                     • Hệ số Lift = 195,9x (cao nhất toàn bộ bộ dữ liệu) biến cặp từ này thành 'chữ ký nhận diện độc quyền' của Topic 16 (transfer_timing sang China), giúp HDBSCAN bóc tách ngay lập tức mà không bị nhầm với chuyển khoản nội địa.
@@ -1252,8 +1252,8 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     else:
         st.markdown(
             """
-            <div style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #F59E0B; padding: 12px 18px; border-radius: 8px;">
-                <div style="font-weight: 700; color: #FBBF24; font-size: 14.5px;">Thuật ngữ Logistic Theo dõi Vận chuyển Thẻ Bưu điện (Lift = 195.9x & 187.8x):</div>
+            <div style="background: #FFFBEB; border-left: 4px solid #F59E0B; padding: 12px 18px; border-radius: 8px;">
+                <div style="font-weight: 700; color: #D97706; font-size: 14.5px;">Thuật ngữ Logistic Theo dõi Vận chuyển Thẻ Bưu điện (Lift = 195.9x & 187.8x):</div>
                 <div style="font-size: 13px; line-height: 1.6; margin-top: 4px;">
                     • Khách hàng khi sốt ruột chờ thẻ không chỉ hỏi 'thẻ đâu rồi' mà dùng thuật ngữ logistic: <code>tracking</code>, <code>track card</code>, <code>tracking number</code>.<br>
                     • Cặp từ này kéo Topic 57 (card_arrival) thành một cụm chuyên về tra cứu mã vận đơn bưu điện, tách biệt hoàn toàn với các câu hỏi về thẻ thông thường.
@@ -1273,11 +1273,11 @@ def render_tab_patterns(pattern_df: pd.DataFrame):
     # Hộp giải thích 3 nguyên nhân cốt lõi vì sao 77 nhãn gốc -> 75 cụm
     st.markdown(
         """
-        <div style="background: rgba(30, 41, 59, 0.5); border-left: 4px solid #F59E0B; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
-            <div style="font-weight: 700; font-size: 15px; color: #FBBF24; margin-bottom: 6px;">
+        <div style="background: #F8FAFC; border-left: 4px solid #F59E0B; padding: 14px 18px; border-radius: 8px; margin-bottom: 16px;">
+            <div style="font-weight: 700; font-size: 15px; color: #D97706; margin-bottom: 6px;">
                 💡 Tại sao Tập dữ liệu gốc có 77 Intent mà HDBSCAN lại gom ra 75 Cụm? Thuật toán sai ở đâu?
             </div>
-            <div style="font-size: 13.5px; line-height: 1.6; color: #CBD5E1;">
+            <div style="font-size: 13.5px; line-height: 1.6; color: #334155;">
                 Sự chênh lệch giữa 77 intent người gán và 75 cụm máy tự tìm đến từ <strong>3 cơ chế Khai phá Dữ liệu cốt lõi</strong>:<br>
                 1. <strong>Hiện tượng Gộp Cụm (Cluster Merging — 1 Cụm nuốt nhiều Intent):</strong> Có 16 cụm có Purity &lt; 0,60 (điển hình như <code>Topic 34</code> gom chung cả 3 intent <i>fiat_currency_support</i>, <i>exchange_rate</i>, <i>wrong_exchange_rate</i> vì các câu đều dùng chung từ vựng GBP, EUR, currency, làm UMAP kéo dính mật độ lại thành 1 đám mây).<br>
                 2. <strong>Hiện tượng Tách Cụm (Cluster Splitting — 1 Intent bị xé làm đôi):</strong> Máy phát hiện ra sự phân hóa mà con người gộp ẩu: Intent <code>apple_pay_or_google_pay</code> bị máy tự động tách thành <code>Topic 21</code> (Google Pay - Android) và <code>Topic 22</code> (Apple Pay - iOS); hay <code>request_refund</code> bị tách thành hoàn tiền món hàng (Topic 36) và hoàn tiền từ người bán (Topic 37).<br>

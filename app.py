@@ -33,6 +33,41 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Global Light Theme Enhancements
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #FFFFFF;
+        color: #0F172A;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #F8FAFC !important;
+        border-right: 1px solid #E2E8F0;
+    }
+    [data-testid="stMetricValue"] {
+        color: #0F172A !important;
+        font-weight: 800 !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+    button[data-baseweb="tab"] {
+        font-weight: 600 !important;
+        color: #475569 !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #0284C7 !important;
+        border-bottom-color: #0284C7 !important;
+    }
+    [data-testid="stDataFrame"] {
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 # Kiểm tra sự tồn tại của thư mục artifacts
 ARTIFACTS_DIR = "artifacts"
 if not os.path.exists(os.path.join(ARTIFACTS_DIR, "umap_2d_states.csv")):
@@ -228,8 +263,8 @@ with tabs[0]:
         else:
             st.markdown(
                 f"""
-                <div style="background: rgba(30, 58, 138, 0.18); border: 1.5px solid #3B82F6; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;">
-                    <div style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #60A5FA; letter-spacing: 0.6px;">
+                <div style="background: #F0F9FF; border: 1.5px solid #3B82F6; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px;">
+                    <div style="font-size: 11.5px; font-weight: 700; text-transform: uppercase; color: #0284C7; letter-spacing: 0.6px;">
                         HỒ SƠ CỤM TOPIC {selected_topic} (ĐỦ {fmt_int_vi(t_row['size'])} ĐIỂM)
                     </div>
                     <div style="font-size: 19px; font-weight: 800; margin: 4px 0 6px 0;">
@@ -240,7 +275,7 @@ with tabs[0]:
                         <b>Độ thuần (Purity):</b> {fmt_pct_vi(t_row['purity'], 1)}
                     </div>
                     <div style="font-size: 13px; margin-bottom: 4px;">🔑 <b>Từ khoá c-TF-IDF đặc trưng:</b></div>
-                    <div style="background: rgba(15, 23, 42, 0.75); color: #F8FAFC; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 12.5px;">
+                    <div style="background: #F1F5F9; color: #0F172A; border: 1px solid #CBD5E1; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 12.5px;">
                         {t_row['keywords']}
                     </div>
                 </div>
@@ -329,8 +364,8 @@ with tabs[2]:
         with lbl_c1:
             st.markdown(
                 f"""
-                <div style="background: rgba(59, 130, 246, 0.12); border: 1px solid #3B82F6; border-radius: 10px; padding: 12px 16px;">
-                    <div style="font-size: 11.5px; color: #60A5FA; font-weight: 700; text-transform: uppercase;">1. Nhãn thật (Ground-truth)</div>
+                <div style="background: #EFF6FF; border: 1px solid #3B82F6; border-radius: 10px; padding: 12px 16px;">
+                    <div style="font-size: 11.5px; color: #0284C7; font-weight: 700; text-transform: uppercase;">1. Nhãn thật (Ground-truth)</div>
                     <div style="font-size: 16px; font-weight: 800; margin-top: 4px;"><code>{res['expected_true_intent']}</code></div>
                 </div>
                 """,
@@ -339,8 +374,8 @@ with tabs[2]:
         with lbl_c2:
             st.markdown(
                 f"""
-                <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid #10B981; border-radius: 10px; padding: 12px 16px;">
-                    <div style="font-size: 11.5px; color: #34D399; font-weight: 700; text-transform: uppercase;">2. Nhãn do HDBSCAN gán</div>
+                <div style="background: #ECFDF5; border: 1px solid #10B981; border-radius: 10px; padding: 12px 16px;">
+                    <div style="font-size: 11.5px; color: #059669; font-weight: 700; text-transform: uppercase;">2. Nhãn do HDBSCAN gán</div>
                     <div style="font-size: 16px; font-weight: 800; margin-top: 4px;"><code>{res['assigned_label_full']}</code></div>
                 </div>
                 """,
@@ -349,8 +384,8 @@ with tabs[2]:
         with lbl_c3:
             st.markdown(
                 f"""
-                <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid #F59E0B; border-radius: 10px; padding: 12px 16px;">
-                    <div style="font-size: 11.5px; color: #FBBF24; font-weight: 700; text-transform: uppercase;">3. Độ tin cậy & Giải thích</div>
+                <div style="background: #FFFBEB; border: 1px solid #F59E0B; border-radius: 10px; padding: 12px 16px;">
+                    <div style="font-size: 11.5px; color: #D97706; font-weight: 700; text-transform: uppercase;">3. Độ tin cậy & Giải thích</div>
                     <div style="font-size: 13px; margin-top: 4px; line-height: 1.4;">
                         Độ gán cụm (Strength): <b>{fmt_num_vi(res['strength'], 2)}</b><br>{res['why_assigned_or_noise']}
                     </div>

@@ -18,9 +18,9 @@ def render_chart_caption(how_to_read: str, limitation: str):
     """Hiển thị cố định 1 câu Cách đọc + 1 câu Lưu ý giới hạn ngay dưới mỗi biểu đồ."""
     st.markdown(
         f"""
-        <div style="background: rgba(144, 194, 249, 0.08); border: 1px solid rgba(144, 194, 249, 0.25); border-left: 4px solid #3B82F6; padding: 11px 15px; border-radius: 6px; font-size: 13.5px; margin-top: 4px; margin-bottom: 16px;">
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-left: 4px solid #0284C7; padding: 12px 16px; border-radius: 6px; font-size: 13.5px; margin-top: 6px; margin-bottom: 16px; color: #1E293B;">
             <div style="margin-bottom: 5px; line-height: 1.45;">📖 <strong>Cách đọc:</strong> {how_to_read}</div>
-            <div style="color: #F87171; line-height: 1.45;">⚠️ <strong>Lưu ý giới hạn:</strong> {limitation}</div>
+            <div style="color: #DC2626; line-height: 1.45;">⚠️ <strong>Lưu ý giới hạn:</strong> {limitation}</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -367,6 +367,7 @@ def plot_stepper_scatter_2d(
     }
 
     fig.update_layout(
+        template="plotly_white",
         title=dict(text=step_titles.get(step, "Không gian 2D minh hoạ"), font=dict(size=15.5)),
         dragmode="pan",  # Cho phép kéo chuột di chuyển biểu đồ mượt mà + lăn chuột để Zoom In/Out!
         xaxis=dict(
@@ -428,5 +429,5 @@ def plot_novelty_gauge(novelty_val: float, thr_p95: float = 0.118) -> go.Figure:
             }
         }
     ))
-    fig.update_layout(height=250, margin=dict(l=25, r=25, t=55, b=15), dragmode=False)
+    fig.update_layout(template="plotly_white", height=250, margin=dict(l=25, r=25, t=55, b=15), dragmode=False)
     return fig
