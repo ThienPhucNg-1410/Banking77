@@ -17,10 +17,10 @@
     - [1.3. Định nghĩa bài toán: Khám phá Chủ đề Không giám sát (Topic Discovery)](#13-định-nghĩa-bài-toán-khám-phá-chủ-đề-không-giám-sát-topic-discovery)
     - [1.4. Mục tiêu & Yêu cầu kỹ thuật của Đồ án](#14-mục-tiêu--yêu-cầu-kỹ-thuật-của-đồ-án)
   - [CHƯƠNG 2: PHÂN TÍCH KHÁM PHÁ DỮ LIỆU (EXPLORATORY DATA ANALYSIS - EDA)](#chương-2-phân-tích-khám-phá-dữ-liệu-exploratory-data-analysis---eda)
-    - [2.1. Nguồn gốc & Cấu trúc tập dữ liệu chuẩn BANKING77](#21-nguồn-gốc--cấu-trúc-tập-dữ-liệu-chuẩn-banking77)
-    - [2.2. Phân tích Hình thái học Văn bản (Text Morphology)](#22-phân-tích-hình-thái-học-văn-bản-text-morphology)
-    - [2.3. Khảo sát Chồng lấn Từ vựng (Vocabulary Overlap) & Ranh giới Mờ](#23-khảo-sát-chồng-lấn-từ-vựng-vocabulary-overlap--ranh-giới-mờ)
-    - [2.4. Bản chất Hình học Đa tạp (Manifold Geometry) của Dữ liệu Ngữ nghĩa](#24-bản-chất-hình-học-đa-tạp-manifold-geometry-của-dữ-liệu-ngữ-nghĩa)
+    - [2.1. Tập dữ liệu này là cái gì? (Ai nói, nói ở đâu, có bao nhiêu câu?)](#21-tập-dữ-liệu-này-là-cái-gì-ai-nói-nói-ở-đâu-có-bao-nhiêu-câu)
+    - [2.2. 77 nhóm câu hỏi đó thường xoay quanh những chuyện gì?](#22-77-nhóm-câu-hỏi-đó-thường-xoay-quanh-những-chuyện-gì)
+    - [2.3. Câu chữ của khách hàng có đặc điểm gì khiến máy bị bối rối?](#23-câu-chữ-của-khách-hàng-có-đặc-điểm-gì-khiến-máy-bị-bối-rối)
+    - [2.4. Tại sao các cách chia nhóm cũ (như K-Means) lại thất bại?](#24-tại-sao-các-cách-chia-nhóm-cũ-như-k-means-lại-thất-bại)
   - [CHƯƠNG 3: QUÁ TRÌNH THỰC HIỆN & THIẾT KẾ ĐƯỜNG ỐNG PIPELINE V3](#chương-3-quá-trình-thực-hiện--thiết-kế-đường-ống-pipeline-v3)
     - [3.1. Kiến trúc Tổng thể Đường ống 4 Chặng Phân tầng](#31-kiến-trúc-tổng-thể-đường-ống-4-chặng-phân-tầng)
     - [3.2. Chặng 1: Biểu diễn Ngữ nghĩa Chiều cao (Dense Embedding)](#32-chặng-1-biểu-diễn-ngữ-nghĩa-chiều-cao-dense-embedding)
@@ -84,41 +84,98 @@ Trong đó:
 
 ## CHƯƠNG 2: PHÂN TÍCH KHÁM PHÁ DỮ LIỆU (EXPLORATORY DATA ANALYSIS - EDA)
 
-### 2.1. Nguồn gốc & Cấu trúc tập dữ liệu chuẩn BANKING77
-Đề tài sử dụng bộ dữ liệu chuẩn học thuật **BANKING77** do Casanueva et al. (PolyAI) công bố tại hội nghị quốc tế *Findings of EMNLP 2020*.
+### 2.1. Tập dữ liệu này là cái gì? (Ai nói, nói ở đâu, có bao nhiêu câu?)
+* **Nguồn gốc:** Đây là hơn **13.000 tin nhắn thật** của khách hàng gửi đến cho tổng đài và chatbot của một ngân hàng số bằng tiếng Anh (tập dữ liệu chuẩn học thuật *BANKING77*).
+* **Người ta chia dữ liệu này ra sao?**
+  * **Túi học (Tập Huấn luyện - Train set: gần 10.000 câu / chính xác 9.993 câu):** Đưa cho máy đọc trước để máy tự tìm hiểu xem khách hàng hay hỏi về những việc gì.
+  * **Túi thi (Tập Kiểm thử - Test set: hơn 3.000 câu / chính xác 3.080 câu):** Giữ lại làm "đề thi", sau khi máy học xong thì phát cho máy làm bài tập xem máy phân loại có đúng không.
+* **Có bao nhiêu nhóm câu hỏi?**
+  * Các chuyên gia ngân hàng đã xem qua từng câu và chia thành **77 nhóm nhu cầu khác nhau** (ví dụ: nhóm chuyên hỏi mất thẻ, nhóm chuyên hỏi đổi mật khẩu, nhóm hỏi chuyển tiền bị kẹt...).
+  * Mỗi nhóm có khoảng **130 câu hỏi** (chia rất đều đặn, không có nhóm nào quá nhiều hay quá ít).
 
-| Đặc tính tập dữ liệu | Giá trị thực tế | Ý nghĩa nghiên cứu |
+| Đặc tính tập dữ liệu | Con số cụ thể | Ý nghĩa bình dân, dễ hiểu |
 | :--- | :---: | :--- |
-| **Quy mô tập Huấn luyện (Train set)** | **9.993 câu** | Đủ lớn để mô hình hóa phân bố mật độ phi tuyến. |
-| **Quy mô tập Kiểm thử (Test set)** | **3.080 câu** | Dùng để kiểm định tính tổng quát hóa độc lập. |
-| **Tổng số nhãn ý định (Intents)** | **77 nhãn** | Số lượng nhãn chi tiết cực lớn, thử thách khả năng phân định vi mô. |
-| **Lĩnh vực nghiệp vụ** | Ngân hàng số & Fintech | Bao quát thẻ, nạp tiền, chuyển khoản, biểu phí, xác minh danh tính. |
+| **Tổng số tin nhắn** | **13.073 câu** | Toàn bộ câu hỏi người dùng gửi đến tổng đài / chatbot |
+| **Túi học (Train set)** | **9.993 câu** | Đưa máy đọc trước để máy tự mày mò tìm ra quy luật |
+| **Túi thi (Test set)** | **3.080 câu** | Giữ kín làm bài kiểm tra sau khi máy học xong |
+| **Số nhóm nhu cầu (Intents)** | **77 nhóm** | 77 việc khác nhau mà khách hàng yêu cầu ngân hàng xử lý |
+| **Mức độ chia đều** | $\approx$ **130 câu/nhóm** | Chia rất đều đặn, không có nhóm nào quá nhiều hay quá ít |
+
+---
+
+### 2.2. 77 nhóm câu hỏi đó thường xoay quanh những chuyện gì?
+Dù chia nhỏ làm 77 nhóm, nhưng thực chất tâm tư của khách hàng chỉ xoay quanh **4 chuyện lớn** sau đây:
+
+1. 💳 **Chuyện cái Thẻ ngân hàng (Nhiều nhất - 28 nhóm, chiếm khoảng 36,4% $\approx$ 3.634 câu):**
+   * *Khách hỏi:* Thẻ bị cây ATM nuốt, thẻ bị cướp giật, thẻ hết hạn, thẻ quẹt không ăn, quên mã PIN, hoặc muốn làm thẻ ảo trên điện thoại để mua hàng online.
+2. 💸 **Chuyện Nạp tiền & Chuyển tiền (22 nhóm, chiếm khoảng 28,6% $\approx$ 2.855 câu):**
+   * *Khách hỏi:* Nạp tiền bằng tài khoản khác, chuyển tiền mà bên kia chưa nhận được, nạp tiền mặt ở cây ATM, chuyển tiền đi nước ngoài mất bao lâu.
+3. 📄 **Chuyện Giấy tờ & Tài khoản (15 nhóm, chiếm khoảng 19,5% $\approx$ 1.947 câu):**
+   * *Khách hỏi:* Phải chụp căn cước công dân thế nào để mở tài khoản, muốn đổi số điện thoại, đổi địa chỉ nhà, hoặc muốn hủy/đóng tài khoản vì không dùng nữa.
+4. 🏷️ **Chuyện Tiền Phí & Tỷ giá tiền tệ (12 nhóm, chiếm khoảng 15,6% $\approx$ 1.557 câu):**
+   * *Khách bức xúc:* Sao tự nhiên tôi bị trừ tiền phí mập mờ, phí rút tiền cây ATM khác ngân hàng là bao nhiêu, đổi tiền Đô sang tiền Việt tính tỷ giá thế nào.
+
+#### Bảng Thống kê 77 Nhóm Nhu cầu theo 4 Chuyện Lớn:
+
+| Chuyện lớn khách hàng quan tâm | Số nhóm nhu cầu (Intents) | Tỷ lệ phần trăm (%) | Số câu thực tế (Tập học Train) | Các thắc mắc điển hình của khách hàng |
+| :--- | :---: | :---: | :---: | :--- |
+| **1. Chuyện cái Thẻ ngân hàng** | **28 nhóm** | **36,4%** | $\approx$ **3.634 câu** | Thẻ bị nuốt, mất thẻ, quên mã PIN, thẻ hỏng quẹt không ăn, làm thẻ ảo |
+| **2. Chuyện Nạp tiền & Chuyển tiền** | **22 nhóm** | **28,6%** | $\approx$ **2.855 câu** | Nạp tiền qua tài khoản/thẻ/tiền mặt, kẹt tiền, chuyển tiền quốc tế |
+| **3. Chuyện Giấy tờ & Tài khoản** | **15 nhóm** | **19,5%** | $\approx$ **1.947 câu** | Xác minh căn cước công dân (KYC), đổi số điện thoại, đổi địa chỉ, hủy tài khoản |
+| **4. Chuyện Tiền Phí & Tỷ giá** | **12 nhóm** | **15,6%** | $\approx$ **1.557 câu** | Bị trừ phí lạ, biểu phí rút ATM, tra cứu tỷ giá ngoại tệ, tính sai tỷ giá |
+| **TỔNG CỘNG** | **77 nhóm** | **100,0%** | **9.993 câu** | *(Bao phủ 100% dữ liệu)* |
 
 ```mermaid
-pie title "Phân bố 77 Ý định trong BANKING77 theo Nhóm Lĩnh vực"
-    "Dịch vụ Thẻ (Thẻ ảo, PIN, nuốt thẻ, kích hoạt)" : 28
-    "Giao dịch & Nạp tiền (Top-up, Chuyển khoản, ATM)" : 22
-    "Biểu phí & Tỷ giá (Exchange rate, Extra charges)" : 12
-    "Tài khoản & Xác minh KYC (Identity, Terminate, Edit)" : 15
+pie title "Phân bố 77 Nhóm Nhu cầu Khách hàng theo 4 Chuyện Lớn"
+    "Chuyện cái Thẻ (28 Nhóm - 36.4%)" : 28
+    "Nạp tiền & Chuyển tiền (22 Nhóm - 28.6%)" : 22
+    "Giấy tờ & Tài khoản (15 Nhóm - 19.5%)" : 15
+    "Tiền Phí & Tỷ giá (12 Nhóm - 15.6%)" : 12
 ```
 
-### 2.2. Phân tích Hình thái học Văn bản (Text Morphology)
-Khảo sát phân bố thống kê văn bản trên 9.993 câu tập Train:
-* **Độ dài câu (Word Count):** Trung bình **11,91 từ/câu**; độ lệch chuẩn $\sigma = 5,42$ từ; trung vị là 11 từ.
-* **Câu ngắn nhất:** 1 từ (ví dụ: *"fee?"*, *"help"*, *"declined"*).
-* **Câu dài nhất:** 79 từ (các câu trần thuật mô tả sự cố giao dịch phức tạp kèm thời gian và số tiền).
-* **Đặc trưng:** Đây là bài toán **Văn bản ngắn (Short-Text NLP)** điển hình. Với câu ngắn, các phương pháp đếm từ truyền thống (BoW, TF-IDF) gặp thất bại nặng nề vì ma trận từ vựng cực kỳ thưa thớt (sparsity $> 99,2\%$).
+---
 
-### 2.3. Khảo sát Chồng lấn Từ vựng (Vocabulary Overlap) & Ranh giới Mờ
-Điểm đặc biệt khó của BANKING77 so với các bộ dữ liệu khác (như 20 Newsgroups hay AG News) nằm ở sự **phân mảnh cực mịn (fine-grained categories)**:
-* **Họ nạp tiền (Top-up):** Có tới 6 intent độc lập cùng xoay quanh hành vi nạp tiền (`top_up_by_bank_transfer_charge`, `top_up_by_card_charge`, `top_up_by_cash_or_cheque`, `top_up_failed`, `top_up_limits`, `top_up_reverted`). Điểm khác biệt giữa chúng chỉ là phương thức thanh toán hoặc trạng thái lỗi.
-* **Họ thẻ hỏng (Card malfunction):** `card_not_working`, `contactless_not_working`, `virtual_card_not_working` có tới hơn $70\%$ từ khóa giao nhau (*card, pay, work, reader, shop*).
+### 2.3. Câu chữ của khách hàng có đặc điểm gì khiến máy bị bối rối?
+Khi mở từng câu tin nhắn ra soi kỹ, nhóm phát hiện ra **2 đặc điểm rất "oái oăm"** của người dùng:
 
-### 2.4. Bản chất Hình học Đa tạp (Manifold Geometry) của Dữ liệu Ngữ nghĩa
-Khi các câu văn bản ngắn được chiếu qua mô hình ngôn ngữ lớn để tạo vector đặc trưng, phân bố không gian của chúng **hoàn toàn không có dạng hình cầu lồi (spherical clusters)**:
-* Các cách diễn đạt đồng nghĩa (paraphrasing) tạo thành các **dải mật độ uốn lượn liên tục (continuous manifolds)**.
-* Giữa các cụm nghiệp vụ gần nhau xuất hiện các **vùng trũng mật độ (density valleys)** nhưng không có ranh giới siêu phẳng tuyến tính rõ rệt.
-* Hiện tượng này chứng minh về mặt toán học rằng các thuật toán phân cụm dựa trên tâm cụm đối xứng như **K-Means hay GMM chắc chắn sẽ xé nát cấu trúc tự nhiên của ngôn ngữ**.
+#### ⚡ Đặc điểm 1: Tin nhắn cực kỳ ngắn và cụt lủn!
+* **Trung bình mỗi câu khách nhắn chỉ có khoảng 11 đến 12 từ** (con số thống kê chính xác là 11,9 từ/câu).
+* **Có người lười gõ:** Chỉ gửi đúng **1 chữ cộc lốc**: *"Phí?"* (`fee?`), *"Giúp với"* (`help`), *"Bị từ chối"* (`declined`).
+* **Nhưng cũng có người bực bội:** Viết một tràng dài **79 chữ** kể lể rắc rối bị trừ tiền ở đâu, mấy giờ, quẹt thẻ không được ra sao.
+* 👉 **Khó khăn là gì?** Các phần mềm cũ ngày xưa chỉ biết "đếm chữ" để đoán ý. Nhưng câu khách nhắn quá ngắn, không đủ chữ để đếm, khiến các cách đếm chữ thông thường hoàn toàn chịu thua!
+
+#### 👥 Đặc điểm 2: Câu hỏi giống như "anh em sinh đôi", dùng chung quá nhiều từ giống nhau!
+* **Ví dụ về chuyện Nạp tiền:** Có tới **6 nhóm nhu cầu riêng biệt**:
+  1. Nạp tiền bằng thẻ (`top_up_by_card_charge`)
+  2. Nạp tiền qua tài khoản (`top_up_by_bank_transfer_charge`)
+  3. Nạp tiền mặt (`top_up_by_cash_or_cheque`)
+  4. Nạp tiền bị lỗi (`top_up_failed`)
+  5. Hỏi hạn mức nạp tối đa (`top_up_limits`)
+  6. Lệnh nạp tiền bị hủy (`top_up_reverted`)  
+  👉 Cả 6 nhóm này câu nào cũng lặp đi lặp lại chữ *"nạp tiền"*, chúng chỉ khác nhau đúng cái đuôi ở cuối!
+* **Ví dụ về Thẻ hỏng:** Các câu hỏi thuộc nhóm `card_not_working`, `contactless_not_working`, `virtual_card_not_working` câu nào cũng có chữ *"thẻ"*, *"quẹt"*, *"không chạy"*, *"máy bán hàng"*, trùng lặp từ vựng tới hơn $70\%$.
+* 👉 **Khó khăn là gì?** Máy rất dễ bị "hoa mắt", nhìn câu nào cũng thấy giống nhau và rất dễ đoán nhầm nhóm này sang nhóm khác nếu chỉ nhìn vào câu chữ đơn thuần.
+
+---
+
+### 2.4. Tại sao các cách chia nhóm cũ (như K-Means) lại thất bại?
+Đây là điểm mấu chốt để giải thích cho mọi người:
+
+#### 1. Tưởng tượng cách khách hàng nói chuyện ngoài đời:
+* Người thứ nhất bảo: *"Tôi muốn đổi mã PIN"*.
+* Người thứ hai bảo: *"Làm sao cập nhật số bí mật của thẻ?"*.
+* Người thứ ba lại nói: *"Quên mật khẩu rồi, cần cấp lại mã số an toàn ở cây ATM"*.  
+👉 Ba câu này dù dùng từ khác nhau nhưng nối tiếp nhau tạo thành **một dải lụa dài uốn lượn ngoằn ngoèo** trong tâm trí, chứ chúng **không đứng túm tụm lại thành một quả bóng tròn xoe**.
+
+#### 2. Sai lầm của các thuật toán cũ (như K-Means):
+* **Các thuật toán cũ luôn ngây thơ cho rằng mọi nhóm câu hỏi phải tròn xoe như quả bóng.**
+* Khi gặp một dải lụa dài uốn lượn, nó liền lấy một mặt phẳng **chém phăng dải lụa làm đôi**, đẩy một nửa câu hỏi của khách sang nhóm khác!
+* Hoặc nó gom nhầm hai dải lụa nằm cạnh nhau vào chung một quả bóng to.
+* Tệ hơn nữa, khách nhắn linh tinh như *"alo"*, *"123"* nó cũng ép phải chui vào một quả bóng nào đó, làm rác dữ liệu.
+
+#### 3. Cách đề tài giải quyết vấn đề:
+* **Bước 1 (UMAP):** Vuốt phẳng và nắn dải lụa uốn lượn về không gian 5 chiều gọn gàng mà không làm đứt gãy mối liên kết giữa các câu gần nhau.
+* **Bước 2 (HDBSCAN):** Lần theo độ đông đúc tự nhiên của dải lụa để gom cụm, đồng thời có cơ chế gạt bỏ những câu nhắn cụt lủn hoặc rác linh tinh ra ngoài (điểm nhiễu - Noise), giữ cho các nhóm luôn sạch sẽ và chính xác.
 
 ---
 
