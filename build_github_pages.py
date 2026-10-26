@@ -2,22 +2,24 @@
 # -*- coding: utf-8 -*-
 """
 Script to generate the comprehensive, interactive Web Portal (index.html)
-for GitHub Pages hosting. Includes:
-1. 4-step stepper algorithm visualization (Text 384D -> UMAP 5D -> HDBSCAN -> 75 Clusters).
-2. Live interactive pipeline tester (chạy thử thuật toán từng bước với câu mới, kNN láng giềng, Novelty alert, hành động Chatbot).
-3. 9-algorithm benchmark comparison.
-4. 4 banking domains & 75 clusters explorer with live search.
-5. Novelty detection ROC curve.
-6. Full 6-chapter scientific report with KaTeX math & Mermaid charts.
+for GitHub Pages hosting.
+Tailored to user's requirements:
+- Removed old sections 3, 4, 6 (Baselines table, Domains table, Long Report reader).
+- Added interactive Dataset Overview & Configuration Playground:
+  * Select configuration (HDBSCAN mcs=20,30,50,80 / EOM vs Leaf, OR K-Means K=20,50,77,100).
+  * Run clustering simulation and see output metrics, 2D scatter visualization, and expert insights.
+  * Direct Head-to-Head Comparison between HDBSCAN (density ribbons + noise) and K-Means (spherical Voronoi + 0% noise).
+- Maintained 4-step algorithm stepper (Tab 1), live pipeline sentence tester (Tab 2), and novelty detection (Tab 4).
 """
 
 import os
 import json
 import pandas as pd
 import numpy as np
+from sklearn.cluster import KMeans
 
 def build_portal():
-    print("Building GitHub Pages Web Portal with Stepper and Interactive Pipeline Tester...")
+    print("Building updated GitHub Pages Web Portal...")
 
     # 1. Load Topics
     topics_path = "artifacts/topics_v3.csv"
@@ -47,13 +49,20 @@ def build_portal():
         with open(rep_path, "r", encoding="utf-8") as f:
             rep_map = json.load(f)
 
-    # 3. Sample UMAP 2D points (with x_b1, y_b1, x_umap, y_umap)
+    # 3. Sample UMAP 2D points (with x_b1, y_b1, x_umap, y_umap, all topic sweep cols)
     umap_path = "artifacts/umap_2d_states.csv"
     sampled_points = []
     if os.path.exists(umap_path):
         df_umap = pd.read_csv(umap_path)
         sample_size = min(1200, len(df_umap))
-        df_sample = df_umap.sample(n=sample_size, random_state=42)
+        df_sample = df_umap.sample(n=sample_size, random_state=42).copy()
+        
+        # Fit K-Means on UMAP 2D coordinates for interactive K-Means modes
+        coords = df_sample[['x_umap', 'y_umap']].values
+        for k in [20, 50, 77, 100]:
+            km = KMeans(n_clusters=k, random_state=42, n_init=1).fit(coords)
+            df_sample[f'km_{k}'] = km.labels_
+
         for _, row in df_sample.iterrows():
             sampled_points.append({
                 "x_b1": round(float(row.get("x_b1", row["x_umap"])), 3),
@@ -63,26 +72,22 @@ def build_portal():
                 "topic": int(row["topic"]),
                 "is_noise": bool(row["is_noise"]),
                 "intent": str(row["true_intent"]),
-                "text": str(row["text"])[:85] + "..." if len(str(row["text"])) > 85 else str(row["text"])
+                "text": str(row["text"])[:85] + "..." if len(str(row["text"])) > 85 else str(row["text"]),
+                "t_20_eom": int(row.get("topic_20_eom", row["topic"])),
+                "t_20_leaf": int(row.get("topic_20_leaf", row["topic"])),
+                "t_30_eom": int(row.get("topic_30_eom", row["topic"])),
+                "t_30_leaf": int(row.get("topic_30_leaf", row["topic"])),
+                "t_50_eom": int(row.get("topic_50_eom", row["topic"])),
+                "t_50_leaf": int(row.get("topic_50_leaf", row["topic"])),
+                "t_80_eom": int(row.get("topic_80_eom", row["topic"])),
+                "t_80_leaf": int(row.get("topic_80_leaf", row["topic"])),
+                "km_20": int(row.get("km_20", 0)),
+                "km_50": int(row.get("km_50", 0)),
+                "km_77": int(row.get("km_77", 0)),
+                "km_100": int(row.get("km_100", 0)),
             })
 
-    # 4. Load Benchmark Data
-    bench_path = "artifacts/benchmark_v3.csv"
-    benchmarks = []
-    if os.path.exists(bench_path):
-        df_bench = pd.read_csv(bench_path)
-        for _, row in df_bench.iterrows():
-            benchmarks.append({
-                "name": str(row["Phương pháp"]),
-                "clusters": int(row["Số cụm"]) if pd.notnull(row["Số cụm"]) else 0,
-                "noise": round(float(row["Noise"]) * 100, 2) if pd.notnull(row["Noise"]) else 0.0,
-                "v_measure": round(float(row["V (noise=1 cụm)"]), 3) if pd.notnull(row["V (noise=1 cụm)"]) else 0.0,
-                "ari": round(float(row["ARI (noise=1 cụm)"]), 3) if pd.notnull(row["ARI (noise=1 cụm)"]) else 0.0,
-                "purity": round(float(row["Purity (trọng số)"]) * 100, 2) if pd.notnull(row["Purity (trọng số)"]) else 0.0,
-                "dbcv": round(float(row["DBCV"]), 3) if pd.notnull(row["DBCV"]) else None,
-            })
-
-    # 5. Load 8 Preset Examples for Interactive Pipeline Tester
+    # 4. Preset Examples for Live Sentence Tester
     from utils.pipeline import PRESET_EXAMPLES
     presets_data = {}
     for k, v in PRESET_EXAMPLES.items():
@@ -99,12 +104,166 @@ def build_portal():
             "neighbors": v["neighbors"]
         }
 
-    # 6. Load Markdown Report
-    report_path = "BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.md"
-    report_md = ""
-    if os.path.exists(report_path):
-        with open(report_path, "r", encoding="utf-8") as f:
-            report_md = f.read()
+    # 5. Configurations Metadata for Playground
+    hdbscan_configs = {
+        "hdbscan_50_eom": {
+            "name": "HDBSCAN (mcs=50, EOM) — [Cấu hình Tối ưu Đề xuất]",
+            "algo": "HDBSCAN",
+            "clusters": 75,
+            "noise": 7.41,
+            "v_measure": 0.833,
+            "ari": 0.542,
+            "dbcv": 0.432,
+            "silhouette": 0.222,
+            "coverage": 92.59,
+            "col": "t_50_eom",
+            "badge": "🏆 TỐI ƯU TOÀN DIỆN",
+            "summary": "Khám phá tự động 75 cụm (sát 77 nhãn thật của chuyên gia), đạt điểm chất lượng mật độ DBCV cao nhất (0.432). Lọc 7,41% câu cộc lốc/mơ hồ ra ngoài (Noise = -1) để giữ độ thuần khiết tuyệt đối cho 75 cụm nghiệp vụ."
+        },
+        "hdbscan_20_eom": {
+            "name": "HDBSCAN (mcs=20, EOM)",
+            "algo": "HDBSCAN",
+            "clusters": 184,
+            "noise": 8.10,
+            "v_measure": 0.806,
+            "ari": 0.570,
+            "dbcv": 0.313,
+            "silhouette": 0.228,
+            "coverage": 91.90,
+            "col": "t_20_eom",
+            "badge": "Phân mảnh",
+            "summary": "Vì mcs=20 quá nhỏ, thuật toán bị phân mảnh dữ liệu thành 184 cụm li ti. Nhiều intent bị xé nhỏ thành 2-3 cụm con, làm giảm tính khái quát nghiệp vụ."
+        },
+        "hdbscan_20_leaf": {
+            "name": "HDBSCAN (mcs=20, Leaf)",
+            "algo": "HDBSCAN",
+            "clusters": 204,
+            "noise": 13.90,
+            "v_measure": 0.772,
+            "ari": 0.532,
+            "dbcv": 0.264,
+            "silhouette": 0.234,
+            "coverage": 86.10,
+            "col": "t_20_leaf",
+            "badge": "Quá khớp",
+            "summary": "Chiến lược Leaf tách đến tận lá cây phân cấp khiến số cụm vọt lên 204 cụm, tỷ lệ câu bị gạt ra làm Noise tăng vọt lên gần 14%."
+        },
+        "hdbscan_30_eom": {
+            "name": "HDBSCAN (mcs=30, EOM)",
+            "algo": "HDBSCAN",
+            "clusters": 125,
+            "noise": 9.50,
+            "v_measure": 0.814,
+            "ari": 0.658,
+            "dbcv": 0.315,
+            "silhouette": 0.225,
+            "coverage": 90.50,
+            "col": "t_30_eom",
+            "badge": "Khá tốt",
+            "summary": "Đã bắt đầu hội tụ tốt hơn mcs=20 nhưng 125 cụm vẫn còn quá nhiều so với 77 nhu cầu thực tế của khách hàng."
+        },
+        "hdbscan_50_leaf": {
+            "name": "HDBSCAN (mcs=50, Leaf)",
+            "algo": "HDBSCAN",
+            "clusters": 86,
+            "noise": 13.02,
+            "v_measure": 0.814,
+            "ari": 0.739,
+            "dbcv": 0.366,
+            "silhouette": 0.229,
+            "coverage": 86.98,
+            "col": "t_50_leaf",
+            "badge": "Noise cao",
+            "summary": "Tìm được 86 cụm nhưng phương thức Leaf ép tỷ lệ Noise tăng gần gấp đôi lên 13,02% (bỏ phí quá nhiều câu hỏi hợp lệ)."
+        },
+        "hdbscan_80_eom": {
+            "name": "HDBSCAN (mcs=80, EOM)",
+            "algo": "HDBSCAN",
+            "clusters": 58,
+            "noise": 7.80,
+            "v_measure": 0.832,
+            "ari": 0.646,
+            "dbcv": 0.411,
+            "silhouette": 0.214,
+            "coverage": 92.20,
+            "col": "t_80_eom",
+            "badge": "Gộp cụm",
+            "summary": "mcs=80 quá lớn dẫn đến hiện tượng gộp cụm quá mức: Chỉ còn 58 cụm, các intent gần nhau (như thẻ ảo và thẻ vật lý) bị nuốt chung vào một cụm to."
+        }
+    }
+
+    kmeans_configs = {
+        "kmeans_77": {
+            "name": "K-Means (K=77) — [Số cụm bằng đúng nhãn thật]",
+            "algo": "K-Means",
+            "clusters": 77,
+            "noise": 0.00,
+            "v_measure": 0.861,
+            "ari": 0.675,
+            "dbcv": None,
+            "silhouette": 0.205,
+            "coverage": 100.0,
+            "col": "km_77",
+            "badge": "⚠️ Ép 100% Cầu",
+            "summary": "K-Means dùng mặt phẳng chia không gian thành 77 khối cầu lồi (Voronoi). Nhược điểm chí mạng: 1) Bắt buộc con người phải 'mớm' trước K=77 (trong thực tế không ai biết trước K); 2) Không có cơ chế lọc nhiễu, ép cả câu cộc lốc/rác vào cụm làm bẩn dữ liệu."
+        },
+        "kmeans_50": {
+            "name": "K-Means (K=50)",
+            "algo": "K-Means",
+            "clusters": 50,
+            "noise": 0.00,
+            "v_measure": 0.724,
+            "ari": 0.485,
+            "dbcv": None,
+            "silhouette": 0.226,
+            "coverage": 100.0,
+            "col": "km_50",
+            "badge": "Gộp ép buộc",
+            "summary": "Thiếu 27 cụm so với thực tế. Các dải lụa ngôn ngữ uốn lượn bị mặt phẳng K-Means chém đứt, gộp lẫn lộn giữa phí thẻ và phí chuyển tiền."
+        },
+        "kmeans_20": {
+            "name": "K-Means (K=20)",
+            "algo": "K-Means",
+            "clusters": 20,
+            "noise": 0.00,
+            "v_measure": 0.582,
+            "ari": 0.295,
+            "dbcv": None,
+            "silhouette": 0.251,
+            "coverage": 100.0,
+            "col": "km_20",
+            "badge": "Trộn lẫn nặng",
+            "summary": "20 khối cầu khổng lồ gom bừa hàng chục nghiệp vụ khác nhau vào chung một chỗ. Độ thuần khiết sụt giảm nghiêm trọng."
+        },
+        "kmeans_100": {
+            "name": "K-Means (K=100)",
+            "algo": "K-Means",
+            "clusters": 100,
+            "noise": 0.00,
+            "v_measure": 0.812,
+            "ari": 0.598,
+            "dbcv": None,
+            "silhouette": 0.198,
+            "coverage": 100.0,
+            "col": "km_100",
+            "badge": "Phân mảnh",
+            "summary": "Xé nhỏ không gian thành 100 ô hình cầu, làm đứt đoạn các chuỗi câu hỏi cùng nghiệp vụ."
+        }
+    }
+
+    # 6. Sample Sentences from BANKING77 Dataset for Preview
+    sample_dataset_sentences = [
+        {"id": 1, "text": "Why was I charged an extra fee when paying with my card?", "intent": "card_payment_fee_charged", "domain": "Dịch vụ Thẻ & Phí", "len": 12},
+        {"id": 2, "text": "My card was stolen, how do I block it immediately?", "intent": "lost_or_stolen_card", "domain": "Dịch vụ Thẻ", "len": 10},
+        {"id": 3, "text": "Why was my transfer declined when I tried to send money?", "intent": "declined_transfer", "domain": "Nạp & Chuyển tiền", "len": 11},
+        {"id": 4, "text": "fee?", "intent": "card_payment_fee_charged / Noise", "domain": "Câu cộc lốc (Điểm Nhiễu)", "len": 1},
+        {"id": 5, "text": "I deposited a cheque yesterday but my balance has not been updated.", "intent": "balance_not_updated_after_cheque_or_cash_deposit", "domain": "Nạp & Chuyển tiền", "len": 12},
+        {"id": 6, "text": "Can I change my card PIN at cash machines while on vacation in Spain?", "intent": "change_pin", "domain": "Dịch vụ Thẻ", "len": 14},
+        {"id": 7, "text": "What documents are required to verify my identity and activate account?", "intent": "why_verify_identity", "domain": "Tài khoản & KYC", "len": 11},
+        {"id": 8, "text": "What is the exchange rate from USD to EUR when making a wire transfer?", "intent": "exchange_rate", "domain": "Biểu phí & Tỷ giá", "len": 14},
+        {"id": 9, "text": "My card got stuck inside the ATM machine at the branch, please help!", "intent": "card_swallowed", "domain": "Dịch vụ Thẻ", "len": 13},
+        {"id": 10, "text": "There was a double charge on my statement yesterday morning for my supermarket grocery shopping order.", "intent": "transaction_charged_twice", "domain": "Sự cố Trừ tiền", "len": 17}
+    ]
 
     # Convert topics list
     topics_list = []
@@ -127,16 +286,17 @@ def build_portal():
     # Serialize to JSON
     topics_json = json.dumps(topics_list, ensure_ascii=False)
     sampled_points_json = json.dumps(sampled_points, ensure_ascii=False)
-    benchmarks_json = json.dumps(benchmarks, ensure_ascii=False)
+    hdbscan_configs_json = json.dumps(hdbscan_configs, ensure_ascii=False)
+    kmeans_configs_json = json.dumps(kmeans_configs, ensure_ascii=False)
+    dataset_samples_json = json.dumps(sample_dataset_sentences, ensure_ascii=False)
     presets_json = json.dumps(presets_data, ensure_ascii=False)
-    report_md_json = json.dumps(report_md, ensure_ascii=False)
 
     html_content = f"""<!DOCTYPE html>
 <html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BANKING77: Khám Phá Chủ Đề & Khai Phá Pattern Ngữ Nghĩa Tự Động</title>
+    <title>BANKING77: Khám Phá Chủ Đề & So Sánh Thuật Toán Trực Quan</title>
     <!-- Favicon & Fonts -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -145,13 +305,6 @@ def build_portal():
     
     <!-- Plotly.js for interactive charts -->
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- KaTeX for math formulas -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-    <!-- Mermaid for architectural diagrams -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 
     <style>
         :root {{
@@ -274,7 +427,7 @@ def build_portal():
             background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(37, 99, 235, 0.04) 100%);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 28px 32px;
+            padding: 26px 30px;
         }}
 
         .hero-badge {{
@@ -289,23 +442,23 @@ def build_portal():
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }}
 
-        .hero-title {{ font-size: 24px; font-weight: 800; line-height: 1.3; margin-bottom: 10px; }}
-        .hero-desc {{ font-size: 14.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }}
+        .hero-title {{ font-size: 23px; font-weight: 800; line-height: 1.3; margin-bottom: 8px; }}
+        .hero-desc {{ font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }}
 
         .kpi-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }}
         .kpi-card {{
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 16px 18px;
+            padding: 14px 16px;
             box-shadow: var(--shadow-sm);
         }}
-        .kpi-label {{ font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }}
-        .kpi-value {{ font-size: 24px; font-weight: 800; color: var(--text-main); }}
-        .kpi-subtext {{ font-size: 12px; color: var(--success); font-weight: 600; margin-top: 3px; }}
+        .kpi-label {{ font-size: 11.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }}
+        .kpi-value {{ font-size: 22px; font-weight: 800; color: var(--text-main); }}
+        .kpi-subtext {{ font-size: 11.5px; color: var(--success); font-weight: 600; margin-top: 3px; }}
 
         .main-container {{ max-width: 1400px; margin: 0 auto 60px; padding: 0 24px; }}
 
@@ -361,8 +514,8 @@ def build_portal():
         .chart-box {{ width: 100%; min-height: 520px; border-radius: 10px; overflow: hidden; }}
 
         .table-responsive {{ overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }}
-        table {{ width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }}
-        th, td {{ padding: 12px 16px; border-bottom: 1px solid var(--border-color); }}
+        table {{ width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }}
+        th, td {{ padding: 10px 14px; border-bottom: 1px solid var(--border-color); }}
         th {{ background-color: rgba(2, 132, 199, 0.05); font-weight: 700; color: var(--primary); white-space: nowrap; }}
         tr:hover td {{ background-color: rgba(2, 132, 199, 0.02); }}
 
@@ -381,7 +534,6 @@ def build_portal():
             color: var(--text-main);
             font-size: 13.5px;
             outline: none;
-            width: 280px;
         }}
         .search-box:focus {{ border-color: var(--primary); }}
 
@@ -399,7 +551,7 @@ def build_portal():
 
         .step-btn {{
             flex: 1;
-            min-width: 180px;
+            min-width: 170px;
             padding: 10px 14px;
             background: none;
             border: 1px solid transparent;
@@ -431,13 +583,7 @@ def build_portal():
             line-height: 1.6;
         }}
 
-        /* Live Tester Box */
-        .tester-grid {{
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 24px;
-        }}
-
+        .tester-grid {{ display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; }}
         .pipeline-card {{
             background-color: var(--bg-page);
             border: 1px solid var(--border-color);
@@ -445,7 +591,6 @@ def build_portal():
             padding: 16px;
             margin-bottom: 14px;
         }}
-
         .pipeline-step-title {{
             font-size: 13.5px;
             font-weight: 700;
@@ -460,42 +605,55 @@ def build_portal():
             .tester-grid {{ grid-template-columns: 1fr; }}
         }}
 
-        /* Report Reader */
-        .report-reader {{ display: flex; gap: 32px; align-items: flex-start; }}
-        .report-toc {{
-            width: 280px; flex-shrink: 0; position: sticky; top: 80px;
-            background-color: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 18px; max-height: calc(100vh - 100px); overflow-y: auto;
+        /* Playground Styling */
+        .playground-box {{
+            background: var(--bg-page);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 22px;
         }}
-        .report-toc h4 {{ font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }}
-        .toc-list {{ list-style: none; display: flex; flex-direction: column; gap: 4px; }}
-        .toc-list a {{ color: var(--text-muted); text-decoration: none; font-size: 13px; padding: 6px 10px; border-radius: 6px; display: block; }}
-        .toc-list a:hover, .toc-list a.active {{ color: var(--primary); background-color: var(--primary-glow); font-weight: 600; }}
 
-        .report-body {{
-            flex-grow: 1; background-color: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 14px; padding: 36px 44px; max-width: 980px; overflow-x: hidden;
+        .config-radio-group {{
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 8px;
         }}
-        .report-body h1 {{ font-size: 26px; color: var(--primary); margin-bottom: 16px; }}
-        .report-body h2 {{ font-size: 21px; margin-top: 36px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }}
-        .report-body h3 {{ font-size: 17px; margin-top: 24px; margin-bottom: 10px; color: var(--accent); }}
-        .report-body h4 {{ font-size: 15px; margin-top: 18px; margin-bottom: 8px; color: var(--warning); }}
-        .report-body p {{ margin-bottom: 14px; line-height: 1.7; }}
-        .report-body ul, .report-body ol {{ margin-bottom: 14px; padding-left: 22px; }}
-        .report-body li {{ margin-bottom: 5px; }}
-        .report-body code {{
-            background-color: var(--code-bg); padding: 2px 6px; border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--primary);
+
+        .config-radio-label {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
         }}
-        .report-body pre {{
-            background-color: var(--code-bg); padding: 16px; border-radius: 8px;
-            border: 1px solid var(--border-color); overflow-x: auto; margin: 18px 0;
+        .config-radio-label:hover {{ border-color: var(--primary); }}
+        .config-radio-label input:checked + span {{ color: var(--primary); font-weight: 700; }}
+
+        .metric-pill-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
         }}
-        .report-body pre code {{ background: none; padding: 0; color: var(--text-main); }}
-        .report-body blockquote {{
-            border-left: 4px solid var(--primary); background-color: var(--primary-glow);
-            padding: 12px 18px; border-radius: 0 8px 8px 0; margin: 18px 0;
+
+        .metric-pill {{
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
         }}
+        .metric-pill-title {{ font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }}
+        .metric-pill-val {{ font-size: 20px; font-weight: 800; color: var(--primary); margin: 3px 0; }}
+        .metric-pill-sub {{ font-size: 11px; color: var(--text-muted); }}
     </style>
 </head>
 <body>
@@ -561,13 +719,12 @@ def build_portal():
     </section>
 
     <main class="main-container">
+        <!-- 4 TABS: Removed 3, 4, 6 and added Config & Compare Playground -->
         <nav class="tab-nav">
             <button class="tab-btn active" onclick="switchTab('tab-stepper', event)">🗺️ 1. Quy Trình Dựng Cụm 4 Bước</button>
             <button class="tab-btn" onclick="switchTab('tab-tester', event)">🧪 2. Chạy Thử Thuật Toán Từng Bước</button>
-            <button class="tab-btn" onclick="switchTab('tab-bench', event)">📊 3. Đối Chuẩn 9 Thuật Toán</button>
-            <button class="tab-btn" onclick="switchTab('tab-domains', event)">🧩 4. Bốn Mảng Nghiệp Vụ & 75 Cụm</button>
-            <button class="tab-btn" onclick="switchTab('tab-novelty', event)">🚨 5. Giám Sát Chủ Đề Mới (Novelty)</button>
-            <button class="tab-btn" onclick="switchTab('tab-report', event)">📖 6. Toàn Văn Báo Cáo (6 Chương)</button>
+            <button class="tab-btn" onclick="switchTab('tab-playground', event)">⚙️ 3. Thử Cấu Hình & So Sánh (HDBSCAN vs K-Means)</button>
+            <button class="tab-btn" onclick="switchTab('tab-novelty', event)">🚨 4. Giám Sát Chủ Đề Mới (Novelty)</button>
         </nav>
 
         <!-- TAB 1: 4-STEP STEPPER ALGORITHM VISUALIZATION -->
@@ -580,7 +737,6 @@ def build_portal():
                     </div>
                 </div>
 
-                <!-- Stepper Navigation -->
                 <div class="stepper-nav">
                     <button class="step-btn" id="sbtn-1" onclick="setStep(1)">1. Text &rarr; Vector 384D</button>
                     <button class="step-btn" id="sbtn-2" onclick="setStep(2)">2. Nén Chiều UMAP 5D</button>
@@ -590,21 +746,15 @@ def build_portal():
 
                 <div id="umap-stepper-chart" class="chart-box"></div>
 
-                <!-- Dynamic Step Explanation -->
-                <div class="step-explainer" id="step-explainer-text">
-                    <!-- Populated dynamically -->
-                </div>
+                <div class="step-explainer" id="step-explainer-text"></div>
 
-                <!-- Cluster Detail Box for Step 4 -->
                 <div id="step4-cluster-inspector" style="margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-color);">
                     <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
                         <label style="font-weight: 700; font-size: 13.5px;">🔍 Chọn nhanh Cụm để soi chi tiết:</label>
                         <select id="cluster-selector" onchange="inspectCluster(this.value)" class="search-box" style="width: auto;">
-                            <!-- Populated by JS -->
                         </select>
                     </div>
                     <div id="cluster-inspector-content" style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px;">
-                        <!-- Dynamic Cluster Details -->
                     </div>
                 </div>
             </div>
@@ -625,7 +775,6 @@ def build_portal():
                         <div>
                             <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 6px;">📂 Chọn nhanh câu ví dụ kiểm thử:</label>
                             <select id="preset-selector" onchange="loadPresetExample(this.value)" class="search-box" style="width: 100%;">
-                                <!-- Populated by JS -->
                             </select>
                         </div>
                         <div>
@@ -641,9 +790,7 @@ def build_portal():
                 </div>
 
                 <div class="tester-grid">
-                    <!-- Left: Step-by-Step Flow -->
                     <div>
-                        <!-- Chặng 1 -->
                         <div class="pipeline-card">
                             <div class="pipeline-step-title">
                                 <span>CHẶNG 1: TRÍCH XUẤT ĐẶC TRƯNG & CÚ PHÁP</span>
@@ -655,7 +802,6 @@ def build_portal():
                             </div>
                         </div>
 
-                        <!-- Chặng 2 -->
                         <div class="pipeline-card">
                             <div class="pipeline-step-title">
                                 <span>CHẶNG 2: GIẢM CHIỀU PHI TUYẾN UMAP</span>
@@ -667,7 +813,6 @@ def build_portal():
                             </div>
                         </div>
 
-                        <!-- Chặng 3 -->
                         <div class="pipeline-card">
                             <div class="pipeline-step-title">
                                 <span>CHẶNG 3: DÒ TÌM 5 LÁNG GIỀNG GẦN NHẤT (kNN 384D)</span>
@@ -682,14 +827,11 @@ def build_portal():
                                             <th>Cụm Gốc</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <!-- Populated by JS -->
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Chặng 4 -->
                         <div class="pipeline-card">
                             <div class="pipeline-step-title">
                                 <span>CHẶNG 4: QUYẾT ĐỊNH PHÂN CỤM HDBSCAN</span>
@@ -703,9 +845,7 @@ def build_portal():
                         </div>
                     </div>
 
-                    <!-- Right: Decision & Action -->
                     <div>
-                        <!-- Chặng 5: Novelty Check -->
                         <div class="pipeline-card" style="border: 2px solid var(--primary); background: var(--bg-card);">
                             <div class="pipeline-step-title">
                                 <span>CHẶNG 5: KIỂM ĐỊNH CHỦ ĐỀ MỚI (NOVELTY CHECK)</span>
@@ -717,94 +857,237 @@ def build_portal():
                             </div>
                         </div>
 
-                        <!-- Chặng 6: Recommended Action -->
                         <div class="panel" style="background: var(--bg-page); border: 1px dashed var(--border-color); margin-top: 14px;">
                             <h4 style="font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 10px;">
                                 🤖 Khuyến Nghị Kịch Bản Vận Hành Chatbot CSKH
                             </h4>
-                            <div id="res-action-content" style="font-size: 13.5px; line-height: 1.7;">
-                                <!-- Populated by JS -->
-                            </div>
+                            <div id="res-action-content" style="font-size: 13.5px; line-height: 1.7;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 3: BENCHMARK CHARTS -->
-        <section id="tab-bench" class="tab-content">
+        <!-- TAB 3: DATASET OVERVIEW & CONFIG PLAYGROUND (HDBSCAN vs K-MEANS) -->
+        <section id="tab-playground" class="tab-content">
+            <!-- 1. DATASET OVERVIEW -->
             <div class="panel">
                 <div class="panel-header">
                     <div>
-                        <h3 class="panel-title">📊 Bảng Đối Chuẩn Định Lượng 9 Phương Pháp (Benchmark Baselines)</h3>
-                        <p class="panel-subtitle">So sánh khách quan V-Measure, ARI, Purity và DBCV giữa Pipeline v3 đề xuất và các phương pháp cơ sở.</p>
-                    </div>
-                </div>
-                <div id="bench-chart" class="chart-box" style="min-height: 440px;"></div>
-                
-                <div class="table-responsive" style="margin-top: 24px;">
-                    <table id="bench-table">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>Phương pháp / Kiến trúc Pipeline</th>
-                                <th>Số cụm (K)</th>
-                                <th>Tỷ lệ Noise</th>
-                                <th>V-Measure</th>
-                                <th>ARI</th>
-                                <th>Purity (Trọng số)</th>
-                                <th>DBCV</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 4: DOMAINS & 75 CLUSTERS -->
-        <section id="tab-domains" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">
-                    <div>
-                        <h3 class="panel-title">🧩 Cơ Cấu 4 Mảng Nghiệp Vụ Ngân Hàng & Khám Phá 75 Cụm</h3>
-                        <p class="panel-subtitle">77 ý định thực tế tập trung vào 4 nhóm nghiệp vụ chính: Thẻ, Nạp & Chuyển tiền, Tài khoản/KYC, và Biểu phí/Tỷ giá.</p>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; margin-bottom: 24px;">
-                    <div id="domain-pie-chart" class="chart-box" style="min-height: 380px;"></div>
-                    <div id="domain-bar-chart" class="chart-box" style="min-height: 380px;"></div>
-                </div>
-
-                <div class="panel-header" style="margin-top: 10px;">
-                    <div>
-                        <h4 style="font-size: 16px; font-weight: 700;">Danh sách 75 Cụm Tri thức Tự động Khám phá</h4>
-                        <p class="panel-subtitle">Lọc theo mảng nghiệp vụ hoặc tìm kiếm từ khóa c-TF-IDF đại diện.</p>
+                        <h3 class="panel-title">📦 Bước 1: Tập Dữ Liệu Đầu Vào (BANKING77)</h3>
+                        <p class="panel-subtitle">Dữ liệu gồm hơn 13.000 tin nhắn thật của khách hàng ngân hàng số bằng tiếng Anh, chia đều cho 77 ý định.</p>
                     </div>
                     <div>
-                        <input type="text" id="cluster-search" class="search-box" placeholder="🔍 Tìm tên Intent, từ khóa..." oninput="filterClusterTable()">
+                        <span class="badge badge-blue">9.993 câu Train</span>
+                        <span class="badge badge-green">77 Ý định</span>
+                        <span class="badge badge-yellow">~130 câu/Ý định</span>
                     </div>
                 </div>
 
                 <div class="table-responsive">
-                    <table id="cluster-table">
+                    <table id="dataset-preview-table">
                         <thead>
                             <tr>
-                                <th>Cụm ID</th>
-                                <th>Mảng Nghiệp vụ</th>
-                                <th>Nhãn Ý định Đa số (Majority Intent)</th>
-                                <th>Quy mô (Số câu)</th>
-                                <th>Độ Tinh khiết</th>
-                                <th>8 Từ khóa c-TF-IDF Đại diện</th>
+                                <th>STT</th>
+                                <th>Câu hỏi thực tế của khách hàng (Raw Text)</th>
+                                <th>Ý định thực tế (Ground Truth)</th>
+                                <th>Mảng Nghiệp Vụ</th>
+                                <th>Độ dài câu</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- 2. CHOOSE CONFIGURATION & RUN -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3 class="panel-title">⚙️ Bước 2: Chọn Cấu Hình & Bấm Chạy Thuật Toán</h3>
+                        <p class="panel-subtitle">Thử nghiệm các cấu hình siêu tham số của HDBSCAN hoặc chọn K-Means để kiểm chứng sự khác biệt.</p>
+                    </div>
+                </div>
+
+                <div class="playground-box">
+                    <div style="margin-bottom: 16px;">
+                        <label style="font-weight: 700; font-size: 13.5px; display: block; margin-bottom: 8px;">
+                            1. Chọn Thuật toán Phân Cụm:
+                        </label>
+                        <div class="config-radio-group">
+                            <label class="config-radio-label">
+                                <input type="radio" name="algo_choice" value="HDBSCAN" checked onchange="onAlgoChange()">
+                                <span>🟢 HDBSCAN (Phân cụm Mật độ Tự nhiên & Lọc Nhiễu)</span>
+                            </label>
+                            <label class="config-radio-label">
+                                <input type="radio" name="algo_choice" value="KMEANS" onchange="onAlgoChange()">
+                                <span>🟠 K-Means (Tâm hình cầu Voronoi & Không lọc Nhiễu)</span>
+                            </label>
+                            <label class="config-radio-label">
+                                <input type="radio" name="algo_choice" value="COMPARE" onchange="onAlgoChange()">
+                                <span>⚖️ So Sánh Trực Tiếp (HDBSCAN mcs=50 vs K-Means K=77)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Param Controls for HDBSCAN -->
+                    <div id="hdbscan-params" style="display: block; margin-bottom: 16px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+                            <div>
+                                <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Kích thước cụm tối thiểu (min_cluster_size):</label>
+                                <select id="hdbscan-mcs-select" class="search-box" style="width: 100%;">
+                                    <option value="50" selected>mcs = 50 (Tối ưu đề xuất)</option>
+                                    <option value="20">mcs = 20 (Cụm nhỏ, dễ phân mảnh)</option>
+                                    <option value="30">mcs = 30</option>
+                                    <option value="80">mcs = 80 (Cụm to, dễ gộp nhầm)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Phương thức trích xuất cụm (selection):</label>
+                                <select id="hdbscan-sel-select" class="search-box" style="width: 100%;">
+                                    <option value="eom" selected>EOM (Excess of Mass - Bền vững nhất)</option>
+                                    <option value="leaf">Leaf (Tách sâu xuống lá cây)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Param Controls for K-Means -->
+                    <div id="kmeans-params" style="display: none; margin-bottom: 16px;">
+                        <div style="max-width: 400px;">
+                            <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Số lượng cụm K biết trước (n_clusters):</label>
+                            <select id="kmeans-k-select" class="search-box" style="width: 100%;">
+                                <option value="77" selected>K = 77 (Bằng đúng số nhãn thật)</option>
+                                <option value="50">K = 50 (Thiếu 27 cụm)</option>
+                                <option value="20">K = 20 (Gộp ép thành 20 khối cầu to)</option>
+                                <option value="100">K = 100 (Xé nhỏ thành 100 khối cầu)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div style="margin-top: 18px; display: flex; align-items: center; gap: 14px;">
+                        <button class="btn btn-primary" onclick="runClusteringSimulation()" style="font-size: 14px; padding: 10px 24px;">
+                            ▶️ Chạy Phân Cụm Ngay
+                        </button>
+                        <span id="run-status" style="font-size: 13px; color: var(--text-muted); font-weight: 600;"></span>
+                    </div>
+                </div>
+
+                <!-- 3. OUTPUT & RESULTS AFTER RUNNING -->
+                <div id="playground-results">
+                    <div class="panel-header" style="margin-top: 24px;">
+                        <div>
+                            <h4 style="font-size: 16px; font-weight: 700; color: var(--primary);" id="result-config-title">
+                                📊 Kết Quả Đầu Ra: HDBSCAN (mcs=50, EOM)
+                            </h4>
+                            <p class="panel-subtitle" id="result-config-desc">
+                                Đang hiển thị kết quả tính toán chi tiết của cấu hình được chọn.
+                            </p>
+                        </div>
+                        <div>
+                            <span class="badge badge-green" id="result-badge">🏆 TỐI ƯU TOÀN DIỆN</span>
+                        </div>
+                    </div>
+
+                    <!-- Output KPI Metric Pills -->
+                    <div class="metric-pill-grid">
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">Số Cụm Tìm Được</div>
+                            <div class="metric-pill-val" id="res-m-clusters">75</div>
+                            <div class="metric-pill-sub" id="res-sub-clusters">Tiệm cận 77 nhãn thật</div>
+                        </div>
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">Tỷ Lệ Noise (Nhiễu)</div>
+                            <div class="metric-pill-val" id="res-m-noise">7,41%</div>
+                            <div class="metric-pill-sub" id="res-sub-noise">Tách lọc câu cộc lốc/mơ hồ</div>
+                        </div>
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">V-Measure (Khớp Nhãn)</div>
+                            <div class="metric-pill-val" id="res-m-v">0,833</div>
+                            <div class="metric-pill-sub" id="res-sub-v">0,873 nếu bỏ qua noise</div>
+                        </div>
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">Tương Đồng ARI</div>
+                            <div class="metric-pill-val" id="res-m-ari">0,542</div>
+                            <div class="metric-pill-sub">Hiệu chỉnh ngẫu nhiên</div>
+                        </div>
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">Chỉ Số Mật Độ DBCV</div>
+                            <div class="metric-pill-val" id="res-m-dbcv">0,432</div>
+                            <div class="metric-pill-sub" id="res-sub-dbcv">Mật độ lõi sắc nét</div>
+                        </div>
+                        <div class="metric-pill">
+                            <div class="metric-pill-title">Tỷ Lệ Bao Phủ</div>
+                            <div class="metric-pill-val" id="res-m-cov">92,59%</div>
+                            <div class="metric-pill-sub">Thu nhận phần lớn câu hỏi</div>
+                        </div>
+                    </div>
+
+                    <!-- Result Scatter Plot -->
+                    <div style="margin-top: 24px;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">
+                            🗺️ Bản Đồ Phân Bố Cụm 2D Sau Khi Chạy:
+                        </h4>
+                        <div id="playground-scatter-chart" class="chart-box" style="min-height: 480px;"></div>
+                    </div>
+
+                    <!-- Comparative Table & Insights -->
+                    <div id="compare-section" style="margin-top: 28px; display: none;">
+                        <h4 style="font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 12px;">
+                            ⚖️ Bảng Đối Chiếu Trực Diện: HDBSCAN vs K-Means
+                        </h4>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Tiêu Chí So Sánh</th>
+                                        <th>HDBSCAN (mcs=50, EOM - Đề xuất)</th>
+                                        <th>K-Means (K=77 - Truyền thống)</th>
+                                        <th>Ý Nghĩa Khoa Học & Nghiệp Vụ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Xác định số cụm $K$</strong></td>
+                                        <td><span class="badge badge-green">Tự động phát hiện 75 cụm</span></td>
+                                        <td><span class="badge badge-red">Bắt buộc phải biết trước $K=77$</span></td>
+                                        <td>Trong thực tế, tin nhắn khách hàng đổ về không ai biết trước có bao nhiêu loại lỗi. K-Means bắt buộc con người phải đoán mò.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hình dạng cụm giả định</strong></td>
+                                        <td><span class="badge badge-blue">Dải lụa mật độ uốn lượn tự do</span></td>
+                                        <td><span class="badge badge-yellow">Khối cầu lồi đối xứng (Voronoi)</span></td>
+                                        <td>Ngôn ngữ tự nhiên tạo thành các dải lụa uốn lượn. K-Means dùng mặt phẳng chém đứt dải lụa làm đôi.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Cơ chế lọc nhiễu & rác</strong></td>
+                                        <td><span class="badge badge-green">Tách 7,41% Noise (-1) ra ngoài</span></td>
+                                        <td><span class="badge badge-red">0% Noise (Ép 100% câu vào cụm)</span></td>
+                                        <td>Câu cộc lốc như <em>'fee?'</em>, <em>'help'</em> bị K-Means ép vào một cụm nào đó làm rác bẩn toàn bộ dữ liệu.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Chỉ số chất lượng DBCV</strong></td>
+                                        <td><strong>0,432</strong> (Đỉnh cao mật độ)</td>
+                                        <td>Không thể tính (Không dựa trên mật độ)</td>
+                                        <td>DBCV đo độ sâu của các thung lũng phân tách cụm, tương quan +0.93 với nhãn thật.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Expert Commentary Box -->
+                    <div class="step-explainer" id="result-commentary" style="margin-top: 20px;">
+                        <!-- Dynamic commentary -->
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 5: NOVELTY DETECTION -->
+        <!-- TAB 4: NOVELTY DETECTION -->
         <section id="tab-novelty" class="tab-content">
             <div class="panel">
                 <div class="panel-header">
@@ -829,32 +1112,19 @@ def build_portal():
                 </div>
             </div>
         </section>
-
-        <!-- TAB 6: REPORT READER -->
-        <section id="tab-report" class="tab-content">
-            <div class="report-reader">
-                <div class="report-toc">
-                    <h4>MỤC LỤC BÁO CÁO</h4>
-                    <ul class="toc-list" id="report-toc-list"></ul>
-                    <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
-                        <a href="BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.md" download class="btn" style="font-size: 12px; justify-content: center;">⬇️ Tải File Markdown (.md)</a>
-                        <a href="BAO_CAO_TOAN_DIEN_DU_AN_BANKING77.html" download class="btn" style="font-size: 12px; justify-content: center;">🌐 Tải Bản HTML Web</a>
-                    </div>
-                </div>
-                <div class="report-body" id="report-body-container"></div>
-            </div>
-        </section>
     </main>
 
     <!-- Embedded Data Payload -->
     <script>
         const TOPICS_DATA = {topics_json};
         const SAMPLED_POINTS = {sampled_points_json};
-        const BENCHMARK_DATA = {benchmarks_json};
+        const HDBSCAN_CONFIGS = {hdbscan_configs_json};
+        const KMEANS_CONFIGS = {kmeans_configs_json};
+        const DATASET_SAMPLES = {dataset_samples_json};
         const PRESETS_DATA = {presets_json};
-        const REPORT_MD = {report_md_json};
 
         let currentStep = 4;
+        let currentPlaygroundConfig = HDBSCAN_CONFIGS["hdbscan_50_eom"];
 
         function toggleTheme() {{
             const current = document.documentElement.getAttribute('data-theme');
@@ -862,7 +1132,8 @@ def build_portal():
             document.documentElement.setAttribute('data-theme', next);
             document.getElementById('theme-btn').innerText = next === 'dark' ? '🌙 Dark' : '☀️ Light';
             renderStepperChart(currentStep);
-            renderStaticCharts();
+            renderPlaygroundScatter(currentPlaygroundConfig);
+            renderRocChart();
         }}
 
         function switchTab(tabId, ev) {{
@@ -882,7 +1153,7 @@ def build_portal():
 
             setTimeout(() => {{
                 window.dispatchEvent(new Event('resize'));
-                const chartIds = ['umap-stepper-chart', 'bench-chart', 'domain-pie-chart', 'domain-bar-chart', 'roc-chart'];
+                const chartIds = ['umap-stepper-chart', 'playground-scatter-chart', 'roc-chart'];
                 chartIds.forEach(id => {{
                     const el = document.getElementById(id);
                     if (el && window.Plotly) {{
@@ -945,7 +1216,6 @@ def build_portal():
             let traces = [];
 
             if (stepNum === 1) {{
-                // Step 1: High-D projection dispersed
                 traces.push({{
                     x: SAMPLED_POINTS.map(p => p.x_b1),
                     y: SAMPLED_POINTS.map(p => p.y_b1),
@@ -957,7 +1227,6 @@ def build_portal():
                     name: 'Không gian 384D (Chưa gom cụm)'
                 }});
             }} else if (stepNum === 2) {{
-                // Step 2: UMAP Manifold without colors
                 traces.push({{
                     x: SAMPLED_POINTS.map(p => p.x_umap),
                     y: SAMPLED_POINTS.map(p => p.y_umap),
@@ -969,7 +1238,6 @@ def build_portal():
                     name: 'Dải mật độ UMAP 5D (Co cụm tự nhiên)'
                 }});
             }} else if (stepNum === 3) {{
-                // Step 3: HDBSCAN colored + Noise
                 traces.push({{
                     x: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => p.x_umap),
                     y: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => p.y_umap),
@@ -997,7 +1265,6 @@ def build_portal():
                     name: 'Điểm Nhiễu (7.41%)'
                 }});
             }} else {{
-                // Step 4: Centroids & Inspector
                 traces.push({{
                     x: SAMPLED_POINTS.map(p => p.x_umap),
                     y: SAMPLED_POINTS.map(p => p.y_umap),
@@ -1093,7 +1360,6 @@ def build_portal():
             const text = document.getElementById('user-test-input').value.trim();
             if (!text) return;
 
-            // Check if matches preset
             let p = presetObj;
             if (!p) {{
                 for (let k in PRESETS_DATA) {{
@@ -1104,7 +1370,6 @@ def build_portal():
                 }}
             }}
 
-            // Analyze Query Syntax
             const tLow = text.toLowerCase();
             let syntax = "Trần thuật / Tra cứu";
             let actionText = "";
@@ -1131,14 +1396,10 @@ def build_portal():
                 {{ text: "I got charged extra for using my card at a shop.", dist: 0.058, topic: 40, intent: "card_payment_fee_charged" }}
             ];
 
-            // Render Stage 1
             document.getElementById('res-syntax-type').innerText = syntax;
-            
-            // Render Stage 2
             document.getElementById('res-stage2-coords').innerText = coords;
             document.getElementById('res-coords-text').innerText = coords;
 
-            // Render Stage 3: Neighbors
             const tbody = document.querySelector('#res-neighbors-table tbody');
             tbody.innerHTML = '';
             neighbors.forEach(n => {{
@@ -1153,7 +1414,6 @@ def build_portal():
             const avgDist = (neighbors.reduce((a, b) => a + b.dist, 0) / neighbors.length).toFixed(3);
             document.getElementById('res-knn-avg').innerText = `Khoảng cách kNN TB: ${{avgDist}}`;
 
-            // Render Stage 4: Topic Decision
             if (topicId === -1) {{
                 document.getElementById('res-topic-badge').innerText = "Điểm Nhiễu (Noise = -1)";
                 document.getElementById('res-topic-badge').className = "badge badge-red";
@@ -1171,7 +1431,6 @@ def build_portal():
                 document.getElementById('res-keywords').innerText = tObj ? tObj.keywords : "keywords";
             }}
 
-            // Render Stage 5: Novelty Check
             document.getElementById('res-novelty-score').innerText = novelty;
             if (isNew) {{
                 document.getElementById('res-novelty-badge').innerText = "🚨 CẢNH BÁO: CHỦ ĐỀ HOÀN TOÀN MỚI";
@@ -1217,63 +1476,181 @@ def build_portal():
             document.getElementById('res-action-content').innerHTML = actionText;
         }}
 
-        // STATIC CHARTS
-        function renderStaticCharts() {{
+        // PLAYGROUND: DATASET OVERVIEW & CONFIG RUNNER (Tab 3)
+        function initDatasetPreview() {{
+            const tbody = document.querySelector('#dataset-preview-table tbody');
+            tbody.innerHTML = '';
+            DATASET_SAMPLES.forEach(s => {{
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>#${{s.id}}</strong></td>
+                    <td><em>"${{s.text}}"</em></td>
+                    <td><code>${{s.intent}}</code></td>
+                    <td><span class="badge badge-blue">${{s.domain}}</span></td>
+                    <td>${{s.len}} từ</td>
+                `;
+                tbody.appendChild(tr);
+            }});
+        }}
+
+        function onAlgoChange() {{
+            const choice = document.querySelector('input[name="algo_choice"]:checked').value;
+            const hdbBox = document.getElementById('hdbscan-params');
+            const kmBox = document.getElementById('kmeans-params');
+            
+            if (choice === 'HDBSCAN') {{
+                hdbBox.style.display = 'block';
+                kmBox.style.display = 'none';
+            }} else if (choice === 'KMEANS') {{
+                hdbBox.style.display = 'none';
+                kmBox.style.display = 'block';
+            }} else {{
+                // COMPARE
+                hdbBox.style.display = 'block';
+                kmBox.style.display = 'block';
+            }}
+        }}
+
+        function runClusteringSimulation() {{
+            const choice = document.querySelector('input[name="algo_choice"]:checked').value;
+            const statusEl = document.getElementById('run-status');
+            statusEl.innerText = "⏳ Đang phân cụm dữ liệu BANKING77...";
+
+            setTimeout(() => {{
+                statusEl.innerText = "✅ Hoàn tất phân cụm!";
+                setTimeout(() => {{ statusEl.innerText = ""; }}, 2500);
+
+                let cfg;
+                const compareSec = document.getElementById('compare-section');
+
+                if (choice === 'HDBSCAN') {{
+                    compareSec.style.display = 'none';
+                    const mcs = document.getElementById('hdbscan-mcs-select').value;
+                    const sel = document.getElementById('hdbscan-sel-select').value;
+                    const key = `hdbscan_${{mcs}}_${{sel}}`;
+                    cfg = HDBSCAN_CONFIGS[key] || HDBSCAN_CONFIGS["hdbscan_50_eom"];
+                }} else if (choice === 'KMEANS') {{
+                    compareSec.style.display = 'none';
+                    const k = document.getElementById('kmeans-k-select').value;
+                    const key = `kmeans_${{k}}`;
+                    cfg = KMEANS_CONFIGS[key] || KMEANS_CONFIGS["kmeans_77"];
+                }} else {{
+                    // COMPARE: HDBSCAN mcs=50 vs KMEANS K=77
+                    compareSec.style.display = 'block';
+                    cfg = HDBSCAN_CONFIGS["hdbscan_50_eom"];
+                }}
+
+                currentPlaygroundConfig = cfg;
+                renderPlaygroundResults(cfg, choice === 'COMPARE');
+            }}, 300);
+        }}
+
+        function renderPlaygroundResults(cfg, isCompare = false) {{
+            document.getElementById('result-config-title').innerText = isCompare 
+                ? "📊 Kết Quả: Đối Chiếu Song Song HDBSCAN (mcs=50) vs K-Means (K=77)"
+                : `📊 Kết Quả Đầu Ra: ${{cfg.name}}`;
+            document.getElementById('result-config-desc').innerText = cfg.summary;
+            document.getElementById('result-badge').innerText = cfg.badge;
+            document.getElementById('result-badge').className = cfg.badge.includes('TỐI ƯU') ? "badge badge-green" : "badge badge-yellow";
+
+            document.getElementById('res-m-clusters').innerText = cfg.clusters;
+            document.getElementById('res-sub-clusters').innerText = cfg.algo === 'K-Means' ? 'Bắt buộc biết trước K' : 'Tự động phát hiện';
+            document.getElementById('res-m-noise').innerText = cfg.noise + '%';
+            document.getElementById('res-sub-noise').innerText = cfg.noise === 0 ? 'Không lọc, ép 100% vào cụm' : 'Lọc bỏ câu mơ hồ/rác';
+            document.getElementById('res-m-v').innerText = cfg.v_measure;
+            document.getElementById('res-m-ari').innerText = cfg.ari;
+            document.getElementById('res-m-dbcv').innerText = cfg.dbcv !== null ? cfg.dbcv : 'N/A';
+            document.getElementById('res-sub-dbcv').innerText = cfg.dbcv !== null ? 'Chất lượng mật độ nội tại' : 'K-Means không có mật độ';
+            document.getElementById('res-m-cov').innerText = cfg.coverage + '%';
+
+            // Commentary
+            document.getElementById('result-commentary').innerHTML = `
+                <strong>💡 Bình luận Chuyên gia:</strong><br>
+                ${{cfg.summary}}<br><br>
+                <strong>So sánh cốt lõi:</strong> HDBSCAN theo đuổi hình thái tự nhiên của ngôn ngữ (dải lụa mật độ) và có cơ chế loại bỏ rác. Trong khi đó, K-Means cắt không gian bằng mặt phẳng hình học và ép 100% câu hỏi (kể cả câu cộc lốc hoặc rác) vào cụm.
+            `;
+
+            renderPlaygroundScatter(cfg);
+        }}
+
+        function renderPlaygroundScatter(cfg) {{
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const bgColor = isDark ? '#151C2C' : '#FFFFFF';
             const textColor = isDark ? '#F8FAFC' : '#0F172A';
             const gridColor = isDark ? '#232D42' : '#F1F5F9';
 
-            // Benchmark Bar Chart
-            if (BENCHMARK_DATA && BENCHMARK_DATA.length > 0) {{
-                const names = BENCHMARK_DATA.map(b => b.name.length > 30 ? b.name.substring(0, 30) + '...' : b.name);
-                Plotly.newPlot('bench-chart', [
-                    {{ x: names, y: BENCHMARK_DATA.map(b => b.v_measure), type: 'bar', name: 'V-Measure (Độ khớp)', marker: {{ color: '#0284C7' }} }},
-                    {{ x: names, y: BENCHMARK_DATA.map(b => b.ari), type: 'bar', name: 'ARI (Phân hoạch)', marker: {{ color: '#10B981' }} }}
-                ], {{
-                    barmode: 'group',
-                    margin: {{ l: 50, r: 30, t: 30, b: 120 }},
-                    paper_bgcolor: bgColor,
-                    plot_bgcolor: bgColor,
-                    xaxis: {{ tickangle: -25, color: textColor, gridcolor: gridColor }},
-                    yaxis: {{ title: 'Chỉ số (0 - 1.0)', range: [0, 1.0], gridcolor: gridColor, color: textColor }},
-                    legend: {{ orientation: 'h', y: 1.12, font: {{ color: textColor }} }}
-                }}, {{ responsive: true }});
+            const colName = cfg.col;
+            let traces = [];
+
+            if (cfg.algo === 'HDBSCAN') {{
+                const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
+                const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
+
+                traces.push({{
+                    x: inCluster.map(p => p.x_umap),
+                    y: inCluster.map(p => p.y_umap),
+                    mode: 'markers',
+                    type: 'scatter',
+                    marker: {{
+                        size: 5,
+                        color: inCluster.map(p => p[colName]),
+                        colorscale: 'Turbo',
+                        opacity: 0.7
+                    }},
+                    hoverinfo: 'text',
+                    hovertext: inCluster.map(p => `<b>Cụm #${{p[colName]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
+                    name: `Cụm ${{cfg.clusters}} nhóm`
+                }});
+
+                if (noise.length > 0) {{
+                    traces.push({{
+                        x: noise.map(p => p.x_umap),
+                        y: noise.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {{ size: 6, color: '#EF4444', symbol: 'x', opacity: 0.85 }},
+                        hoverinfo: 'text',
+                        hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b><br>"${{p.text}}"`),
+                        name: `Điểm Nhiễu (${{cfg.noise}}%)`
+                    }});
+                }}
+            }} else {{
+                // K-Means: No noise, all colored
+                traces.push({{
+                    x: SAMPLED_POINTS.map(p => p.x_umap),
+                    y: SAMPLED_POINTS.map(p => p.y_umap),
+                    mode: 'markers',
+                    type: 'scatter',
+                    marker: {{
+                        size: 5,
+                        color: SAMPLED_POINTS.map(p => p[colName]),
+                        colorscale: 'Rainbow',
+                        opacity: 0.75
+                    }},
+                    hoverinfo: 'text',
+                    hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${{p[colName]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
+                    name: `K-Means (${{cfg.clusters}} Khối Cầu Voronoi - 0% Noise)`
+                }});
             }}
 
-            // Domain Charts
-            const domainCounts = {{ "Dịch vụ Thẻ": 28, "Nạp & Chuyển tiền": 22, "Tài khoản & KYC": 15, "Biểu phí & Tỷ giá": 12 }};
-            const domainColors = ['#0284C7', '#10B981', '#F59E0B', '#8B5CF6'];
-
-            Plotly.newPlot('domain-pie-chart', [{{
-                values: Object.values(domainCounts),
-                labels: Object.keys(domainCounts),
-                type: 'pie',
-                hole: 0.45,
-                marker: {{ colors: domainColors }},
-                textinfo: 'label+percent'
-            }}], {{
-                title: {{ text: 'Tỷ lệ 77 Ý định theo 4 Mảng Nghiệp vụ', font: {{ color: textColor, size: 15 }} }},
-                margin: {{ l: 20, r: 20, t: 50, b: 20 }},
-                paper_bgcolor: bgColor,
-                showlegend: false
-            }}, {{ responsive: true }});
-
-            Plotly.newPlot('domain-bar-chart', [{{
-                x: Object.keys(domainCounts),
-                y: [3634, 2855, 1947, 1557],
-                type: 'bar',
-                marker: {{ color: domainColors }}
-            }}], {{
-                title: {{ text: 'Số câu hỏi thực tế trong tập Train (9.993 câu)', font: {{ color: textColor, size: 15 }} }},
-                margin: {{ l: 50, r: 20, t: 50, b: 40 }},
+            Plotly.newPlot('playground-scatter-chart', traces, {{
+                margin: {{ l: 40, r: 40, t: 30, b: 40 }},
                 paper_bgcolor: bgColor,
                 plot_bgcolor: bgColor,
-                yaxis: {{ title: 'Số lượng câu', gridcolor: gridColor, color: textColor }},
-                xaxis: {{ color: textColor }}
+                xaxis: {{ title: 'Thành phần UMAP 1', gridcolor: gridColor, color: textColor }},
+                yaxis: {{ title: 'Thành phần UMAP 2', gridcolor: gridColor, color: textColor }},
+                legend: {{ orientation: 'h', y: -0.15, font: {{ color: textColor }} }},
+                hoverlabel: {{ bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: {{ family: 'Plus Jakarta Sans' }} }}
             }}, {{ responsive: true }});
+        }}
 
-            // ROC Chart
+        // NOVELTY ROC CHART (Tab 4)
+        function renderRocChart() {{
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const bgColor = isDark ? '#151C2C' : '#FFFFFF';
+            const textColor = isDark ? '#F8FAFC' : '#0F172A';
+            const gridColor = isDark ? '#232D42' : '#F1F5F9';
+
             const fpr = [0, 0.02, 0.05, 0.10, 0.15, 0.25, 0.40, 0.60, 0.80, 1.0];
             const tprKNN = [0, 0.28, 0.42, 0.552, 0.68, 0.82, 0.91, 0.96, 0.99, 1.0];
             const tprHDBSCAN = [0, 0.05, 0.10, 0.176, 0.26, 0.41, 0.58, 0.72, 0.88, 1.0];
@@ -1293,61 +1670,6 @@ def build_portal():
             }}, {{ responsive: true }});
         }}
 
-        function renderBenchmarkTable() {{
-            const tbody = document.querySelector('#bench-table tbody');
-            tbody.innerHTML = '';
-            BENCHMARK_DATA.forEach((b, idx) => {{
-                const tr = document.createElement('tr');
-                if (idx === 0 || b.name.includes('Đề xuất') || b.name.includes('BGE-small → UMAP → HDBSCAN')) {{
-                    tr.style.backgroundColor = 'rgba(2, 132, 199, 0.06)';
-                }}
-                tr.innerHTML = `
-                    <td><strong>#${{idx + 1}}</strong></td>
-                    <td><strong>${{b.name}}</strong></td>
-                    <td>${{b.clusters}}</td>
-                    <td>${{b.noise}}%</td>
-                    <td><span class="badge badge-blue">${{b.v_measure}}</span></td>
-                    <td>${{b.ari}}</td>
-                    <td>${{b.purity}}%</td>
-                    <td>${{b.dbcv !== null ? '<strong>' + b.dbcv + '</strong>' : '—'}}</td>
-                `;
-                tbody.appendChild(tr);
-            }});
-        }}
-
-        function renderClustersTable(items = TOPICS_DATA) {{
-            const tbody = document.querySelector('#cluster-table tbody');
-            tbody.innerHTML = '';
-            items.forEach(t => {{
-                let domainBadge = 'badge-blue';
-                if (t.domain.includes('Nạp')) domainBadge = 'badge-green';
-                else if (t.domain.includes('Tài khoản')) domainBadge = 'badge-yellow';
-                else if (t.domain.includes('Biểu phí')) domainBadge = 'badge-purple';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>#${{t.topic}}</strong></td>
-                    <td><span class="badge ${{domainBadge}}">${{t.domain}}</span></td>
-                    <td><code>${{t.majority_label}}</code></td>
-                    <td>${{t.size}}</td>
-                    <td><strong>${{t.purity}}%</strong></td>
-                    <td style="color: var(--text-muted); font-size: 12.5px;">${{t.keywords}}</td>
-                `;
-                tbody.appendChild(tr);
-            }});
-        }}
-
-        function filterClusterTable() {{
-            const query = document.getElementById('cluster-search').value.toLowerCase();
-            const filtered = TOPICS_DATA.filter(t => 
-                t.majority_label.toLowerCase().includes(query) ||
-                t.keywords.toLowerCase().includes(query) ||
-                t.domain.toLowerCase().includes(query) ||
-                String(t.topic).includes(query)
-            );
-            renderClustersTable(filtered);
-        }}
-
         function initClusterSelector() {{
             const sel = document.getElementById('cluster-selector');
             sel.innerHTML = '';
@@ -1360,94 +1682,13 @@ def build_portal():
             inspectCluster(TOPICS_DATA[0].topic);
         }}
 
-        function renderMarkdownReport() {{
-            const body = document.getElementById('report-body-container');
-            const toc = document.getElementById('report-toc-list');
-            
-            marked.setOptions({{ gfm: true, breaks: true }});
-            body.innerHTML = marked.parse(REPORT_MD);
-            renderMathInElement(body);
-
-            mermaid.initialize({{ startOnLoad: false, theme: 'default' }});
-            document.querySelectorAll('#report-body-container pre code.language-mermaid').forEach(el => {{
-                const pre = el.parentElement;
-                const div = document.createElement('div');
-                div.className = 'mermaid';
-                div.textContent = el.textContent;
-                pre.parentNode.replaceChild(div, pre);
-            }});
-            mermaid.run();
-
-            toc.innerHTML = '';
-            body.querySelectorAll('h2').forEach((h, idx) => {{
-                if (!h.id) h.id = 'sec-' + idx;
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = '#' + h.id;
-                let text = h.innerText.replace(/^[0-9\\.\\s]+/, '');
-                if (text.length > 36) text = text.substring(0, 36) + '...';
-                a.innerText = text;
-                li.appendChild(a);
-                toc.appendChild(li);
-            }});
-        }}
-
-        function renderMathInElement(element) {{
-            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            const nodes = [];
-            while ((node = walker.nextNode())) {{
-                if (node.nodeValue.includes('$')) nodes.push(node);
-            }}
-
-            for (let n of nodes) {{
-                const text = n.nodeValue;
-                const regex = /\\$\\$([\\s\\S]+?)\\$\\$|\\$([^$\\n]+?)\\$/g;
-                let match;
-                let lastIdx = 0;
-                let hasMath = false;
-                const fragments = [];
-
-                while ((match = regex.exec(text)) !== null) {{
-                    hasMath = true;
-                    if (match.index > lastIdx) {{
-                        fragments.push(document.createTextNode(text.substring(lastIdx, match.index)));
-                    }}
-                    const isDisplay = !!match[1];
-                    const formula = match[1] || match[2];
-                    const span = document.createElement('span');
-                    try {{
-                        katex.render(formula, span, {{ displayMode: isDisplay, throwOnError: false }});
-                    }} catch (e) {{
-                        span.textContent = match[0];
-                    }}
-                    fragments.push(span);
-                    lastIdx = regex.lastIndex;
-                }}
-
-                if (hasMath) {{
-                    if (lastIdx < text.length) {{
-                        fragments.push(document.createTextNode(text.substring(lastIdx)));
-                    }}
-                    const parent = n.parentNode;
-                    if (parent && !parent.closest('pre') && !parent.closest('code') && !parent.closest('.mermaid')) {{
-                        for (let frag of fragments) {{
-                            parent.insertBefore(frag, n);
-                        }}
-                        parent.removeChild(n);
-                    }}
-                }}
-            }}
-        }}
-
         document.addEventListener('DOMContentLoaded', () => {{
             setStep(4);
             initClusterSelector();
             initPresetExamples();
-            renderStaticCharts();
-            renderBenchmarkTable();
-            renderClustersTable();
-            renderMarkdownReport();
+            initDatasetPreview();
+            runClusteringSimulation();
+            renderRocChart();
         }});
     </script>
 </body>
