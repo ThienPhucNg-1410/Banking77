@@ -129,6 +129,31 @@
 
         .btn-primary:hover { color: #FFFFFF; opacity: 0.95; box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35); }
 
+        .btn-toggle {
+            padding: 5px 12px;
+            font-size: 12.5px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-toggle:hover {
+            color: var(--text-main);
+            border-color: var(--primary);
+        }
+        .btn-toggle.active {
+            background: var(--primary);
+            color: #FFFFFF;
+            border-color: var(--primary);
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+        }
+
         .hero { max-width: 1400px; margin: 24px auto 16px; padding: 0 24px; }
         .hero-card {
             background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(37, 99, 235, 0.04) 100%);
@@ -735,17 +760,37 @@
 
                     <!-- Result Scatter Plot Container -->
                     <div id="single-chart-container" style="margin-top: 24px;">
-                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">
-                            🗺️ Bản Đồ Phân Bố Cụm 2D Sau Khi Chạy:
-                        </h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="font-size: 15px; font-weight: 700; margin: 0;">
+                                🗺️ Bản Đồ Không Gian Phân Cụm 2D:
+                            </h4>
+                            <div style="display: flex; gap: 8px; align-items: center; background: var(--bg-page); padding: 4px; border: 1px solid var(--border-color); border-radius: 8px;">
+                                <button type="button" class="btn-toggle active" id="btn-mode-scatter" onclick="setPlaygroundViewMode('scatter')">
+                                    🔹 Chi Tiết Từng Điểm
+                                </button>
+                                <button type="button" class="btn-toggle" id="btn-mode-bubbles" onclick="setPlaygroundViewMode('bubbles')">
+                                    🫧 Tâm Cụm To (Bong Bóng Centroid)
+                                </button>
+                            </div>
+                        </div>
                         <div id="playground-scatter-chart" class="chart-box" style="min-height: 480px;"></div>
                     </div>
 
                     <!-- Side-by-Side Compare Charts Container -->
                     <div id="compare-charts-container" style="margin-top: 24px; display: none;">
-                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary);">
-                            ⚖️ So Sánh Trực Tiếp Không Gian Phân Cụm: HDBSCAN vs K-Means
-                        </h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                            <h4 style="font-size: 15px; font-weight: 700; margin: 0; color: var(--primary);">
+                                ⚖️ So Sánh Trực Tiếp Không Gian Phân Cụm: HDBSCAN vs K-Means
+                            </h4>
+                            <div style="display: flex; gap: 8px; align-items: center; background: var(--bg-page); padding: 4px; border: 1px solid var(--border-color); border-radius: 8px;">
+                                <button type="button" class="btn-toggle active" id="btn-comp-scatter" onclick="setPlaygroundViewMode('scatter')">
+                                    🔹 Chi Tiết Từng Điểm
+                                </button>
+                                <button type="button" class="btn-toggle" id="btn-comp-bubbles" onclick="setPlaygroundViewMode('bubbles')">
+                                    🫧 Tâm Cụm To (Bong Bóng Centroid)
+                                </button>
+                            </div>
+                        </div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
                             <div style="background: var(--bg-card); border: 1.5px solid #0284C7; border-radius: 12px; padding: 14px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -817,6 +862,22 @@
                         </div>
                     </div>
 
+                    <!-- Tab 3 Cluster Inspector: Soi Chi Tiết Cụm giống Phần 1 Bước 4 -->
+                    <div id="playground-cluster-inspector" style="margin-top: 24px; padding-top: 18px; border-top: 1.5px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                            <label style="font-weight: 700; font-size: 14px; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+                                🔍 Soi Chi Tiết Cụm Nghiệp Vụ (Mỏ Neo Từ Vựng c-TF-IDF & Câu Hỏi Đại Diện):
+                            </label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="font-size: 12.5px; color: var(--text-muted);">Chọn cụm:</span>
+                                <select id="playground-cluster-selector" onchange="inspectPlaygroundCluster(this.value)" class="search-box" style="width: auto; min-width: 280px; padding: 6px 12px; font-size: 13px;">
+                                </select>
+                            </div>
+                        </div>
+                        <div id="playground-cluster-content" style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px;">
+                        </div>
+                    </div>
+
                     <!-- Expert Commentary Box -->
                     <div class="step-explainer" id="result-commentary" style="margin-top: 20px;">
                         <!-- Dynamic commentary -->
@@ -863,6 +924,58 @@
 
         let currentStep = 4;
         let currentPlaygroundConfig = HDBSCAN_CONFIGS["hdbscan_50_eom"];
+        let playgroundViewMode = 'scatter'; // 'scatter' or 'bubbles'
+        let kmeansCentroids = null;
+
+        function getKMeansCentroids() {
+            if (kmeansCentroids) return kmeansCentroids;
+            const groups = {};
+            SAMPLED_POINTS.forEach(p => {
+                const k = p.km_77;
+                if (!groups[k]) groups[k] = { k: k, count: 0, sx: 0, sy: 0, intentMap: {} };
+                groups[k].count++;
+                groups[k].sx += p.x_umap;
+                groups[k].sy += p.y_umap;
+                groups[k].intentMap[p.intent] = (groups[k].intentMap[p.intent] || 0) + 1;
+            });
+            kmeansCentroids = Object.values(groups).map(g => {
+                let majIntent = '';
+                let maxCount = 0;
+                for (let it in g.intentMap) {
+                    if (g.intentMap[it] > maxCount) { maxCount = g.intentMap[it]; majIntent = it; }
+                }
+                return {
+                    k: g.k,
+                    cx: g.sx / g.count,
+                    cy: g.sy / g.count,
+                    size: Math.round(g.count * (9993 / SAMPLED_POINTS.length)),
+                    majority_label: majIntent,
+                    purity: Math.round((maxCount / g.count) * 1000) / 10
+                };
+            });
+            return kmeansCentroids;
+        }
+
+        function setPlaygroundViewMode(mode) {
+            playgroundViewMode = mode;
+            ['btn-mode-scatter', 'btn-comp-scatter'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (mode === 'scatter') el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            });
+            ['btn-mode-bubbles', 'btn-comp-bubbles'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (mode === 'bubbles') el.classList.add('active');
+                    else el.classList.remove('active');
+                }
+            });
+
+            const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare);
+        }
 
         // COLOR SYSTEM: Discrete vivid palette for high-contrast cluster visualization
         const VIVID_PALETTE = [
@@ -1336,6 +1449,43 @@
             renderPlaygroundScatter(cfg, isCompare);
         }
 
+        function initPlaygroundClusterSelector() {
+            const sel = document.getElementById('playground-cluster-selector');
+            if (!sel) return;
+            sel.innerHTML = '';
+            TOPICS_DATA.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.topic;
+                opt.innerText = `Topic #${t.topic}: ${t.majority_label} (${t.purity}% - ${t.size} câu)`;
+                sel.appendChild(opt);
+            });
+            inspectPlaygroundCluster(TOPICS_DATA[0].topic);
+        }
+
+        function inspectPlaygroundCluster(topicId) {
+            const t = TOPICS_DATA.find(x => x.topic === parseInt(topicId, 10));
+            if (!t) return;
+            const container = document.getElementById('playground-cluster-content');
+            if (!container) return;
+            let repsHtml = t.reps.map((s, i) => `<li style="margin-bottom: 4px;"><em>"${s}"</em></li>`).join('');
+            
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                    <h4 style="font-size: 16px; color: var(--primary);">Cụm #${t.topic}: <code>${t.majority_label}</code></h4>
+                    <div>
+                        <span class="badge badge-blue">Quy mô: ${t.size} câu</span>
+                        <span class="badge badge-green">Purity: ${t.purity}%</span>
+                        <span class="badge badge-purple">${t.domain}</span>
+                    </div>
+                </div>
+                <div style="font-size: 13px; margin-bottom: 8px;"><strong>🔑 8 Từ khóa c-TF-IDF đặc trưng:</strong> <code>${t.keywords}</code></div>
+                <div style="font-size: 13px;"><strong>🌟 Các câu hỏi đại diện tiêu biểu nhất từ tập BANKING77:</strong></div>
+                <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6; margin-top: 4px;">
+                    ${repsHtml}
+                </ul>
+            `;
+        }
+
         function renderPlaygroundScatter(cfg, isCompare = false) {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const bgColor = isDark ? '#151C2C' : '#FFFFFF';
@@ -1349,36 +1499,131 @@
                 if (singleContainer) singleContainer.style.display = 'none';
                 if (compareContainer) compareContainer.style.display = 'block';
 
-                // Chart 1: HDBSCAN (t_50_eom)
-                const inHdb = SAMPLED_POINTS.filter(p => p.t_50_eom !== -1);
-                const noiseHdb = SAMPLED_POINTS.filter(p => p.t_50_eom === -1);
+                let hdbTraces = [];
+                let kmTraces = [];
 
-                const hdbTraces = [
-                    {
-                        x: inHdb.map(p => p.x_umap),
-                        y: inHdb.map(p => p.y_umap),
-                        mode: 'markers',
-                        type: 'scatter',
-                        marker: {
-                            size: 5,
-                            color: inHdb.map(p => getVividClusterColor(p.t_50_eom)),
-                            opacity: 0.75
+                if (playgroundViewMode === 'bubbles') {
+                    // BUBBLE / CENTROID VIEW FOR COMPARE
+                    hdbTraces = [
+                        {
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: { size: 3.5, color: '#94A3B8', opacity: 0.25 },
+                            hoverinfo: 'skip',
+                            name: 'Dữ liệu nền'
                         },
-                        hoverinfo: 'text',
-                        hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${p.t_50_eom}</b> (${p.intent})<br>"${p.text}"`),
-                        name: '75 Cụm Mật Độ Tự Nhiên'
-                    },
-                    {
-                        x: noiseHdb.map(p => p.x_umap),
-                        y: noiseHdb.map(p => p.y_umap),
-                        mode: 'markers',
-                        type: 'scatter',
-                        marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
-                        hoverinfo: 'text',
-                        hovertext: noiseHdb.map(p => `<b>Điểm Nhiễu HDBSCAN (-1)</b><br>"${p.text}"`),
-                        name: 'Điểm Nhiễu (7,41%)'
-                    }
-                ];
+                        {
+                            x: TOPICS_DATA.map(t => t.cx),
+                            y: TOPICS_DATA.map(t => t.cy),
+                            mode: 'markers+text',
+                            type: 'scatter',
+                            text: TOPICS_DATA.map(t => 'C' + t.topic),
+                            textposition: 'top center',
+                            textfont: { family: 'Plus Jakarta Sans', size: 9, color: textColor },
+                            marker: {
+                                size: TOPICS_DATA.map(t => Math.max(12, Math.sqrt(t.size) * 1.85)),
+                                color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
+                                opacity: 0.9,
+                                line: { color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }
+                            },
+                            hoverinfo: 'text',
+                            hovertext: TOPICS_DATA.map(t => 
+                                `<b>HDBSCAN Cụm #${t.topic}</b>: ${t.majority_label}<br>` +
+                                `Quy mô: ${t.size} câu | Purity: ${t.purity}%<br>` +
+                                `Mảng: ${t.domain}<br>` +
+                                `Từ khóa: <i>${t.keywords}</i>`
+                            ),
+                            customdata: TOPICS_DATA.map(t => t.topic),
+                            name: 'Tâm 75 Cụm HDBSCAN'
+                        }
+                    ];
+
+                    const kmCentroids = getKMeansCentroids();
+                    kmTraces = [
+                        {
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: { size: 3.5, color: '#94A3B8', opacity: 0.25 },
+                            hoverinfo: 'skip',
+                            name: 'Dữ liệu nền'
+                        },
+                        {
+                            x: kmCentroids.map(k => k.cx),
+                            y: kmCentroids.map(k => k.cy),
+                            mode: 'markers+text',
+                            type: 'scatter',
+                            text: kmCentroids.map(k => 'K' + k.k),
+                            textposition: 'top center',
+                            textfont: { family: 'Plus Jakarta Sans', size: 9, color: textColor },
+                            marker: {
+                                size: kmCentroids.map(k => Math.max(12, Math.sqrt(k.size) * 1.85)),
+                                color: kmCentroids.map(k => getVividClusterColor(k.k)),
+                                opacity: 0.9,
+                                line: { color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }
+                            },
+                            hoverinfo: 'text',
+                            hovertext: kmCentroids.map(k => 
+                                `<b>K-Means Cụm #${k.k}</b>: ${k.majority_label}<br>` +
+                                `Quy mô: ~${k.size} câu | Purity: ${k.purity}%<br>` +
+                                `Khối cầu Voronoi (0% Noise)`
+                            ),
+                            name: 'Tâm 77 Khối Cầu K-Means'
+                        }
+                    ];
+                } else {
+                    // SCATTER POINTS VIEW FOR COMPARE
+                    const inHdb = SAMPLED_POINTS.filter(p => p.t_50_eom !== -1);
+                    const noiseHdb = SAMPLED_POINTS.filter(p => p.t_50_eom === -1);
+
+                    hdbTraces = [
+                        {
+                            x: inHdb.map(p => p.x_umap),
+                            y: inHdb.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {
+                                size: 5,
+                                color: inHdb.map(p => getVividClusterColor(p.t_50_eom)),
+                                opacity: 0.75
+                            },
+                            hoverinfo: 'text',
+                            hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${p.t_50_eom}</b> (${p.intent})<br>"${p.text}"`),
+                            customdata: inHdb.map(p => p.t_50_eom),
+                            name: '75 Cụm Mật Độ Tự Nhiên'
+                        },
+                        {
+                            x: noiseHdb.map(p => p.x_umap),
+                            y: noiseHdb.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                            hoverinfo: 'text',
+                            hovertext: noiseHdb.map(p => `<b>Điểm Nhiễu HDBSCAN (-1)</b><br>"${p.text}"`),
+                            name: 'Điểm Nhiễu (7,41%)'
+                        }
+                    ];
+
+                    kmTraces = [
+                        {
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {
+                                size: 5,
+                                color: SAMPLED_POINTS.map(p => getVividClusterColor(p.km_77)),
+                                opacity: 0.75
+                            },
+                            hoverinfo: 'text',
+                            hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p.km_77}</b> (${p.intent})<br>"${p.text}"`),
+                            name: '77 Khối Cầu Voronoi (0% Noise)'
+                        }
+                    ];
+                }
 
                 Plotly.newPlot('compare-hdbscan-chart', hdbTraces, {
                     margin: { l: 35, r: 25, t: 30, b: 35 },
@@ -1390,24 +1635,6 @@
                     hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
                 }, { responsive: true });
 
-                // Chart 2: K-Means (km_77)
-                const kmTraces = [
-                    {
-                        x: SAMPLED_POINTS.map(p => p.x_umap),
-                        y: SAMPLED_POINTS.map(p => p.y_umap),
-                        mode: 'markers',
-                        type: 'scatter',
-                        marker: {
-                            size: 5,
-                            color: SAMPLED_POINTS.map(p => getVividClusterColor(p.km_77)),
-                            opacity: 0.75
-                        },
-                        hoverinfo: 'text',
-                        hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p.km_77}</b> (${p.intent})<br>"${p.text}"`),
-                        name: '77 Khối Cầu Voronoi (0% Noise)'
-                    }
-                ];
-
                 Plotly.newPlot('compare-kmeans-chart', kmTraces, {
                     margin: { l: 35, r: 25, t: 30, b: 35 },
                     paper_bgcolor: bgColor,
@@ -1418,60 +1645,152 @@
                     hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
                 }, { responsive: true });
 
+                const hdbEl = document.getElementById('compare-hdbscan-chart');
+                if (hdbEl && hdbEl.on) {
+                    hdbEl.on('plotly_click', function(data) {
+                        if (data && data.points && data.points.length > 0) {
+                            const tid = data.points[0].customdata;
+                            if (tid !== undefined && tid !== null && tid !== -1) {
+                                const sel = document.getElementById('playground-cluster-selector');
+                                if (sel) sel.value = tid;
+                                inspectPlaygroundCluster(tid);
+                            }
+                        }
+                    });
+                }
+
             } else {
+                // SINGLE CHART MODE
                 if (singleContainer) singleContainer.style.display = 'block';
                 if (compareContainer) compareContainer.style.display = 'none';
 
                 const colName = cfg.col;
                 let traces = [];
 
-                if (cfg.algo === 'HDBSCAN') {
-                    const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
-                    const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
-
-                    traces.push({
-                        x: inCluster.map(p => p.x_umap),
-                        y: inCluster.map(p => p.y_umap),
-                        mode: 'markers',
-                        type: 'scatter',
-                        marker: {
-                            size: 5,
-                            color: inCluster.map(p => getVividClusterColor(p[colName])),
-                            opacity: 0.75
-                        },
-                        hoverinfo: 'text',
-                        hovertext: inCluster.map(p => `<b>Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
-                        name: `Cụm ${cfg.clusters} nhóm`
-                    });
-
-                    if (noise.length > 0) {
+                if (playgroundViewMode === 'bubbles') {
+                    // BUBBLE / CENTROID VIEW
+                    if (cfg.algo === 'HDBSCAN') {
                         traces.push({
-                            x: noise.map(p => p.x_umap),
-                            y: noise.map(p => p.y_umap),
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
                             mode: 'markers',
                             type: 'scatter',
-                            marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                            marker: { size: 4, color: '#94A3B8', opacity: 0.35 },
+                            hoverinfo: 'skip',
+                            name: 'Dữ liệu nền (9.993 câu)'
+                        });
+
+                        traces.push({
+                            x: TOPICS_DATA.map(t => t.cx),
+                            y: TOPICS_DATA.map(t => t.cy),
+                            mode: 'markers+text',
+                            type: 'scatter',
+                            text: TOPICS_DATA.map(t => 'C' + t.topic),
+                            textposition: 'top center',
+                            textfont: { family: 'Plus Jakarta Sans', size: 10, color: textColor },
+                            marker: {
+                                size: TOPICS_DATA.map(t => Math.max(13, Math.sqrt(t.size) * 1.85)),
+                                color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
+                                opacity: 0.9,
+                                line: { color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }
+                            },
                             hoverinfo: 'text',
-                            hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b><br>"${p.text}"`),
-                            name: `Điểm Nhiễu (${cfg.noise}%)`
+                            hovertext: TOPICS_DATA.map(t => 
+                                `<b>Cụm #${t.topic}</b>: ${t.majority_label}<br>` +
+                                `Quy mô: ${t.size} câu | Purity: ${t.purity}%<br>` +
+                                `Mảng: ${t.domain}<br>` +
+                                `Từ khóa: <i>${t.keywords}</i>`
+                            ),
+                            customdata: TOPICS_DATA.map(t => t.topic),
+                            name: `Tâm 75 Cụm HDBSCAN Tự Nhiên`
+                        });
+                    } else {
+                        // K-Means Bubble View
+                        const kmCentroids = getKMeansCentroids();
+                        traces.push({
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: { size: 4, color: '#94A3B8', opacity: 0.35 },
+                            hoverinfo: 'skip',
+                            name: 'Dữ liệu nền (9.993 câu)'
+                        });
+
+                        traces.push({
+                            x: kmCentroids.map(k => k.cx),
+                            y: kmCentroids.map(k => k.cy),
+                            mode: 'markers+text',
+                            type: 'scatter',
+                            text: kmCentroids.map(k => 'K' + k.k),
+                            textposition: 'top center',
+                            textfont: { family: 'Plus Jakarta Sans', size: 10, color: textColor },
+                            marker: {
+                                size: kmCentroids.map(k => Math.max(13, Math.sqrt(k.size) * 1.85)),
+                                color: kmCentroids.map(k => getVividClusterColor(k.k)),
+                                opacity: 0.9,
+                                line: { color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }
+                            },
+                            hoverinfo: 'text',
+                            hovertext: kmCentroids.map(k => 
+                                `<b>K-Means Cụm #${k.k}</b>: ${k.majority_label}<br>` +
+                                `Quy mô: ~${k.size} câu | Purity: ${k.purity}%<br>` +
+                                `Tâm khối cầu Voronoi (0% Noise)`
+                            ),
+                            name: `Tâm ${cfg.clusters} Khối Cầu K-Means`
                         });
                     }
                 } else {
-                    // K-Means: No noise, all colored with vivid distinct colors
-                    traces.push({
-                        x: SAMPLED_POINTS.map(p => p.x_umap),
-                        y: SAMPLED_POINTS.map(p => p.y_umap),
-                        mode: 'markers',
-                        type: 'scatter',
-                        marker: {
-                            size: 5,
-                            color: SAMPLED_POINTS.map(p => getVividClusterColor(p[colName])),
-                            opacity: 0.75
-                        },
-                        hoverinfo: 'text',
-                        hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
-                        name: `K-Means (${cfg.clusters} Khối Cầu Voronoi - 0% Noise)`
-                    });
+                    // SCATTER POINTS VIEW
+                    if (cfg.algo === 'HDBSCAN') {
+                        const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
+                        const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
+
+                        traces.push({
+                            x: inCluster.map(p => p.x_umap),
+                            y: inCluster.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {
+                                size: 5,
+                                color: inCluster.map(p => getVividClusterColor(p[colName])),
+                                opacity: 0.75
+                            },
+                            hoverinfo: 'text',
+                            hovertext: inCluster.map(p => `<b>Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
+                            customdata: inCluster.map(p => p[colName]),
+                            name: `Cụm ${cfg.clusters} nhóm`
+                        });
+
+                        if (noise.length > 0) {
+                            traces.push({
+                                x: noise.map(p => p.x_umap),
+                                y: noise.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                                hoverinfo: 'text',
+                                hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b><br>"${p.text}"`),
+                                name: `Điểm Nhiễu (${cfg.noise}%)`
+                            });
+                        }
+                    } else {
+                        // K-Means: No noise, all colored
+                        traces.push({
+                            x: SAMPLED_POINTS.map(p => p.x_umap),
+                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {
+                                size: 5,
+                                color: SAMPLED_POINTS.map(p => getVividClusterColor(p[colName])),
+                                opacity: 0.75
+                            },
+                            hoverinfo: 'text',
+                            hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
+                            name: `K-Means (${cfg.clusters} Khối Cầu Voronoi - 0% Noise)`
+                        });
+                    }
                 }
 
                 Plotly.newPlot('playground-scatter-chart', traces, {
@@ -1483,6 +1802,20 @@
                     legend: { orientation: 'h', y: -0.15, font: { color: textColor } },
                     hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
                 }, { responsive: true });
+
+                const scatterEl = document.getElementById('playground-scatter-chart');
+                if (scatterEl && scatterEl.on) {
+                    scatterEl.on('plotly_click', function(data) {
+                        if (data && data.points && data.points.length > 0) {
+                            const tid = data.points[0].customdata;
+                            if (tid !== undefined && tid !== null && tid !== -1) {
+                                const sel = document.getElementById('playground-cluster-selector');
+                                if (sel) sel.value = tid;
+                                inspectPlaygroundCluster(tid);
+                            }
+                        }
+                    });
+                }
             }
         }
 
@@ -1527,6 +1860,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             setStep(4);
             initClusterSelector();
+            initPlaygroundClusterSelector();
             initPresetExamples();
             initDatasetPreview();
             runClusteringSimulation();
