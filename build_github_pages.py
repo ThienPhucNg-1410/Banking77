@@ -539,9 +539,9 @@ def build_portal():
         .chart-box {{ width: 100%; min-height: 520px; border-radius: 10px; overflow: hidden; }}
 
         .table-responsive {{ overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }}
-        table {{ width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }}
-        th, td {{ padding: 10px 14px; border-bottom: 1px solid var(--border-color); }}
-        th {{ background-color: rgba(2, 132, 199, 0.05); font-weight: 700; color: var(--primary); white-space: nowrap; }}
+        table {{ width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }}
+        th, td {{ padding: 12px 14px; border-bottom: 1px solid var(--border-color); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; vertical-align: middle; }}
+        th {{ background-color: rgba(2, 132, 199, 0.05); font-weight: 700; color: var(--primary); white-space: nowrap; font-size: 13.5px; }}
         tr:hover td {{ background-color: rgba(2, 132, 199, 0.02); }}
 
         .badge {{ display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; }}
@@ -1084,26 +1084,52 @@ def build_portal():
                                 </button>
                             </div>
                         </div>
+
+                        <!-- Intent Filter Toolbar for Comparison (Giúp hiển thị đỡ rối) -->
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); border: 1.5px solid var(--border-color); border-radius: 10px; padding: 10px 16px; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <label style="font-size: 13.5px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+                                    🎯 Lọc Intent Cần So Sánh:
+                                </label>
+                                <select id="compare-intent-filter" onchange="onCompareIntentChange(this.value)" class="search-box" style="width: auto; min-width: 290px; padding: 6px 12px; font-size: 13px; font-weight: 600;">
+                                    <option value="ALL">🌟 Tất Cả Intent (Toàn bộ 1.200 mẫu quan sát)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Hiển thị:</span>
+                                <button type="button" class="btn-toggle active" id="btn-filter-isolate" onclick="setCompareFilterMode('isolate')">
+                                    👁️ Chỉ hiện Intent này
+                                </button>
+                                <button type="button" class="btn-toggle" id="btn-filter-dim" onclick="setCompareFilterMode('dim')">
+                                    🌫️ Làm mờ các Intent khác
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Intent Insight Card when an Intent is selected -->
+                        <div id="compare-intent-insight" style="display: none; background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(2, 132, 199, 0.25); border-radius: 8px; padding: 10px 16px; margin-bottom: 14px; font-size: 13px; line-height: 1.6;">
+                        </div>
+
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
                             <div style="background: var(--bg-card); border: 1.5px solid #0284C7; border-radius: 12px; padding: 14px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <strong style="color: #0284C7; font-size: 14px;">🟢 HDBSCAN (mcs=50, EOM)</strong>
-                                    <span class="badge badge-green">75 Cụm Tự Nhiên | 7,41% Noise</span>
+                                    <strong style="color: #0284C7; font-size: 14px;" id="compare-hdb-title">🟢 HDBSCAN (mcs=50, EOM)</strong>
+                                    <span class="badge badge-green" id="compare-hdb-badge">75 Cụm Tự Nhiên | 7,41% Noise</span>
                                 </div>
                                 <div id="compare-hdbscan-chart" class="chart-box" style="min-height: 450px;"></div>
                                 <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
                                     ✓ Uốn lượn theo dải mật độ tự nhiên.<br>
-                                    ✓ Lọc 7,41% câu cộc lốc (điểm đỏ <strong>x</strong>) bảo vệ độ tinh khiết.
+                                    ✓ Lọc câu cộc lốc (điểm đỏ <strong>x</strong>) bảo vệ độ tinh khiết.
                                 </div>
                             </div>
                             <div style="background: var(--bg-card); border: 1.5px solid #F59E0B; border-radius: 12px; padding: 14px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <strong style="color: #D97706; font-size: 14px;">🟠 K-Means (K=77)</strong>
-                                    <span class="badge badge-yellow">77 Khối Cầu | 0% Noise (Ép cả rác)</span>
+                                    <strong style="color: #D97706; font-size: 14px;" id="compare-km-title">🟠 K-Means (K=77)</strong>
+                                    <span class="badge badge-yellow" id="compare-km-badge">77 Khối Cầu | 0% Noise (Ép cả rác)</span>
                                 </div>
                                 <div id="compare-kmeans-chart" class="chart-box" style="min-height: 450px;"></div>
                                 <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
-                                    ⚠️ Bắt buộc phải biết trước K=77 nhãn.<br>
+                                    ⚠️ Bắt buộc phải biết trước số nhãn <em>K</em>.<br>
                                     ⚠️ Ép 100% câu hỏi (kể cả câu cộc lốc/rác) vào các khối cầu Voronoi.
                                 </div>
                             </div>
@@ -1120,17 +1146,17 @@ def build_portal():
                                 <thead>
                                     <tr>
                                         <th>Tiêu Chí So Sánh</th>
-                                        <th>HDBSCAN (mcs=50, EOM - Đề xuất)</th>
-                                        <th>K-Means (K=77 - Truyền thống)</th>
+                                        <th id="tbl-hdb-col-title">HDBSCAN (mcs=50, EOM - Đề xuất)</th>
+                                        <th id="tbl-km-col-title">K-Means (K=77 - Truyền thống)</th>
                                         <th>Ý Nghĩa Khoa Học & Nghiệp Vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><strong>Xác định số cụm $K$</strong></td>
-                                        <td><span class="badge badge-green">Tự động phát hiện 75 cụm</span></td>
-                                        <td><span class="badge badge-red">Bắt buộc phải biết trước $K=77$</span></td>
-                                        <td>Trong thực tế, tin nhắn khách hàng đổ về không ai biết trước có bao nhiêu loại lỗi. K-Means bắt buộc con người phải đoán mò.</td>
+                                        <td><strong>Xác định số cụm <i>K</i></strong></td>
+                                        <td><span class="badge badge-green" id="tbl-hdb-k">Tự động phát hiện 75 cụm</span></td>
+                                        <td><span class="badge badge-red" id="tbl-km-k">Bắt buộc phải biết trước <code>K = 77</code></span></td>
+                                        <td>Trong thực tế, tin nhắn khách hàng gửi đến không ai biết trước có bao nhiêu loại lỗi. K-Means bắt buộc con người phải đoán mò.</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Hình dạng cụm giả định</strong></td>
@@ -1140,13 +1166,13 @@ def build_portal():
                                     </tr>
                                     <tr>
                                         <td><strong>Cơ chế lọc nhiễu & rác</strong></td>
-                                        <td><span class="badge badge-green">Tách 7,41% Noise (-1) ra ngoài</span></td>
-                                        <td><span class="badge badge-red">0% Noise (Ép 100% câu vào cụm)</span></td>
+                                        <td><span class="badge badge-green" id="tbl-hdb-noise">Tách 7,41% Noise (-1) ra ngoài</span></td>
+                                        <td><span class="badge badge-red" id="tbl-km-noise">0% Noise (Ép 100% câu vào cụm)</span></td>
                                         <td>Câu cộc lốc như <em>'fee?'</em>, <em>'help'</em> bị K-Means ép vào một cụm nào đó làm rác bẩn toàn bộ dữ liệu.</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Chỉ số chất lượng DBCV</strong></td>
-                                        <td><strong>0,432</strong> (Đỉnh cao mật độ)</td>
+                                        <td><strong id="tbl-hdb-dbcv">0,432</strong> (Đỉnh cao mật độ)</td>
                                         <td>Không thể tính (Không dựa trên mật độ)</td>
                                         <td>DBCV đo độ sâu của các thung lũng phân tách cụm, tương quan +0.93 với nhãn thật.</td>
                                     </tr>
@@ -1216,22 +1242,27 @@ def build_portal():
         const PRESETS_DATA = {presets_json};
 
         let currentStep = 4;
+        let currentHdbConfig = HDBSCAN_CONFIGS["hdbscan_50_eom"];
+        let currentKmConfig = KMEANS_CONFIGS["kmeans_77"];
         let currentPlaygroundConfig = HDBSCAN_CONFIGS["hdbscan_50_eom"];
         let playgroundViewMode = 'scatter'; // 'scatter' or 'bubbles'
-        let kmeansCentroids = null;
+        let selectedCompareIntent = 'ALL';
+        let compareFilterMode = 'isolate'; // 'isolate' or 'dim'
+        let kmeansCentroidsCache = {{}};
 
-        function getKMeansCentroids() {{
-            if (kmeansCentroids) return kmeansCentroids;
+        function getKMeansCentroids(colKm = 'km_77') {{
+            if (kmeansCentroidsCache[colKm]) return kmeansCentroidsCache[colKm];
             const groups = {{}};
             SAMPLED_POINTS.forEach(p => {{
-                const k = p.km_77;
+                const k = p[colKm];
+                if (k === undefined || k === null) return;
                 if (!groups[k]) groups[k] = {{ k: k, count: 0, sx: 0, sy: 0, intentMap: {{}} }};
                 groups[k].count++;
                 groups[k].sx += p.x_umap;
                 groups[k].sy += p.y_umap;
                 groups[k].intentMap[p.intent] = (groups[k].intentMap[p.intent] || 0) + 1;
             }});
-            kmeansCentroids = Object.values(groups).map(g => {{
+            const list = Object.values(groups).map(g => {{
                 let majIntent = '';
                 let maxCount = 0;
                 for (let it in g.intentMap) {{
@@ -1246,7 +1277,8 @@ def build_portal():
                     purity: Math.round((maxCount / g.count) * 1000) / 10
                 }};
             }});
-            return kmeansCentroids;
+            kmeansCentroidsCache[colKm] = list;
+            return list;
         }}
 
         function setPlaygroundViewMode(mode) {{
@@ -1267,7 +1299,44 @@ def build_portal():
             }});
 
             const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
-            renderPlaygroundScatter(currentPlaygroundConfig, isCompare);
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare, currentKmConfig);
+        }}
+
+        function initCompareIntentFilter() {{
+            const sel = document.getElementById('compare-intent-filter');
+            if (!sel) return;
+            const intents = [...new Set(SAMPLED_POINTS.map(p => p.intent))].sort();
+            sel.innerHTML = '<option value="ALL">🌟 Tất Cả Intent (Toàn bộ 1.200 mẫu quan sát)</option>';
+            intents.forEach(it => {{
+                const count = SAMPLED_POINTS.filter(p => p.intent === it).length;
+                const opt = document.createElement('option');
+                opt.value = it;
+                opt.innerText = `${{it}} (${{count}} câu)`;
+                sel.appendChild(opt);
+            }});
+        }}
+
+        function onCompareIntentChange(intentVal) {{
+            selectedCompareIntent = intentVal;
+            const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare, currentKmConfig);
+        }}
+
+        function setCompareFilterMode(mode) {{
+            compareFilterMode = mode;
+            const btnIso = document.getElementById('btn-filter-isolate');
+            const btnDim = document.getElementById('btn-filter-dim');
+            if (btnIso && btnDim) {{
+                if (mode === 'isolate') {{
+                    btnIso.classList.add('active');
+                    btnDim.classList.remove('active');
+                }} else {{
+                    btnIso.classList.remove('active');
+                    btnDim.classList.add('active');
+                }}
+            }}
+            const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare, currentKmConfig);
         }}
 
         // COLOR SYSTEM: Discrete vivid palette for high-contrast cluster visualization
@@ -1297,7 +1366,7 @@ def build_portal():
             document.getElementById('theme-btn').innerText = next === 'dark' ? '🌙 Dark' : '☀️ Light';
             renderStepperChart(currentStep);
             const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
-            renderPlaygroundScatter(currentPlaygroundConfig, isCompare);
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare, currentKmConfig);
             renderRocChart();
         }}
 
@@ -1685,61 +1754,97 @@ def build_portal():
                 statusEl.innerText = "✅ Hoàn tất phân cụm!";
                 setTimeout(() => {{ statusEl.innerText = ""; }}, 2500);
 
-                let cfg;
+                const mcs = document.getElementById('hdbscan-mcs-select').value;
+                const sel = document.getElementById('hdbscan-sel-select').value;
+                const hdbKey = `hdbscan_${{mcs}}_${{sel}}`;
+                currentHdbConfig = HDBSCAN_CONFIGS[hdbKey] || HDBSCAN_CONFIGS["hdbscan_50_eom"];
+
+                const k = document.getElementById('kmeans-k-select').value;
+                const kmKey = `kmeans_${{k}}`;
+                currentKmConfig = KMEANS_CONFIGS[kmKey] || KMEANS_CONFIGS["kmeans_77"];
+
                 const compareSec = document.getElementById('compare-section');
 
                 if (choice === 'HDBSCAN') {{
                     compareSec.style.display = 'none';
-                    const mcs = document.getElementById('hdbscan-mcs-select').value;
-                    const sel = document.getElementById('hdbscan-sel-select').value;
-                    const key = `hdbscan_${{mcs}}_${{sel}}`;
-                    cfg = HDBSCAN_CONFIGS[key] || HDBSCAN_CONFIGS["hdbscan_50_eom"];
+                    currentPlaygroundConfig = currentHdbConfig;
+                    renderPlaygroundResults(currentHdbConfig, false, null);
                 }} else if (choice === 'KMEANS') {{
                     compareSec.style.display = 'none';
-                    const k = document.getElementById('kmeans-k-select').value;
-                    const key = `kmeans_${{k}}`;
-                    cfg = KMEANS_CONFIGS[key] || KMEANS_CONFIGS["kmeans_77"];
+                    currentPlaygroundConfig = currentKmConfig;
+                    renderPlaygroundResults(currentKmConfig, false, null);
                 }} else {{
-                    // COMPARE: HDBSCAN mcs=50 vs KMEANS K=77
+                    // COMPARE: HDBSCAN (currentHdbConfig) vs K-Means (currentKmConfig)
                     compareSec.style.display = 'block';
-                    cfg = HDBSCAN_CONFIGS["hdbscan_50_eom"];
+                    currentPlaygroundConfig = currentHdbConfig;
+                    renderPlaygroundResults(currentHdbConfig, true, currentKmConfig);
                 }}
-
-                currentPlaygroundConfig = cfg;
-                renderPlaygroundResults(cfg, choice === 'COMPARE');
             }}, 300);
         }}
 
-        function renderPlaygroundResults(cfg, isCompare = false) {{
+        function renderPlaygroundResults(cfg, isCompare = false, kmCfg = null) {{
+            const hdb = cfg;
+            const km = kmCfg || currentKmConfig;
+
             document.getElementById('result-config-title').innerText = isCompare 
-                ? "📊 Kết Quả: Đối Chiếu Song Song HDBSCAN (mcs=50) vs K-Means (K=77)"
+                ? `📊 Kết Quả: Đối Chiếu Song Song ${{hdb.name}} vs ${{km.name}}`
                 : `📊 Kết Quả Đầu Ra: ${{cfg.name}}`;
             document.getElementById('result-config-desc').innerText = isCompare
-                ? "Quan sát trực tiếp sự khác biệt giữa phân cụm mật độ tự nhiên có lọc nhiễu (HDBSCAN) và phân cụm hình học khối cầu ép 100% dữ liệu (K-Means)."
+                ? `Quan sát trực tiếp sự khác biệt giữa ${{hdb.algo}} (${{hdb.clusters}} cụm, ${{hdb.noise}}% noise) và ${{km.algo}} (${{km.clusters}} cụm khối cầu Voronoi, 0% noise).`
                 : cfg.summary;
             document.getElementById('result-badge').innerText = isCompare ? "ĐỐI CHIẾU SONG SONG" : cfg.badge;
             document.getElementById('result-badge').className = "badge badge-green";
 
-            document.getElementById('res-m-clusters').innerText = isCompare ? "75 vs 77" : cfg.clusters;
+            document.getElementById('res-m-clusters').innerText = isCompare ? `${{hdb.clusters}} vs ${{km.clusters}}` : cfg.clusters;
             document.getElementById('res-sub-clusters').innerText = isCompare ? "HDBSCAN tự động vs K-Means ép trước K" : (cfg.algo === 'K-Means' ? 'Bắt buộc biết trước K' : 'Tự động phát hiện');
-            document.getElementById('res-m-noise').innerText = isCompare ? "7,41% vs 0%" : (cfg.noise + '%');
+            document.getElementById('res-m-noise').innerText = isCompare ? `${{hdb.noise}}% vs 0%` : (cfg.noise + '%');
             document.getElementById('res-sub-noise').innerText = isCompare ? "HDBSCAN lọc rác vs K-Means ép cả rác" : (cfg.noise === 0 ? 'Không lọc, ép 100% vào cụm' : 'Lọc bỏ câu mơ hồ/rác');
-            document.getElementById('res-m-v').innerText = isCompare ? "0,798 vs 0,772" : cfg.v_measure;
-            document.getElementById('res-m-ari').innerText = isCompare ? "0,562 vs 0,498" : cfg.ari;
-            document.getElementById('res-m-dbcv').innerText = isCompare ? "0,421 vs N/A" : (cfg.dbcv !== null ? cfg.dbcv : 'N/A');
+            document.getElementById('res-m-v').innerText = isCompare ? `${{hdb.v_measure}} vs ${{km.v_measure}}` : cfg.v_measure;
+            document.getElementById('res-m-ari').innerText = isCompare ? `${{hdb.ari}} vs ${{km.ari}}` : cfg.ari;
+            document.getElementById('res-m-dbcv').innerText = isCompare ? `${{hdb.dbcv !== null ? hdb.dbcv : 'N/A'}} vs N/A` : (cfg.dbcv !== null ? cfg.dbcv : 'N/A');
             document.getElementById('res-sub-dbcv').innerText = isCompare ? "Chỉ HDBSCAN có mật độ nội tại" : (cfg.dbcv !== null ? 'Chất lượng mật độ nội tại' : 'K-Means không có mật độ');
-            document.getElementById('res-m-cov').innerText = isCompare ? "92,59% vs 100%" : (cfg.coverage + '%');
+            document.getElementById('res-m-cov').innerText = isCompare ? `${{hdb.coverage}}% vs 100%` : (cfg.coverage + '%');
+
+            if (isCompare) {{
+                // Update card titles and badges on the two charts
+                const hdbTitleEl = document.getElementById('compare-hdb-title');
+                const hdbBadgeEl = document.getElementById('compare-hdb-badge');
+                if (hdbTitleEl) hdbTitleEl.innerText = `🟢 ${{hdb.name}}`;
+                if (hdbBadgeEl) hdbBadgeEl.innerText = `${{hdb.clusters}} Cụm Tự Nhiên | ${{hdb.noise}}% Noise`;
+
+                const kmTitleEl = document.getElementById('compare-km-title');
+                const kmBadgeEl = document.getElementById('compare-km-badge');
+                if (kmTitleEl) kmTitleEl.innerText = `🟠 ${{km.name}}`;
+                if (kmBadgeEl) kmBadgeEl.innerText = `${{km.clusters}} Khối Cầu | 0% Noise`;
+
+                // Update table values
+                const tblHdbCol = document.getElementById('tbl-hdb-col-title');
+                const tblKmCol = document.getElementById('tbl-km-col-title');
+                if (tblHdbCol) tblHdbCol.innerText = `HDBSCAN (${{hdb.name}})`;
+                if (tblKmCol) tblKmCol.innerText = `K-Means (${{km.name}})`;
+
+                const tblHdbK = document.getElementById('tbl-hdb-k');
+                const tblKmK = document.getElementById('tbl-km-k');
+                if (tblHdbK) tblHdbK.innerText = `Tự động phát hiện ${{hdb.clusters}} cụm`;
+                if (tblKmK) tblKmK.innerHTML = `Bắt buộc phải biết trước <code>K = ${{km.clusters}}</code>`;
+
+                const tblHdbNoise = document.getElementById('tbl-hdb-noise');
+                if (tblHdbNoise) tblHdbNoise.innerText = `Tách ${{hdb.noise}}% Noise (-1) ra ngoài`;
+
+                const tblHdbDbcv = document.getElementById('tbl-hdb-dbcv');
+                if (tblHdbDbcv) tblHdbDbcv.innerText = hdb.dbcv !== null ? hdb.dbcv : 'N/A';
+            }}
 
             // Commentary
             document.getElementById('result-commentary').innerHTML = `
                 <strong>💡 Bình luận Chuyên gia:</strong><br>
                 ${{isCompare 
-                    ? "Tại hai biểu đồ bên dưới: Bên trái là <strong>HDBSCAN (mcs=50, EOM)</strong> tự động lần theo dải mật độ và lọc bỏ 7,41% câu cộc lốc/nhiễu (dấu x đỏ). Bên phải là <strong>K-Means (K=77)</strong> chia không gian thành 77 khối cầu Voronoi nhân tạo, ép toàn bộ 100% câu hỏi (kể cả câu rác) vào cụm, làm biến dạng ranh giới ngữ nghĩa tự nhiên." 
+                    ? `Tại hai biểu đồ bên dưới: Bên trái là <strong>${{hdb.name}}</strong> (${{hdb.clusters}} cụm, ${{hdb.noise}}% noise) tự động lần theo dải mật độ phi tuyến và loại bỏ các câu cộc lốc/mơ hồ ra điểm nhiễu (dấu x đỏ). Bên phải là <strong>${{km.name}}</strong> (${{km.clusters}} cụm khối cầu) ép cứng 100% dữ liệu vào các khối cầu Voronoi nhân tạo, làm biến dạng ranh giới tự nhiên.` 
                     : cfg.summary + "<br><br><strong>So sánh cốt lõi:</strong> HDBSCAN theo đuổi hình thái tự nhiên của ngôn ngữ (dải lụa mật độ) và có cơ chế loại bỏ rác. Trong khi đó, K-Means cắt không gian bằng mặt phẳng hình học và ép 100% câu hỏi (kể cả câu cộc lốc hoặc rác) vào cụm."
                 }}
             `;
 
-            renderPlaygroundScatter(cfg, isCompare);
+            renderPlaygroundScatter(cfg, isCompare, km);
         }}
 
         function initPlaygroundClusterSelector() {{
@@ -1779,7 +1884,7 @@ def build_portal():
             `;
         }}
 
-        function renderPlaygroundScatter(cfg, isCompare = false) {{
+        function renderPlaygroundScatter(cfg, isCompare = false, kmCfg = null) {{
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const bgColor = isDark ? '#151C2C' : '#FFFFFF';
             const textColor = isDark ? '#F8FAFC' : '#0F172A';
@@ -1792,130 +1897,263 @@ def build_portal():
                 if (singleContainer) singleContainer.style.display = 'none';
                 if (compareContainer) compareContainer.style.display = 'block';
 
+                const hdb = cfg;
+                const km = kmCfg || currentKmConfig;
+                const colHdb = hdb.col;
+                const colKm = km.col;
+
                 let hdbTraces = [];
                 let kmTraces = [];
 
-                if (playgroundViewMode === 'bubbles') {{
-                    // BUBBLE / CENTROID VIEW FOR COMPARE
-                    hdbTraces = [
-                        {{
-                            x: SAMPLED_POINTS.map(p => p.x_umap),
-                            y: SAMPLED_POINTS.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{ size: 3.5, color: '#94A3B8', opacity: 0.25 }},
-                            hoverinfo: 'skip',
-                            name: 'Dữ liệu nền'
-                        }},
-                        {{
-                            x: TOPICS_DATA.map(t => t.cx),
-                            y: TOPICS_DATA.map(t => t.cy),
-                            mode: 'markers+text',
-                            type: 'scatter',
-                            text: TOPICS_DATA.map(t => 'C' + t.topic),
-                            textposition: 'top center',
-                            textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
-                            marker: {{
-                                size: TOPICS_DATA.map(t => Math.max(12, Math.sqrt(t.size) * 1.85)),
-                                color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
-                                opacity: 0.9,
-                                line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
-                            }},
-                            hoverinfo: 'text',
-                            hovertext: TOPICS_DATA.map(t => 
-                                `<b>HDBSCAN Cụm #${{t.topic}}</b>: ${{t.majority_label}}<br>` +
-                                `Quy mô: ${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
-                                `Mảng: ${{t.domain}}<br>` +
-                                `Từ khóa: <i>${{t.keywords}}</i>`
-                            ),
-                            customdata: TOPICS_DATA.map(t => t.topic),
-                            name: 'Tâm 75 Cụm HDBSCAN'
-                        }}
-                    ];
+                if (selectedCompareIntent !== 'ALL') {{
+                    // FILTERED INTENT VIEW
+                    const targetPts = SAMPLED_POINTS.filter(p => p.intent === selectedCompareIntent);
+                    const otherPts = SAMPLED_POINTS.filter(p => p.intent !== selectedCompareIntent);
 
-                    const kmCentroids = getKMeansCentroids();
-                    kmTraces = [
-                        {{
-                            x: SAMPLED_POINTS.map(p => p.x_umap),
-                            y: SAMPLED_POINTS.map(p => p.y_umap),
+                    // Compute Insight for this Intent
+                    const hdbTally = {{}};
+                    let hdbNoise = 0;
+                    targetPts.forEach(p => {{
+                        const t = p[colHdb];
+                        if (t === -1) hdbNoise++;
+                        else hdbTally[t] = (hdbTally[t] || 0) + 1;
+                    }});
+                    let hdbMainTopic = -1;
+                    let hdbMainCount = 0;
+                    for (let t in hdbTally) {{
+                        if (hdbTally[t] > hdbMainCount) {{ hdbMainCount = hdbTally[t]; hdbMainTopic = t; }}
+                    }}
+                    const hdbMainPct = targetPts.length > 0 ? Math.round((hdbMainCount / targetPts.length) * 100) : 0;
+
+                    const kmTally = {{}};
+                    targetPts.forEach(p => {{
+                        const k = p[colKm];
+                        kmTally[k] = (kmTally[k] || 0) + 1;
+                    }});
+                    const kmNumClusters = Object.keys(kmTally).length;
+
+                    const insightEl = document.getElementById('compare-intent-insight');
+                    if (insightEl) {{
+                        insightEl.style.display = 'block';
+                        insightEl.innerHTML = `
+                            <div style="font-weight: 700; color: var(--primary); margin-bottom: 6px;">
+                                🎯 Đang soi Intent: <code>${{selectedCompareIntent}}</code> (${{targetPts.length}} câu trong mẫu quan sát):
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 6px;">
+                                <div style="background: var(--bg-card); padding: 8px 12px; border-radius: 6px; border-left: 3px solid #0284C7;">
+                                    <strong style="color: #0284C7;">🟢 ${{hdb.algo}} (${{hdb.name}}):</strong><br>
+                                    • Tập trung <strong>${{hdbMainPct}}%</strong> (${{hdbMainCount}}/${{targetPts.length}} câu) vào <strong>Cụm #${{hdbMainTopic}}</strong>.<br>
+                                    • ${{hdbNoise > 0 ? `Lọc <strong>${{hdbNoise}}</strong> câu cộc lốc/nhiễu ra ngoài (dấu x đỏ).` : 'Không có câu nhiễu trong intent này.'}}
+                                </div>
+                                <div style="background: var(--bg-card); padding: 8px 12px; border-radius: 6px; border-left: 3px solid #D97706;">
+                                    <strong style="color: #D97706;">🟠 ${{km.algo}} (${{km.name}}):</strong><br>
+                                    • Bị xé vụn ra <strong>${{kmNumClusters}} cụm hình cầu Voronoi khác nhau</strong> (${{Object.keys(kmTally).slice(0, 4).map(k => '#' + k).join(', ')}}...).<br>
+                                    • Ép toàn bộ câu hỏi vào các khối cầu hình học, làm loãng độ tinh khiết.
+                                </div>
+                            </div>
+                        `;
+                    }}
+
+                    // HDBSCAN Traces (Filtered)
+                    if (compareFilterMode === 'dim') {{
+                        hdbTraces.push({{
+                            x: otherPts.map(p => p.x_umap),
+                            y: otherPts.map(p => p.y_umap),
                             mode: 'markers',
                             type: 'scatter',
-                            marker: {{ size: 3.5, color: '#94A3B8', opacity: 0.25 }},
+                            marker: {{ size: 3.5, color: isDark ? '#334155' : '#CBD5E1', opacity: 0.25 }},
                             hoverinfo: 'skip',
-                            name: 'Dữ liệu nền'
-                        }},
-                        {{
-                            x: kmCentroids.map(k => k.cx),
-                            y: kmCentroids.map(k => k.cy),
-                            mode: 'markers+text',
+                            name: 'Các Intent khác'
+                        }});
+                    }}
+                    const inTarget = targetPts.filter(p => p[colHdb] !== -1);
+                    const noiseTarget = targetPts.filter(p => p[colHdb] === -1);
+                    if (inTarget.length > 0) {{
+                        hdbTraces.push({{
+                            x: inTarget.map(p => p.x_umap),
+                            y: inTarget.map(p => p.y_umap),
+                            mode: 'markers',
                             type: 'scatter',
-                            text: kmCentroids.map(k => 'K' + k.k),
-                            textposition: 'top center',
-                            textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
                             marker: {{
-                                size: kmCentroids.map(k => Math.max(12, Math.sqrt(k.size) * 1.85)),
-                                color: kmCentroids.map(k => getVividClusterColor(k.k)),
-                                opacity: 0.9,
+                                size: 8,
+                                color: inTarget.map(p => getVividClusterColor(p[colHdb])),
+                                opacity: 0.95,
                                 line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
                             }},
                             hoverinfo: 'text',
-                            hovertext: kmCentroids.map(k => 
-                                `<b>K-Means Cụm #${{k.k}}</b>: ${{k.majority_label}}<br>` +
-                                `Quy mô: ~${{k.size}} câu | Purity: ${{k.purity}}%<br>` +
-                                `Khối cầu Voronoi (0% Noise)`
-                            ),
-                            name: 'Tâm 77 Khối Cầu K-Means'
-                        }}
-                    ];
+                            hovertext: inTarget.map(p => `<b>HDBSCAN Cụm #${{p[colHdb]}}</b><br>Intent: ${{p.intent}}<br>"${{p.text}}"`),
+                            customdata: inTarget.map(p => p[colHdb]),
+                            name: `${{selectedCompareIntent}} (Thuộc cụm)`
+                        }});
+                    }}
+                    if (noiseTarget.length > 0) {{
+                        hdbTraces.push({{
+                            x: noiseTarget.map(p => p.x_umap),
+                            y: noiseTarget.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {{ size: 9, color: '#EF4444', symbol: 'x', opacity: 1.0 }},
+                            hoverinfo: 'text',
+                            hovertext: noiseTarget.map(p => `<b>Điểm Nhiễu (-1)</b><br>Intent: ${{p.intent}}<br>"${{p.text}}"`),
+                            name: `${{selectedCompareIntent}} (Nhiễu ${{noiseTarget.length}} câu)`
+                        }});
+                    }}
+
+                    // K-Means Traces (Filtered)
+                    if (compareFilterMode === 'dim') {{
+                        kmTraces.push({{
+                            x: otherPts.map(p => p.x_umap),
+                            y: otherPts.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: {{ size: 3.5, color: isDark ? '#334155' : '#CBD5E1', opacity: 0.25 }},
+                            hoverinfo: 'skip',
+                            name: 'Các Intent khác'
+                        }});
+                    }}
+                    kmTraces.push({{
+                        x: targetPts.map(p => p.x_umap),
+                        y: targetPts.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {{
+                            size: 8,
+                            color: targetPts.map(p => getVividClusterColor(p[colKm])),
+                            opacity: 0.95,
+                            line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
+                        }},
+                        hoverinfo: 'text',
+                        hovertext: targetPts.map(p => `<b>K-Means Cụm #${{p[colKm]}}</b><br>Intent: ${{p.intent}}<br>"${{p.text}}"`),
+                        name: `${{selectedCompareIntent}} (K-Means)`
+                    }});
+
                 }} else {{
-                    // SCATTER POINTS VIEW FOR COMPARE
-                    const inHdb = SAMPLED_POINTS.filter(p => p.t_50_eom !== -1);
-                    const noiseHdb = SAMPLED_POINTS.filter(p => p.t_50_eom === -1);
+                    // ALL INTENTS VIEW
+                    const insightEl = document.getElementById('compare-intent-insight');
+                    if (insightEl) insightEl.style.display = 'none';
 
-                    hdbTraces = [
-                        {{
-                            x: inHdb.map(p => p.x_umap),
-                            y: inHdb.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{
-                                size: 5,
-                                color: inHdb.map(p => getVividClusterColor(p.t_50_eom)),
-                                opacity: 0.75
+                    if (playgroundViewMode === 'bubbles') {{
+                        // Centroids view
+                        hdbTraces = [
+                            {{
+                                x: SAMPLED_POINTS.map(p => p.x_umap),
+                                y: SAMPLED_POINTS.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: {{ size: 3.5, color: '#94A3B8', opacity: 0.25 }},
+                                hoverinfo: 'skip',
+                                name: 'Dữ liệu nền'
                             }},
-                            hoverinfo: 'text',
-                            hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${{p.t_50_eom}}</b> (${{p.intent}})<br>"${{p.text}}"`),
-                            customdata: inHdb.map(p => p.t_50_eom),
-                            name: '75 Cụm Mật Độ Tự Nhiên'
-                        }},
-                        {{
-                            x: noiseHdb.map(p => p.x_umap),
-                            y: noiseHdb.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{ size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 }},
-                            hoverinfo: 'text',
-                            hovertext: noiseHdb.map(p => `<b>Điểm Nhiễu HDBSCAN (-1)</b><br>"${{p.text}}"`),
-                            name: 'Điểm Nhiễu (7,41%)'
-                        }}
-                    ];
+                            {{
+                                x: TOPICS_DATA.map(t => t.cx),
+                                y: TOPICS_DATA.map(t => t.cy),
+                                mode: 'markers+text',
+                                type: 'scatter',
+                                text: TOPICS_DATA.map(t => 'C' + t.topic),
+                                textposition: 'top center',
+                                textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
+                                marker: {{
+                                    size: TOPICS_DATA.map(t => Math.max(12, Math.sqrt(t.size) * 1.85)),
+                                    color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
+                                    opacity: 0.9,
+                                    line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
+                                }},
+                                hoverinfo: 'text',
+                                hovertext: TOPICS_DATA.map(t => 
+                                    `<b>HDBSCAN Cụm #${{t.topic}}</b>: ${{t.majority_label}}<br>` +
+                                    `Quy mô: ${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
+                                    `Mảng: ${{t.domain}}<br>` +
+                                    `Từ khóa: <i>${{t.keywords}}</i>`
+                                ),
+                                customdata: TOPICS_DATA.map(t => t.topic),
+                                name: `Tâm ${{hdb.clusters}} Cụm HDBSCAN`
+                            }}
+                        ];
 
-                    kmTraces = [
-                        {{
-                            x: SAMPLED_POINTS.map(p => p.x_umap),
-                            y: SAMPLED_POINTS.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{
-                                size: 5,
-                                color: SAMPLED_POINTS.map(p => getVividClusterColor(p.km_77)),
-                                opacity: 0.75
+                        const kmCentroids = getKMeansCentroids(colKm);
+                        kmTraces = [
+                            {{
+                                x: SAMPLED_POINTS.map(p => p.x_umap),
+                                y: SAMPLED_POINTS.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: {{ size: 3.5, color: '#94A3B8', opacity: 0.25 }},
+                                hoverinfo: 'skip',
+                                name: 'Dữ liệu nền'
                             }},
-                            hoverinfo: 'text',
-                            hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${{p.km_77}}</b> (${{p.intent}})<br>"${{p.text}}"`),
-                            name: '77 Khối Cầu Voronoi (0% Noise)'
-                        }}
-                    ];
+                            {{
+                                x: kmCentroids.map(k => k.cx),
+                                y: kmCentroids.map(k => k.cy),
+                                mode: 'markers+text',
+                                type: 'scatter',
+                                text: kmCentroids.map(k => 'K' + k.k),
+                                textposition: 'top center',
+                                textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
+                                marker: {{
+                                    size: kmCentroids.map(k => Math.max(12, Math.sqrt(k.size) * 1.85)),
+                                    color: kmCentroids.map(k => getVividClusterColor(k.k)),
+                                    opacity: 0.9,
+                                    line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
+                                }},
+                                hoverinfo: 'text',
+                                hovertext: kmCentroids.map(k => 
+                                    `<b>K-Means Cụm #${{k.k}}</b>: ${{k.majority_label}}<br>` +
+                                    `Quy mô: ~${{k.size}} câu | Purity: ${{k.purity}}%<br>` +
+                                    `Khối cầu Voronoi (0% Noise)`
+                                ),
+                                name: `Tâm ${{km.clusters}} Khối Cầu K-Means`
+                            }}
+                        ];
+                    }} else {{
+                        // Detailed scatter points view
+                        const inHdb = SAMPLED_POINTS.filter(p => p[colHdb] !== -1);
+                        const noiseHdb = SAMPLED_POINTS.filter(p => p[colHdb] === -1);
+
+                        hdbTraces = [
+                            {{
+                                x: inHdb.map(p => p.x_umap),
+                                y: inHdb.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: {{
+                                    size: 5,
+                                    color: inHdb.map(p => getVividClusterColor(p[colHdb])),
+                                    opacity: 0.75
+                                }},
+                                hoverinfo: 'text',
+                                hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${{p[colHdb]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
+                                customdata: inHdb.map(p => p[colHdb]),
+                                name: `${{hdb.clusters}} Cụm Tự Nhiên`
+                            }},
+                            {{
+                                x: noiseHdb.map(p => p.x_umap),
+                                y: noiseHdb.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: {{ size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 }},
+                                hoverinfo: 'text',
+                                hovertext: noiseHdb.map(p => `<b>Điểm Nhiễu HDBSCAN (-1)</b><br>"${{p.text}}"`),
+                                name: `Điểm Nhiễu (${{hdb.noise}}%)`
+                            }}
+                        ];
+
+                        kmTraces = [
+                            {{
+                                x: SAMPLED_POINTS.map(p => p.x_umap),
+                                y: SAMPLED_POINTS.map(p => p.y_umap),
+                                mode: 'markers',
+                                type: 'scatter',
+                                marker: {{
+                                    size: 5,
+                                    color: SAMPLED_POINTS.map(p => getVividClusterColor(p[colKm])),
+                                    opacity: 0.75
+                                }},
+                                hoverinfo: 'text',
+                                hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${{p[colKm]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
+                                name: `${{km.clusters}} Khối Cầu (0% Noise)`
+                            }}
+                        ];
+                    }}
                 }}
 
                 Plotly.newPlot('compare-hdbscan-chart', hdbTraces, {{
@@ -1953,7 +2191,7 @@ def build_portal():
                 }}
 
             }} else {{
-                // SINGLE CHART MODE
+                // SINGLE CHART MODE (Uses cfg.col)
                 if (singleContainer) singleContainer.style.display = 'block';
                 if (compareContainer) compareContainer.style.display = 'none';
 
@@ -1995,11 +2233,11 @@ def build_portal():
                                 `Từ khóa: <i>${{t.keywords}}</i>`
                             ),
                             customdata: TOPICS_DATA.map(t => t.topic),
-                            name: `Tâm 75 Cụm HDBSCAN Tự Nhiên`
+                            name: `Tâm ${{cfg.clusters}} Cụm HDBSCAN Tự Nhiên`
                         }});
                     }} else {{
                         // K-Means Bubble View
-                        const kmCentroids = getKMeansCentroids();
+                        const kmCentroids = getKMeansCentroids(colName);
                         traces.push({{
                             x: SAMPLED_POINTS.map(p => p.x_umap),
                             y: SAMPLED_POINTS.map(p => p.y_umap),
@@ -2154,6 +2392,7 @@ def build_portal():
             setStep(4);
             initClusterSelector();
             initPlaygroundClusterSelector();
+            initCompareIntentFilter();
             initPresetExamples();
             initDatasetPreview();
             runClusteringSimulation();
