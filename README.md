@@ -2,6 +2,7 @@
 
 > **Đồ án môn Khai phá Dữ liệu (Data Mining):** Khám phá Chủ đề & Khai phá Mẫu hình Ngữ nghĩa từ Dữ liệu Chăm sóc Khách hàng Ngân hàng số.  
 > **Tác giả:** [ThienPhucNg-1410](https://github.com/ThienPhucNg-1410) & Cộng sự.  
+> 🌐 **TRẢI NGHIỆM TRỰC TUYẾN (WEB PORTAL & INTERACTIVE PLOTS):** [https://thienphucng-1410.github.io/Banking77/](https://thienphucng-1410.github.io/Banking77/)  
 > **Kế hoạch phân công báo cáo chi tiết:** Xem tại [KE_HOACH_PHAN_CONG_BAO_CAO.md](KE_HOACH_PHAN_CONG_BAO_CAO.md).
 
 ---
