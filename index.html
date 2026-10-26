@@ -733,12 +733,43 @@
                         </div>
                     </div>
 
-                    <!-- Result Scatter Plot -->
-                    <div style="margin-top: 24px;">
+                    <!-- Result Scatter Plot Container -->
+                    <div id="single-chart-container" style="margin-top: 24px;">
                         <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">
                             🗺️ Bản Đồ Phân Bố Cụm 2D Sau Khi Chạy:
                         </h4>
                         <div id="playground-scatter-chart" class="chart-box" style="min-height: 480px;"></div>
+                    </div>
+
+                    <!-- Side-by-Side Compare Charts Container -->
+                    <div id="compare-charts-container" style="margin-top: 24px; display: none;">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary);">
+                            ⚖️ So Sánh Trực Tiếp Không Gian Phân Cụm: HDBSCAN vs K-Means
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 20px;">
+                            <div style="background: var(--bg-card); border: 1.5px solid #0284C7; border-radius: 12px; padding: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="color: #0284C7; font-size: 14px;">🟢 HDBSCAN (mcs=50, EOM)</strong>
+                                    <span class="badge badge-green">75 Cụm Tự Nhiên | 7,41% Noise</span>
+                                </div>
+                                <div id="compare-hdbscan-chart" class="chart-box" style="min-height: 450px;"></div>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+                                    ✓ Uốn lượn theo dải mật độ tự nhiên.<br>
+                                    ✓ Lọc 7,41% câu cộc lốc (điểm đỏ <strong>x</strong>) bảo vệ độ tinh khiết.
+                                </div>
+                            </div>
+                            <div style="background: var(--bg-card); border: 1.5px solid #F59E0B; border-radius: 12px; padding: 14px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="color: #D97706; font-size: 14px;">🟠 K-Means (K=77)</strong>
+                                    <span class="badge badge-yellow">77 Khối Cầu | 0% Noise (Ép cả rác)</span>
+                                </div>
+                                <div id="compare-kmeans-chart" class="chart-box" style="min-height: 450px;"></div>
+                                <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
+                                    ⚠️ Bắt buộc phải biết trước K=77 nhãn.<br>
+                                    ⚠️ Ép 100% câu hỏi (kể cả câu cộc lốc/rác) vào các khối cầu Voronoi.
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Comparative Table & Insights -->
@@ -833,13 +864,34 @@
         let currentStep = 4;
         let currentPlaygroundConfig = HDBSCAN_CONFIGS["hdbscan_50_eom"];
 
+        // COLOR SYSTEM: Discrete vivid palette for high-contrast cluster visualization
+        const VIVID_PALETTE = [
+            '#2563EB', '#E11D48', '#059669', '#D97706', '#7C3AED', 
+            '#0891B2', '#EA580C', '#4F46E5', '#16A34A', '#CA8A04', 
+            '#9333EA', '#0284C7', '#DC2626', '#0D9488', '#C026D3', 
+            '#4338CA', '#65A30D', '#B45309', '#BE123C', '#0369A1', 
+            '#15803D', '#A21CAF', '#1D4ED8', '#C2410C', '#0E7490', 
+            '#6D28D9', '#B91C1C', '#047857', '#7E22CE', '#374151', 
+            '#BE185D', '#046A38', '#991B1B', '#1E40AF', '#854D0E', 
+            '#5B21B6', '#155E75', '#9A3412', '#3730A3', '#166534'
+        ];
+
+        function getVividClusterColor(clusterId) {
+            if (clusterId === -1 || clusterId === '-1' || clusterId === null || clusterId === undefined) {
+                return '#EF4444'; // Bright Red for Noise
+            }
+            const id = Math.abs(parseInt(clusterId, 10));
+            return VIVID_PALETTE[(id * 13 + 7) % VIVID_PALETTE.length];
+        }
+
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             document.getElementById('theme-btn').innerText = next === 'dark' ? '🌙 Dark' : '☀️ Light';
             renderStepperChart(currentStep);
-            renderPlaygroundScatter(currentPlaygroundConfig);
+            const isCompare = document.querySelector('input[name="algo_choice"]:checked')?.value === 'COMPARE';
+            renderPlaygroundScatter(currentPlaygroundConfig, isCompare);
             renderRocChart();
         }
 
@@ -860,7 +912,7 @@
 
             setTimeout(() => {
                 window.dispatchEvent(new Event('resize'));
-                const chartIds = ['umap-stepper-chart', 'playground-scatter-chart', 'roc-chart'];
+                const chartIds = ['umap-stepper-chart', 'playground-scatter-chart', 'compare-hdbscan-chart', 'compare-kmeans-chart', 'roc-chart'];
                 chartIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el && window.Plotly) {
@@ -945,31 +997,33 @@
                     name: 'Dải mật độ UMAP 5D (Co cụm tự nhiên)'
                 });
             } else if (stepNum === 3) {
+                const inCluster = SAMPLED_POINTS.filter(p => !p.is_noise);
+                const noise = SAMPLED_POINTS.filter(p => p.is_noise);
+
                 traces.push({
-                    x: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => p.x_umap),
-                    y: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => p.y_umap),
+                    x: inCluster.map(p => p.x_umap),
+                    y: inCluster.map(p => p.y_umap),
                     mode: 'markers',
                     type: 'scatter',
                     marker: {
-                        size: 5,
-                        color: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => p.topic),
-                        colorscale: 'Turbo',
-                        opacity: 0.65
+                        size: 5.5,
+                        color: inCluster.map(p => getVividClusterColor(p.topic)),
+                        opacity: 0.75
                     },
                     hoverinfo: 'text',
-                    hovertext: SAMPLED_POINTS.filter(p => !p.is_noise).map(p => `<b>Cụm #${p.topic}</b> (${p.intent})<br>"${p.text}"`),
-                    name: '75 Cụm HDBSCAN'
+                    hovertext: inCluster.map(p => `<b>Cụm #${p.topic}</b> (${p.intent})<br>"${p.text}"`),
+                    name: '75 Cụm HDBSCAN Tự Nhiên'
                 });
 
                 traces.push({
-                    x: SAMPLED_POINTS.filter(p => p.is_noise).map(p => p.x_umap),
-                    y: SAMPLED_POINTS.filter(p => p.is_noise).map(p => p.y_umap),
+                    x: noise.map(p => p.x_umap),
+                    y: noise.map(p => p.y_umap),
                     mode: 'markers',
                     type: 'scatter',
-                    marker: { size: 6, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                    marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
                     hoverinfo: 'text',
-                    hovertext: SAMPLED_POINTS.filter(p => p.is_noise).map(p => `<b>Điểm Nhiễu (-1)</b><br>"${p.text}"`),
-                    name: 'Điểm Nhiễu (7.41%)'
+                    hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b> (Lọc bỏ)<br>"${p.text}"`),
+                    name: 'Điểm Nhiễu (7,41%)'
                 });
             } else {
                 traces.push({
@@ -991,12 +1045,10 @@
                     textposition: 'top center',
                     textfont: { family: 'Plus Jakarta Sans', size: 10, color: textColor },
                     marker: {
-                        size: TOPICS_DATA.map(t => Math.max(12, Math.sqrt(t.size) * 1.8)),
-                        color: TOPICS_DATA.map(t => t.purity),
-                        colorscale: 'Blues',
-                        showscale: true,
-                        colorbar: { title: 'Độ Tinh Khiết (%)', thickness: 12, len: 0.7 },
-                        line: { color: '#0284C7', width: 1.5 }
+                        size: TOPICS_DATA.map(t => Math.max(13, Math.sqrt(t.size) * 1.85)),
+                        color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
+                        opacity: 0.9,
+                        line: { color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }
                     },
                     hoverinfo: 'text',
                     hovertext: TOPICS_DATA.map(t => 
@@ -1256,99 +1308,182 @@
             document.getElementById('result-config-title').innerText = isCompare 
                 ? "📊 Kết Quả: Đối Chiếu Song Song HDBSCAN (mcs=50) vs K-Means (K=77)"
                 : `📊 Kết Quả Đầu Ra: ${cfg.name}`;
-            document.getElementById('result-config-desc').innerText = cfg.summary;
-            document.getElementById('result-badge').innerText = cfg.badge;
-            document.getElementById('result-badge').className = cfg.badge.includes('TỐI ƯU') ? "badge badge-green" : "badge badge-yellow";
+            document.getElementById('result-config-desc').innerText = isCompare
+                ? "Quan sát trực tiếp sự khác biệt giữa phân cụm mật độ tự nhiên có lọc nhiễu (HDBSCAN) và phân cụm hình học khối cầu ép 100% dữ liệu (K-Means)."
+                : cfg.summary;
+            document.getElementById('result-badge').innerText = isCompare ? "ĐỐI CHIẾU SONG SONG" : cfg.badge;
+            document.getElementById('result-badge').className = "badge badge-green";
 
-            document.getElementById('res-m-clusters').innerText = cfg.clusters;
-            document.getElementById('res-sub-clusters').innerText = cfg.algo === 'K-Means' ? 'Bắt buộc biết trước K' : 'Tự động phát hiện';
-            document.getElementById('res-m-noise').innerText = cfg.noise + '%';
-            document.getElementById('res-sub-noise').innerText = cfg.noise === 0 ? 'Không lọc, ép 100% vào cụm' : 'Lọc bỏ câu mơ hồ/rác';
-            document.getElementById('res-m-v').innerText = cfg.v_measure;
-            document.getElementById('res-m-ari').innerText = cfg.ari;
-            document.getElementById('res-m-dbcv').innerText = cfg.dbcv !== null ? cfg.dbcv : 'N/A';
-            document.getElementById('res-sub-dbcv').innerText = cfg.dbcv !== null ? 'Chất lượng mật độ nội tại' : 'K-Means không có mật độ';
-            document.getElementById('res-m-cov').innerText = cfg.coverage + '%';
+            document.getElementById('res-m-clusters').innerText = isCompare ? "75 vs 77" : cfg.clusters;
+            document.getElementById('res-sub-clusters').innerText = isCompare ? "HDBSCAN tự động vs K-Means ép trước K" : (cfg.algo === 'K-Means' ? 'Bắt buộc biết trước K' : 'Tự động phát hiện');
+            document.getElementById('res-m-noise').innerText = isCompare ? "7,41% vs 0%" : (cfg.noise + '%');
+            document.getElementById('res-sub-noise').innerText = isCompare ? "HDBSCAN lọc rác vs K-Means ép cả rác" : (cfg.noise === 0 ? 'Không lọc, ép 100% vào cụm' : 'Lọc bỏ câu mơ hồ/rác');
+            document.getElementById('res-m-v').innerText = isCompare ? "0,798 vs 0,772" : cfg.v_measure;
+            document.getElementById('res-m-ari').innerText = isCompare ? "0,562 vs 0,498" : cfg.ari;
+            document.getElementById('res-m-dbcv').innerText = isCompare ? "0,421 vs N/A" : (cfg.dbcv !== null ? cfg.dbcv : 'N/A');
+            document.getElementById('res-sub-dbcv').innerText = isCompare ? "Chỉ HDBSCAN có mật độ nội tại" : (cfg.dbcv !== null ? 'Chất lượng mật độ nội tại' : 'K-Means không có mật độ');
+            document.getElementById('res-m-cov').innerText = isCompare ? "92,59% vs 100%" : (cfg.coverage + '%');
 
             // Commentary
             document.getElementById('result-commentary').innerHTML = `
                 <strong>💡 Bình luận Chuyên gia:</strong><br>
-                ${cfg.summary}<br><br>
-                <strong>So sánh cốt lõi:</strong> HDBSCAN theo đuổi hình thái tự nhiên của ngôn ngữ (dải lụa mật độ) và có cơ chế loại bỏ rác. Trong khi đó, K-Means cắt không gian bằng mặt phẳng hình học và ép 100% câu hỏi (kể cả câu cộc lốc hoặc rác) vào cụm.
+                ${isCompare 
+                    ? "Tại hai biểu đồ bên dưới: Bên trái là <strong>HDBSCAN (mcs=50, EOM)</strong> tự động lần theo dải mật độ và lọc bỏ 7,41% câu cộc lốc/nhiễu (dấu x đỏ). Bên phải là <strong>K-Means (K=77)</strong> chia không gian thành 77 khối cầu Voronoi nhân tạo, ép toàn bộ 100% câu hỏi (kể cả câu rác) vào cụm, làm biến dạng ranh giới ngữ nghĩa tự nhiên." 
+                    : cfg.summary + "<br><br><strong>So sánh cốt lõi:</strong> HDBSCAN theo đuổi hình thái tự nhiên của ngôn ngữ (dải lụa mật độ) và có cơ chế loại bỏ rác. Trong khi đó, K-Means cắt không gian bằng mặt phẳng hình học và ép 100% câu hỏi (kể cả câu cộc lốc hoặc rác) vào cụm."
+                }
             `;
 
-            renderPlaygroundScatter(cfg);
+            renderPlaygroundScatter(cfg, isCompare);
         }
 
-        function renderPlaygroundScatter(cfg) {
+        function renderPlaygroundScatter(cfg, isCompare = false) {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const bgColor = isDark ? '#151C2C' : '#FFFFFF';
             const textColor = isDark ? '#F8FAFC' : '#0F172A';
             const gridColor = isDark ? '#232D42' : '#F1F5F9';
 
-            const colName = cfg.col;
-            let traces = [];
+            const singleContainer = document.getElementById('single-chart-container');
+            const compareContainer = document.getElementById('compare-charts-container');
 
-            if (cfg.algo === 'HDBSCAN') {
-                const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
-                const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
+            if (isCompare) {
+                if (singleContainer) singleContainer.style.display = 'none';
+                if (compareContainer) compareContainer.style.display = 'block';
 
-                traces.push({
-                    x: inCluster.map(p => p.x_umap),
-                    y: inCluster.map(p => p.y_umap),
-                    mode: 'markers',
-                    type: 'scatter',
-                    marker: {
-                        size: 5,
-                        color: inCluster.map(p => p[colName]),
-                        colorscale: 'Turbo',
-                        opacity: 0.7
-                    },
-                    hoverinfo: 'text',
-                    hovertext: inCluster.map(p => `<b>Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
-                    name: `Cụm ${cfg.clusters} nhóm`
-                });
+                // Chart 1: HDBSCAN (t_50_eom)
+                const inHdb = SAMPLED_POINTS.filter(p => p.t_50_eom !== -1);
+                const noiseHdb = SAMPLED_POINTS.filter(p => p.t_50_eom === -1);
 
-                if (noise.length > 0) {
-                    traces.push({
-                        x: noise.map(p => p.x_umap),
-                        y: noise.map(p => p.y_umap),
+                const hdbTraces = [
+                    {
+                        x: inHdb.map(p => p.x_umap),
+                        y: inHdb.map(p => p.y_umap),
                         mode: 'markers',
                         type: 'scatter',
-                        marker: { size: 6, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                        marker: {
+                            size: 5,
+                            color: inHdb.map(p => getVividClusterColor(p.t_50_eom)),
+                            opacity: 0.75
+                        },
                         hoverinfo: 'text',
-                        hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b><br>"${p.text}"`),
-                        name: `Điểm Nhiễu (${cfg.noise}%)`
+                        hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${p.t_50_eom}</b> (${p.intent})<br>"${p.text}"`),
+                        name: '75 Cụm Mật Độ Tự Nhiên'
+                    },
+                    {
+                        x: noiseHdb.map(p => p.x_umap),
+                        y: noiseHdb.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                        hoverinfo: 'text',
+                        hovertext: noiseHdb.map(p => `<b>Điểm Nhiễu HDBSCAN (-1)</b><br>"${p.text}"`),
+                        name: 'Điểm Nhiễu (7,41%)'
+                    }
+                ];
+
+                Plotly.newPlot('compare-hdbscan-chart', hdbTraces, {
+                    margin: { l: 35, r: 25, t: 30, b: 35 },
+                    paper_bgcolor: bgColor,
+                    plot_bgcolor: bgColor,
+                    xaxis: { title: 'UMAP 1', gridcolor: gridColor, color: textColor },
+                    yaxis: { title: 'UMAP 2', gridcolor: gridColor, color: textColor },
+                    legend: { orientation: 'h', y: -0.18, font: { color: textColor, size: 11 } },
+                    hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
+                }, { responsive: true });
+
+                // Chart 2: K-Means (km_77)
+                const kmTraces = [
+                    {
+                        x: SAMPLED_POINTS.map(p => p.x_umap),
+                        y: SAMPLED_POINTS.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {
+                            size: 5,
+                            color: SAMPLED_POINTS.map(p => getVividClusterColor(p.km_77)),
+                            opacity: 0.75
+                        },
+                        hoverinfo: 'text',
+                        hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p.km_77}</b> (${p.intent})<br>"${p.text}"`),
+                        name: '77 Khối Cầu Voronoi (0% Noise)'
+                    }
+                ];
+
+                Plotly.newPlot('compare-kmeans-chart', kmTraces, {
+                    margin: { l: 35, r: 25, t: 30, b: 35 },
+                    paper_bgcolor: bgColor,
+                    plot_bgcolor: bgColor,
+                    xaxis: { title: 'UMAP 1', gridcolor: gridColor, color: textColor },
+                    yaxis: { title: 'UMAP 2', gridcolor: gridColor, color: textColor },
+                    legend: { orientation: 'h', y: -0.18, font: { color: textColor, size: 11 } },
+                    hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
+                }, { responsive: true });
+
+            } else {
+                if (singleContainer) singleContainer.style.display = 'block';
+                if (compareContainer) compareContainer.style.display = 'none';
+
+                const colName = cfg.col;
+                let traces = [];
+
+                if (cfg.algo === 'HDBSCAN') {
+                    const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
+                    const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
+
+                    traces.push({
+                        x: inCluster.map(p => p.x_umap),
+                        y: inCluster.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {
+                            size: 5,
+                            color: inCluster.map(p => getVividClusterColor(p[colName])),
+                            opacity: 0.75
+                        },
+                        hoverinfo: 'text',
+                        hovertext: inCluster.map(p => `<b>Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
+                        name: `Cụm ${cfg.clusters} nhóm`
+                    });
+
+                    if (noise.length > 0) {
+                        traces.push({
+                            x: noise.map(p => p.x_umap),
+                            y: noise.map(p => p.y_umap),
+                            mode: 'markers',
+                            type: 'scatter',
+                            marker: { size: 6.5, color: '#EF4444', symbol: 'x', opacity: 0.85 },
+                            hoverinfo: 'text',
+                            hovertext: noise.map(p => `<b>Điểm Nhiễu (-1)</b><br>"${p.text}"`),
+                            name: `Điểm Nhiễu (${cfg.noise}%)`
+                        });
+                    }
+                } else {
+                    // K-Means: No noise, all colored with vivid distinct colors
+                    traces.push({
+                        x: SAMPLED_POINTS.map(p => p.x_umap),
+                        y: SAMPLED_POINTS.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {
+                            size: 5,
+                            color: SAMPLED_POINTS.map(p => getVividClusterColor(p[colName])),
+                            opacity: 0.75
+                        },
+                        hoverinfo: 'text',
+                        hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
+                        name: `K-Means (${cfg.clusters} Khối Cầu Voronoi - 0% Noise)`
                     });
                 }
-            } else {
-                // K-Means: No noise, all colored
-                traces.push({
-                    x: SAMPLED_POINTS.map(p => p.x_umap),
-                    y: SAMPLED_POINTS.map(p => p.y_umap),
-                    mode: 'markers',
-                    type: 'scatter',
-                    marker: {
-                        size: 5,
-                        color: SAMPLED_POINTS.map(p => p[colName]),
-                        colorscale: 'Rainbow',
-                        opacity: 0.75
-                    },
-                    hoverinfo: 'text',
-                    hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${p[colName]}</b> (${p.intent})<br>"${p.text}"`),
-                    name: `K-Means (${cfg.clusters} Khối Cầu Voronoi - 0% Noise)`
-                });
-            }
 
-            Plotly.newPlot('playground-scatter-chart', traces, {
-                margin: { l: 40, r: 40, t: 30, b: 40 },
-                paper_bgcolor: bgColor,
-                plot_bgcolor: bgColor,
-                xaxis: { title: 'Thành phần UMAP 1', gridcolor: gridColor, color: textColor },
-                yaxis: { title: 'Thành phần UMAP 2', gridcolor: gridColor, color: textColor },
-                legend: { orientation: 'h', y: -0.15, font: { color: textColor } },
-                hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
-            }, { responsive: true });
+                Plotly.newPlot('playground-scatter-chart', traces, {
+                    margin: { l: 40, r: 40, t: 30, b: 40 },
+                    paper_bgcolor: bgColor,
+                    plot_bgcolor: bgColor,
+                    xaxis: { title: 'Thành phần UMAP 1', gridcolor: gridColor, color: textColor },
+                    yaxis: { title: 'Thành phần UMAP 2', gridcolor: gridColor, color: textColor },
+                    legend: { orientation: 'h', y: -0.15, font: { color: textColor } },
+                    hoverlabel: { bgcolor: isDark ? '#1E293B' : '#FFFFFF', font: { family: 'Plus Jakarta Sans' } }
+                }, { responsive: true });
+            }
         }
 
         // NOVELTY ROC CHART (Tab 4)
