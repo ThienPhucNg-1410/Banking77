@@ -596,11 +596,11 @@
     <!-- Main Content Tabs -->
     <main class="main-container">
         <nav class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('tab-umap')">🗺️ Bản đồ 2D UMAP</button>
-            <button class="tab-btn" onclick="switchTab('tab-bench')">📊 Đối chuẩn 9 Thuật toán</button>
-            <button class="tab-btn" onclick="switchTab('tab-domains')">🧩 4 Mảng Nghiệp vụ & 75 Cụm</button>
-            <button class="tab-btn" onclick="switchTab('tab-novelty')">🚨 Dò Chủ đề Mới (Novelty)</button>
-            <button class="tab-btn" onclick="switchTab('tab-report')">📖 Toàn văn Báo cáo (6 Chương)</button>
+            <button class="tab-btn active" onclick="switchTab('tab-umap', event)">🗺️ Bản đồ 2D UMAP</button>
+            <button class="tab-btn" onclick="switchTab('tab-bench', event)">📊 Đối chuẩn 9 Thuật toán</button>
+            <button class="tab-btn" onclick="switchTab('tab-domains', event)">🧩 4 Mảng Nghiệp vụ & 75 Cụm</button>
+            <button class="tab-btn" onclick="switchTab('tab-novelty', event)">🚨 Dò Chủ đề Mới (Novelty)</button>
+            <button class="tab-btn" onclick="switchTab('tab-report', event)">📖 Toàn văn Báo cáo (6 Chương)</button>
         </nav>
 
         <!-- Tab 1: Interactive UMAP Plot -->
@@ -761,15 +761,32 @@
         }
 
         // Tab Navigation
-        function switchTab(tabId) {
+        function switchTab(tabId, ev) {
+            const eventObj = ev || window.event;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
-            event.currentTarget.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            if (eventObj && eventObj.currentTarget) {
+                eventObj.currentTarget.classList.add('active');
+            } else {
+                const btn = document.querySelector(`[onclick*="${tabId}"]`);
+                if (btn) btn.classList.add('active');
+            }
+            
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
 
-            // Trigger window resize so Plotly charts fit container perfectly
-            window.dispatchEvent(new Event('resize'));
+            // Trigger resize on Plotly charts after tab is made visible
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+                const chartIds = ['umap-chart', 'bench-chart', 'domain-pie-chart', 'domain-bar-chart', 'roc-chart'];
+                chartIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && window.Plotly) {
+                        try { Plotly.Plots.resize(el); } catch(e) {}
+                    }
+                });
+            }, 50);
         }
 
         // Render Plotly Charts
