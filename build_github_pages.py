@@ -162,6 +162,20 @@ def build_portal():
             "badge": "Khá tốt",
             "summary": "Đã bắt đầu hội tụ tốt hơn mcs=20 nhưng 125 cụm vẫn còn quá nhiều so với 77 nhu cầu thực tế của khách hàng."
         },
+        "hdbscan_30_leaf": {
+            "name": "HDBSCAN (mcs=30, Leaf)",
+            "algo": "HDBSCAN",
+            "clusters": 134,
+            "noise": 12.20,
+            "v_measure": 0.794,
+            "ari": 0.624,
+            "dbcv": 0.299,
+            "silhouette": 0.220,
+            "coverage": 87.80,
+            "col": "t_30_leaf",
+            "badge": "Phân nhánh sâu",
+            "summary": "Phương thức Leaf ở mcs=30 tách sâu xuống 134 cụm lá, khiến tỷ lệ điểm nhiễu tăng lên 12,2%."
+        },
         "hdbscan_50_leaf": {
             "name": "HDBSCAN (mcs=50, Leaf)",
             "algo": "HDBSCAN",
@@ -189,6 +203,20 @@ def build_portal():
             "col": "t_80_eom",
             "badge": "Gộp cụm",
             "summary": "mcs=80 quá lớn dẫn đến hiện tượng gộp cụm quá mức: Chỉ còn 58 cụm, các intent gần nhau (như thẻ ảo và thẻ vật lý) bị nuốt chung vào một cụm to."
+        },
+        "hdbscan_80_leaf": {
+            "name": "HDBSCAN (mcs=80, Leaf)",
+            "algo": "HDBSCAN",
+            "clusters": 62,
+            "noise": 12.00,
+            "v_measure": 0.822,
+            "ari": 0.717,
+            "dbcv": 0.362,
+            "silhouette": 0.217,
+            "coverage": 88.00,
+            "col": "t_80_leaf",
+            "badge": "Gộp nhưng tách lá",
+            "summary": "Ở mcs=80, chiến lược Leaf giữ lại 62 cụm (nhiều hơn EOM 4 cụm), nhưng điểm nhiễu tăng từ 7,8% lên 12,0%."
         }
     }
 
@@ -962,7 +990,7 @@ def build_portal():
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
                             <div>
                                 <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Kích thước cụm tối thiểu (min_cluster_size):</label>
-                                <select id="hdbscan-mcs-select" class="search-box" style="width: 100%;">
+                                <select id="hdbscan-mcs-select" class="search-box" style="width: 100%;" onchange="runClusteringSimulation()">
                                     <option value="50" selected>mcs = 50 (Tối ưu đề xuất)</option>
                                     <option value="20">mcs = 20 (Cụm nhỏ, dễ phân mảnh)</option>
                                     <option value="30">mcs = 30</option>
@@ -971,7 +999,7 @@ def build_portal():
                             </div>
                             <div>
                                 <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Phương thức trích xuất cụm (selection):</label>
-                                <select id="hdbscan-sel-select" class="search-box" style="width: 100%;">
+                                <select id="hdbscan-sel-select" class="search-box" style="width: 100%;" onchange="runClusteringSimulation()">
                                     <option value="eom" selected>EOM (Excess of Mass - Bền vững nhất)</option>
                                     <option value="leaf">Leaf (Tách sâu xuống lá cây)</option>
                                 </select>
@@ -983,7 +1011,7 @@ def build_portal():
                     <div id="kmeans-params" style="display: none; margin-bottom: 16px;">
                         <div style="max-width: 400px;">
                             <label style="font-size: 12.5px; font-weight: 700; display: block; margin-bottom: 4px;">Số lượng cụm K biết trước (n_clusters):</label>
-                            <select id="kmeans-k-select" class="search-box" style="width: 100%;">
+                            <select id="kmeans-k-select" class="search-box" style="width: 100%;" onchange="runClusteringSimulation()">
                                 <option value="77" selected>K = 77 (Bằng đúng số nhãn thật)</option>
                                 <option value="50">K = 50 (Thiếu 27 cụm)</option>
                                 <option value="20">K = 20 (Gộp ép thành 20 khối cầu to)</option>
@@ -1184,8 +1212,8 @@ def build_portal():
                     <!-- Tab 3 Cluster Inspector: Soi Chi Tiết Cụm giống Phần 1 Bước 4 -->
                     <div id="playground-cluster-inspector" style="margin-top: 24px; padding-top: 18px; border-top: 1.5px solid var(--border-color);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-                            <label style="font-weight: 700; font-size: 14px; color: var(--primary); display: flex; align-items: center; gap: 6px;">
-                                🔍 Soi Chi Tiết Cụm Nghiệp Vụ (Mỏ Neo Từ Vựng c-TF-IDF & Câu Hỏi Đại Diện):
+                            <label id="playground-cluster-inspector-title" style="font-weight: 700; font-size: 14px; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+                                🔍 Soi Chi Tiết Cụm Nghiệp Vụ (Mỏ Neo Từ Vựng & Câu Hỏi Đại Diện):
                             </label>
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 <span style="font-size: 12.5px; color: var(--text-muted);">Chọn cụm:</span>
@@ -1248,37 +1276,81 @@ def build_portal():
         let playgroundViewMode = 'scatter'; // 'scatter' or 'bubbles'
         let selectedCompareIntent = 'ALL';
         let compareFilterMode = 'isolate'; // 'isolate' or 'dim'
-        let kmeansCentroidsCache = {{}};
+        let clusterCentroidsCache = {{}};
 
-        function getKMeansCentroids(colKm = 'km_77') {{
-            if (kmeansCentroidsCache[colKm]) return kmeansCentroidsCache[colKm];
+        function getClusterCentroids(colName, isHdbscan = true) {{
+            const cacheKey = `${{colName}}_${{isHdbscan}}`;
+            if (clusterCentroidsCache[cacheKey]) return clusterCentroidsCache[cacheKey];
+
             const groups = {{}};
             SAMPLED_POINTS.forEach(p => {{
-                const k = p[colKm];
-                if (k === undefined || k === null) return;
-                if (!groups[k]) groups[k] = {{ k: k, count: 0, sx: 0, sy: 0, intentMap: {{}} }};
-                groups[k].count++;
-                groups[k].sx += p.x_umap;
-                groups[k].sy += p.y_umap;
-                groups[k].intentMap[p.intent] = (groups[k].intentMap[p.intent] || 0) + 1;
+                const c = p[colName];
+                if (c === undefined || c === null) return;
+                if (isHdbscan && (c === -1 || c === '-1')) return; // Ignore noise for cluster bubbles
+
+                if (!groups[c]) {{
+                    groups[c] = {{
+                        id: c,
+                        count: 0,
+                        sx: 0,
+                        sy: 0,
+                        intentMap: {{}},
+                        sampleTexts: []
+                    }};
+                }}
+                groups[c].count++;
+                groups[c].sx += p.x_umap;
+                groups[c].sy += p.y_umap;
+                groups[c].intentMap[p.intent] = (groups[c].intentMap[p.intent] || 0) + 1;
+                if (groups[c].sampleTexts.length < 4) {{
+                    groups[c].sampleTexts.push(p.text);
+                }}
             }});
+
             const list = Object.values(groups).map(g => {{
                 let majIntent = '';
                 let maxCount = 0;
                 for (let it in g.intentMap) {{
-                    if (g.intentMap[it] > maxCount) {{ maxCount = g.intentMap[it]; majIntent = it; }}
+                    if (g.intentMap[it] > maxCount) {{
+                        maxCount = g.intentMap[it];
+                        majIntent = it;
+                    }}
                 }}
+                const purity = Math.round((maxCount / g.count) * 1000) / 10;
+                const estSize = Math.round(g.count * (9993 / SAMPLED_POINTS.length));
+                
+                let keywords = majIntent.replace(/_/g, ' ');
+                let domain = "Nghiệp Vụ Ngân Hàng";
+                if (colName === 't_50_eom') {{
+                    const tObj = TOPICS_DATA.find(x => x.topic === parseInt(g.id, 10));
+                    if (tObj) {{
+                        keywords = tObj.keywords;
+                        domain = tObj.domain;
+                    }}
+                }}
+
                 return {{
-                    k: g.k,
+                    id: g.id,
+                    k: g.id,
                     cx: g.sx / g.count,
                     cy: g.sy / g.count,
-                    size: Math.round(g.count * (9993 / SAMPLED_POINTS.length)),
+                    size: estSize,
+                    count: g.count,
                     majority_label: majIntent,
-                    purity: Math.round((maxCount / g.count) * 1000) / 10
+                    purity: purity,
+                    keywords: keywords,
+                    domain: domain,
+                    sampleTexts: g.sampleTexts
                 }};
             }});
-            kmeansCentroidsCache[colKm] = list;
+
+            list.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
+            clusterCentroidsCache[cacheKey] = list;
             return list;
+        }}
+
+        function getKMeansCentroids(colKm = 'km_77') {{
+            return getClusterCentroids(colKm, false);
         }}
 
         function setPlaygroundViewMode(mode) {{
@@ -1844,39 +1916,87 @@ def build_portal():
                 }}
             `;
 
+            updatePlaygroundClusterSelector(cfg);
             renderPlaygroundScatter(cfg, isCompare, km);
         }}
 
         function initPlaygroundClusterSelector() {{
-            const sel = document.getElementById('playground-cluster-selector');
-            if (!sel) return;
-            sel.innerHTML = '';
-            TOPICS_DATA.forEach(t => {{
-                const opt = document.createElement('option');
-                opt.value = t.topic;
-                opt.innerText = `Topic #${{t.topic}}: ${{t.majority_label}} (${{t.purity}}% - ${{t.size}} câu)`;
-                sel.appendChild(opt);
-            }});
-            inspectPlaygroundCluster(TOPICS_DATA[0].topic);
+            updatePlaygroundClusterSelector(currentPlaygroundConfig);
         }}
 
-        function inspectPlaygroundCluster(topicId) {{
-            const t = TOPICS_DATA.find(x => x.topic === parseInt(topicId, 10));
-            if (!t) return;
+        function updatePlaygroundClusterSelector(cfg) {{
+            const sel = document.getElementById('playground-cluster-selector');
+            if (!sel) return;
+            const isHdb = cfg.algo === 'HDBSCAN';
+            const centroids = getClusterCentroids(cfg.col, isHdb);
+            sel.innerHTML = '';
+
+            const titleEl = document.getElementById('playground-cluster-inspector-title');
+            if (titleEl) {{
+                titleEl.innerText = `🔍 Soi Chi Tiết Cụm của cấu hình ${{cfg.name}} (${{centroids.length}} Cụm được phát hiện):`;
+            }}
+
+            centroids.forEach(c => {{
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.innerText = `${{isHdb ? 'Cụm' : 'Khối'}} #${{c.id}}: ${{c.majority_label}} (Purity ${{c.purity}}% - Quy mô ~${{c.size}} câu)`;
+                sel.appendChild(opt);
+            }});
+
+            if (centroids.length > 0) {{
+                inspectPlaygroundCluster(centroids[0].id, cfg.col, isHdb);
+            }}
+        }}
+
+        function inspectPlaygroundCluster(topicId, colName = null, isHdb = null) {{
+            const cId = parseInt(topicId, 10);
+            const activeCol = colName || (currentPlaygroundConfig ? currentPlaygroundConfig.col : 't_50_eom');
+            const activeIsHdb = isHdb !== null ? isHdb : (currentPlaygroundConfig ? (currentPlaygroundConfig.algo === 'HDBSCAN') : true);
+            
+            const centroids = getClusterCentroids(activeCol, activeIsHdb);
+            const c = centroids.find(x => parseInt(x.id, 10) === cId);
             const container = document.getElementById('playground-cluster-content');
             if (!container) return;
-            let repsHtml = t.reps.map((s, i) => `<li style="margin-bottom: 4px;"><em>"${{s}}"</em></li>`).join('');
-            
+
+            if (!c) {{
+                const t = TOPICS_DATA.find(x => x.topic === cId);
+                if (t) {{
+                    let repsHtml = t.reps.map(s => `<li style="margin-bottom: 4px;"><em>"${{s}}"</em></li>`).join('');
+                    container.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                            <h4 style="font-size: 16px; color: var(--primary);">Cụm #${{t.topic}}: <code>${{t.majority_label}}</code></h4>
+                            <div>
+                                <span class="badge badge-blue">Quy mô: ${{t.size}} câu</span>
+                                <span class="badge badge-green">Purity: ${{t.purity}}%</span>
+                                <span class="badge badge-purple">${{t.domain}}</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 13px; margin-bottom: 8px;"><strong>🔑 8 Từ khóa c-TF-IDF đặc trưng:</strong> <code>${{t.keywords}}</code></div>
+                        <div style="font-size: 13px;"><strong>🌟 Các câu hỏi đại diện tiêu biểu nhất:</strong></div>
+                        <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6; margin-top: 4px;">${{repsHtml}}</ul>
+                    `;
+                }}
+                return;
+            }}
+
+            let repsHtml = c.sampleTexts.map(s => `<li style="margin-bottom: 4px;"><em>"${{s}}"</em></li>`).join('');
+            if (activeCol === 't_50_eom') {{
+                const tObj = TOPICS_DATA.find(x => x.topic === cId);
+                if (tObj && tObj.reps) {{
+                    repsHtml = tObj.reps.map(s => `<li style="margin-bottom: 4px;"><em>"${{s}}"</em></li>`).join('');
+                }}
+            }}
+
             container.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-                    <h4 style="font-size: 16px; color: var(--primary);">Cụm #${{t.topic}}: <code>${{t.majority_label}}</code></h4>
+                    <h4 style="font-size: 16px; color: var(--primary);">${{activeIsHdb ? 'Cụm HDBSCAN' : 'Khối Cầu K-Means'}} #${{c.id}}: <code>${{c.majority_label}}</code></h4>
                     <div>
-                        <span class="badge badge-blue">Quy mô: ${{t.size}} câu</span>
-                        <span class="badge badge-green">Purity: ${{t.purity}}%</span>
-                        <span class="badge badge-purple">${{t.domain}}</span>
+                        <span class="badge badge-blue">Quy mô: ~${{c.size}} câu</span>
+                        <span class="badge badge-green">Purity: ${{c.purity}}%</span>
+                        <span class="badge badge-purple">${{c.domain}}</span>
                     </div>
                 </div>
-                <div style="font-size: 13px; margin-bottom: 8px;"><strong>🔑 8 Từ khóa c-TF-IDF đặc trưng:</strong> <code>${{t.keywords}}</code></div>
+                <div style="font-size: 13px; margin-bottom: 8px;"><strong>🔑 Chủ đề / Từ khóa đặc trưng:</strong> <code>${{c.keywords}}</code></div>
                 <div style="font-size: 13px;"><strong>🌟 Các câu hỏi đại diện tiêu biểu nhất từ tập BANKING77:</strong></div>
                 <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6; margin-top: 4px;">
                     ${{repsHtml}}
@@ -2034,6 +2154,7 @@ def build_portal():
 
                     if (playgroundViewMode === 'bubbles') {{
                         // Centroids view
+                        const hdbCentroids = getClusterCentroids(colHdb, true);
                         hdbTraces = [
                             {{
                                 x: SAMPLED_POINTS.map(p => p.x_umap),
@@ -2045,32 +2166,32 @@ def build_portal():
                                 name: 'Dữ liệu nền'
                             }},
                             {{
-                                x: TOPICS_DATA.map(t => t.cx),
-                                y: TOPICS_DATA.map(t => t.cy),
+                                x: hdbCentroids.map(t => t.cx),
+                                y: hdbCentroids.map(t => t.cy),
                                 mode: 'markers+text',
                                 type: 'scatter',
-                                text: TOPICS_DATA.map(t => 'C' + t.topic),
+                                text: hdbCentroids.map(t => 'C' + t.id),
                                 textposition: 'top center',
                                 textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
                                 marker: {{
-                                    size: TOPICS_DATA.map(t => Math.max(12, Math.sqrt(t.size) * 1.85)),
-                                    color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
+                                    size: hdbCentroids.map(t => Math.max(10, Math.sqrt(t.size) * 1.85)),
+                                    color: hdbCentroids.map(t => getVividClusterColor(t.id)),
                                     opacity: 0.9,
                                     line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
                                 }},
                                 hoverinfo: 'text',
-                                hovertext: TOPICS_DATA.map(t => 
-                                    `<b>HDBSCAN Cụm #${{t.topic}}</b>: ${{t.majority_label}}<br>` +
-                                    `Quy mô: ${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
+                                hovertext: hdbCentroids.map(t => 
+                                    `<b>HDBSCAN Cụm #${{t.id}}</b>: ${{t.majority_label}}<br>` +
+                                    `Quy mô: ~${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
                                     `Mảng: ${{t.domain}}<br>` +
                                     `Từ khóa: <i>${{t.keywords}}</i>`
                                 ),
-                                customdata: TOPICS_DATA.map(t => t.topic),
-                                name: `Tâm ${{hdb.clusters}} Cụm HDBSCAN`
+                                customdata: hdbCentroids.map(t => t.id),
+                                name: `Tâm ${{hdbCentroids.length}} Cụm HDBSCAN Tự Nhiên`
                             }}
                         ];
 
-                        const kmCentroids = getKMeansCentroids(colKm);
+                        const kmCentroids = getClusterCentroids(colKm, false);
                         kmTraces = [
                             {{
                                 x: SAMPLED_POINTS.map(p => p.x_umap),
@@ -2086,28 +2207,30 @@ def build_portal():
                                 y: kmCentroids.map(k => k.cy),
                                 mode: 'markers+text',
                                 type: 'scatter',
-                                text: kmCentroids.map(k => 'K' + k.k),
+                                text: kmCentroids.map(k => 'K' + k.id),
                                 textposition: 'top center',
                                 textfont: {{ family: 'Plus Jakarta Sans', size: 9, color: textColor }},
                                 marker: {{
-                                    size: kmCentroids.map(k => Math.max(12, Math.sqrt(k.size) * 1.85)),
-                                    color: kmCentroids.map(k => getVividClusterColor(k.k)),
+                                    size: kmCentroids.map(k => Math.max(10, Math.sqrt(k.size) * 1.85)),
+                                    color: kmCentroids.map(k => getVividClusterColor(k.id)),
                                     opacity: 0.9,
                                     line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 1.5 }}
                                 }},
                                 hoverinfo: 'text',
                                 hovertext: kmCentroids.map(k => 
-                                    `<b>K-Means Cụm #${{k.k}}</b>: ${{k.majority_label}}<br>` +
+                                    `<b>K-Means Cụm #${{k.id}}</b>: ${{k.majority_label}}<br>` +
                                     `Quy mô: ~${{k.size}} câu | Purity: ${{k.purity}}%<br>` +
                                     `Khối cầu Voronoi (0% Noise)`
                                 ),
-                                name: `Tâm ${{km.clusters}} Khối Cầu K-Means`
+                                customdata: kmCentroids.map(k => k.id),
+                                name: `Tâm ${{kmCentroids.length}} Khối Cầu K-Means`
                             }}
                         ];
                     }} else {{
                         // Detailed scatter points view
                         const inHdb = SAMPLED_POINTS.filter(p => p[colHdb] !== -1);
                         const noiseHdb = SAMPLED_POINTS.filter(p => p[colHdb] === -1);
+                        const uHdb = new Set(inHdb.map(p => p[colHdb])).size;
 
                         hdbTraces = [
                             {{
@@ -2123,7 +2246,7 @@ def build_portal():
                                 hoverinfo: 'text',
                                 hovertext: inHdb.map(p => `<b>HDBSCAN Cụm #${{p[colHdb]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
                                 customdata: inHdb.map(p => p[colHdb]),
-                                name: `${{hdb.clusters}} Cụm Tự Nhiên`
+                                name: `${{uHdb}} Cụm Tự Nhiên (${{hdb.clusters}} toàn tập)`
                             }},
                             {{
                                 x: noiseHdb.map(p => p.x_umap),
@@ -2137,6 +2260,7 @@ def build_portal():
                             }}
                         ];
 
+                        const uKm = new Set(SAMPLED_POINTS.map(p => p[colKm])).size;
                         kmTraces = [
                             {{
                                 x: SAMPLED_POINTS.map(p => p.x_umap),
@@ -2150,7 +2274,8 @@ def build_portal():
                                 }},
                                 hoverinfo: 'text',
                                 hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${{p[colKm]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
-                                name: `${{km.clusters}} Khối Cầu (0% Noise)`
+                                customdata: SAMPLED_POINTS.map(p => p[colKm]),
+                                name: `${{uKm}} Khối Cầu K-Means (0% Noise)`
                             }}
                         ];
                     }}
@@ -2184,7 +2309,21 @@ def build_portal():
                             if (tid !== undefined && tid !== null && tid !== -1) {{
                                 const sel = document.getElementById('playground-cluster-selector');
                                 if (sel) sel.value = tid;
-                                inspectPlaygroundCluster(tid);
+                                inspectPlaygroundCluster(tid, colHdb, true);
+                            }}
+                        }}
+                    }});
+                }}
+
+                const kmEl = document.getElementById('compare-kmeans-chart');
+                if (kmEl && kmEl.on) {{
+                    kmEl.on('plotly_click', function(data) {{
+                        if (data && data.points && data.points.length > 0) {{
+                            const kid = data.points[0].customdata;
+                            if (kid !== undefined && kid !== null) {{
+                                const sel = document.getElementById('playground-cluster-selector');
+                                if (sel) sel.value = kid;
+                                inspectPlaygroundCluster(kid, colKm, false);
                             }}
                         }}
                     }});
@@ -2199,83 +2338,50 @@ def build_portal():
                 let traces = [];
 
                 if (playgroundViewMode === 'bubbles') {{
-                    // BUBBLE / CENTROID VIEW
-                    if (cfg.algo === 'HDBSCAN') {{
-                        traces.push({{
-                            x: SAMPLED_POINTS.map(p => p.x_umap),
-                            y: SAMPLED_POINTS.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{ size: 4, color: '#94A3B8', opacity: 0.35 }},
-                            hoverinfo: 'skip',
-                            name: 'Dữ liệu nền (9.993 câu)'
-                        }});
+                    // BUBBLE / CENTROID VIEW (Dynamic for all configurations)
+                    const isHdb = cfg.algo === 'HDBSCAN';
+                    const centroids = getClusterCentroids(colName, isHdb);
 
-                        traces.push({{
-                            x: TOPICS_DATA.map(t => t.cx),
-                            y: TOPICS_DATA.map(t => t.cy),
-                            mode: 'markers+text',
-                            type: 'scatter',
-                            text: TOPICS_DATA.map(t => 'C' + t.topic),
-                            textposition: 'top center',
-                            textfont: {{ family: 'Plus Jakarta Sans', size: 10, color: textColor }},
-                            marker: {{
-                                size: TOPICS_DATA.map(t => Math.max(13, Math.sqrt(t.size) * 1.85)),
-                                color: TOPICS_DATA.map(t => getVividClusterColor(t.topic)),
-                                opacity: 0.9,
-                                line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }}
-                            }},
-                            hoverinfo: 'text',
-                            hovertext: TOPICS_DATA.map(t => 
-                                `<b>Cụm #${{t.topic}}</b>: ${{t.majority_label}}<br>` +
-                                `Quy mô: ${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
-                                `Mảng: ${{t.domain}}<br>` +
-                                `Từ khóa: <i>${{t.keywords}}</i>`
-                            ),
-                            customdata: TOPICS_DATA.map(t => t.topic),
-                            name: `Tâm ${{cfg.clusters}} Cụm HDBSCAN Tự Nhiên`
-                        }});
-                    }} else {{
-                        // K-Means Bubble View
-                        const kmCentroids = getKMeansCentroids(colName);
-                        traces.push({{
-                            x: SAMPLED_POINTS.map(p => p.x_umap),
-                            y: SAMPLED_POINTS.map(p => p.y_umap),
-                            mode: 'markers',
-                            type: 'scatter',
-                            marker: {{ size: 4, color: '#94A3B8', opacity: 0.35 }},
-                            hoverinfo: 'skip',
-                            name: 'Dữ liệu nền (9.993 câu)'
-                        }});
+                    traces.push({{
+                        x: SAMPLED_POINTS.map(p => p.x_umap),
+                        y: SAMPLED_POINTS.map(p => p.y_umap),
+                        mode: 'markers',
+                        type: 'scatter',
+                        marker: {{ size: 4, color: '#94A3B8', opacity: 0.35 }},
+                        hoverinfo: 'skip',
+                        name: 'Dữ liệu nền (9.993 câu)'
+                    }});
 
-                        traces.push({{
-                            x: kmCentroids.map(k => k.cx),
-                            y: kmCentroids.map(k => k.cy),
-                            mode: 'markers+text',
-                            type: 'scatter',
-                            text: kmCentroids.map(k => 'K' + k.k),
-                            textposition: 'top center',
-                            textfont: {{ family: 'Plus Jakarta Sans', size: 10, color: textColor }},
-                            marker: {{
-                                size: kmCentroids.map(k => Math.max(13, Math.sqrt(k.size) * 1.85)),
-                                color: kmCentroids.map(k => getVividClusterColor(k.k)),
-                                opacity: 0.9,
-                                line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }}
-                            }},
-                            hoverinfo: 'text',
-                            hovertext: kmCentroids.map(k => 
-                                `<b>K-Means Cụm #${{k.k}}</b>: ${{k.majority_label}}<br>` +
-                                `Quy mô: ~${{k.size}} câu | Purity: ${{k.purity}}%<br>` +
-                                `Tâm khối cầu Voronoi (0% Noise)`
-                            ),
-                            name: `Tâm ${{cfg.clusters}} Khối Cầu K-Means`
-                        }});
-                    }}
+                    traces.push({{
+                        x: centroids.map(t => t.cx),
+                        y: centroids.map(t => t.cy),
+                        mode: 'markers+text',
+                        type: 'scatter',
+                        text: centroids.map(t => (isHdb ? 'C' : 'K') + t.id),
+                        textposition: 'top center',
+                        textfont: {{ family: 'Plus Jakarta Sans', size: 10, color: textColor }},
+                        marker: {{
+                            size: centroids.map(t => Math.max(12, Math.sqrt(t.size) * 1.85)),
+                            color: centroids.map(t => getVividClusterColor(t.id)),
+                            opacity: 0.9,
+                            line: {{ color: isDark ? '#FFFFFF' : '#0F172A', width: 2 }}
+                        }},
+                        hoverinfo: 'text',
+                        hovertext: centroids.map(t => 
+                            `<b>${{isHdb ? 'HDBSCAN Cụm' : 'K-Means Khối'}} #${{t.id}}</b>: ${{t.majority_label}}<br>` +
+                            `Quy mô: ~${{t.size}} câu | Purity: ${{t.purity}}%<br>` +
+                            `Mảng: ${{t.domain}}<br>` +
+                            `Từ khóa: <i>${{t.keywords}}</i>`
+                        ),
+                        customdata: centroids.map(t => t.id),
+                        name: `Tâm ${{centroids.length}} ${{isHdb ? 'Cụm HDBSCAN Tự Nhiên' : 'Khối Cầu K-Means'}}`
+                    }});
                 }} else {{
                     // SCATTER POINTS VIEW
                     if (cfg.algo === 'HDBSCAN') {{
                         const inCluster = SAMPLED_POINTS.filter(p => p[colName] !== -1);
                         const noise = SAMPLED_POINTS.filter(p => p[colName] === -1);
+                        const uHdb = new Set(inCluster.map(p => p[colName])).size;
 
                         traces.push({{
                             x: inCluster.map(p => p.x_umap),
@@ -2290,7 +2396,7 @@ def build_portal():
                             hoverinfo: 'text',
                             hovertext: inCluster.map(p => `<b>Cụm #${{p[colName]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
                             customdata: inCluster.map(p => p[colName]),
-                            name: `Cụm ${{cfg.clusters}} nhóm`
+                            name: `${{uHdb}} Cụm Tự Nhiên (${{cfg.clusters}} toàn tập)`
                         }});
 
                         if (noise.length > 0) {{
@@ -2307,6 +2413,7 @@ def build_portal():
                         }}
                     }} else {{
                         // K-Means: No noise, all colored
+                        const uKm = new Set(SAMPLED_POINTS.map(p => p[colName])).size;
                         traces.push({{
                             x: SAMPLED_POINTS.map(p => p.x_umap),
                             y: SAMPLED_POINTS.map(p => p.y_umap),
@@ -2318,8 +2425,9 @@ def build_portal():
                                 opacity: 0.75
                             }},
                             hoverinfo: 'text',
-                            hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Cụm #${{p[colName]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
-                            name: `K-Means (${{cfg.clusters}} Khối Cầu Voronoi - 0% Noise)`
+                            hovertext: SAMPLED_POINTS.map(p => `<b>K-Means Khối #${{p[colName]}}</b> (${{p.intent}})<br>"${{p.text}}"`),
+                            customdata: SAMPLED_POINTS.map(p => p[colName]),
+                            name: `${{uKm}} Khối Cầu Voronoi (${{cfg.clusters}} toàn tập)`
                         }});
                     }}
                 }}
@@ -2342,7 +2450,7 @@ def build_portal():
                             if (tid !== undefined && tid !== null && tid !== -1) {{
                                 const sel = document.getElementById('playground-cluster-selector');
                                 if (sel) sel.value = tid;
-                                inspectPlaygroundCluster(tid);
+                                inspectPlaygroundCluster(tid, cfg.col, cfg.algo === 'HDBSCAN');
                             }}
                         }}
                     }});
